@@ -284,6 +284,7 @@ namespace GetFacts.Facts
                 //p.Outdated += Page_Outdated;
                 p.SectionAdded += Page_SectionAdded;
                 pages.Add(p);
+                p.TimerEnabled = true;
             }
         }
 

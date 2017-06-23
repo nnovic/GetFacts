@@ -143,11 +143,16 @@ namespace GetFacts.Download
             }
         }
 
-        internal void Reload()
+        internal bool Reload()
         {
             lock(_lock_)
             {
+                if( (Status==DownloadStatus.Connecting) || (Status==DownloadStatus.Started) )
+                {
+                    return false;
+                }
                 Status = DownloadStatus.ReadyToStart;
+                return true;
             }
         }
 
@@ -210,9 +215,9 @@ namespace GetFacts.Download
 
         internal void StopDownload()
         {
-            try { readStream?.Close(); } catch { }
+            try { readStream?.Dispose(); } catch { }
             try { webClient?.Dispose(); } catch { }
-            try { writeStream?.Close(); } catch { }
+            try { writeStream?.Dispose(); } catch { }
             Status = DownloadStatus.Aborted;
         }
 
@@ -277,21 +282,18 @@ namespace GetFacts.Download
                 AbortDownload();
                 return;
             }
-
+            
             expectedDownloadSize = -1;
             achievedDownloadSize = 0;
             string contentLengthAsString = webClient.ResponseHeaders[HttpResponseHeader.ContentLength];
-            if( string.IsNullOrEmpty(contentLengthAsString)==false )
+            if (string.IsNullOrEmpty(contentLengthAsString) == false)
             {
-                if( long.TryParse(contentLengthAsString, out expectedDownloadSize) == false )
+                if (long.TryParse(contentLengthAsString, out expectedDownloadSize) == false)
                 {
                     expectedDownloadSize = -1;
                 }
             }
 
-            //string dirName = ConfigurationManager.AppSettings.Get("DownloadDirectory");
-            //string fileName = Path.GetRandomFileName();
-            //downloadPath = Path.Combine(dirName, fileName);
             downloadPath = Path.ChangeExtension(LocalFile, TmpFileExtension);
             writeStream = File.OpenWrite(downloadPath);
             Status = DownloadStatus.Started;

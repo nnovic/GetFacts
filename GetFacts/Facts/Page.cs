@@ -16,6 +16,7 @@ namespace GetFacts.Facts
         private readonly DownloadTask pageDownloadTask;
         private readonly Section defaultSection;
         private readonly Timer refreshTimer;
+        private bool timerEnabled = false;
 
         public Page(string url)
         {
@@ -31,6 +32,12 @@ namespace GetFacts.Facts
         {
             Parser = new HtmlParser(); 
             Template = TemplateFactory.GetInstance().GetTemplate(pc.Template); 
+        }
+
+        internal bool TimerEnabled
+        {
+            get { return timerEnabled; }
+            set { timerEnabled = value; }
         }
 
         /// <summary>
@@ -86,12 +93,14 @@ namespace GetFacts.Facts
             {
                 Parser.Load(pageDownloadTask.LocalFile);
                 Update(Parser.CreateNavigator());
-                refreshTimer.Change(10 * 1000, Timeout.Infinite);
+                if(TimerEnabled)
+                    refreshTimer.Change(10 * 1000, Timeout.Infinite);
             }
             else
             {
                 // SO WHAT ???
-                refreshTimer.Change(10 * 1000, Timeout.Infinite);
+                if(TimerEnabled)
+                    refreshTimer.Change(10 * 1000, Timeout.Infinite);
             }
         }
 
