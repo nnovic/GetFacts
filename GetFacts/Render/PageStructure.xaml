@@ -1,0 +1,70 @@
+﻿<Page x:Class="GetFacts.Render.PageStructure"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GetFacts.Render"
+      xmlns:core="clr-namespace:System;assembly=mscorlib"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="500"
+      Title="PagePage" Unloaded="Page_Unloaded">
+
+    <Page.Resources>
+        <core:Double x:Key="PauseOpacity">0.65</core:Double>
+    </Page.Resources>
+
+    <Grid>
+        <Grid x:Name="elasticGrid" SizeChanged="Grid_SizeChanged">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <local:ArticleDisplay x:Name="pageDisplay" />
+            <Grid x:Name="pauseDisplay" Visibility="Hidden" Background="Black" Opacity="{StaticResource PauseOpacity}"  >
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Viewbox Grid.Row="1" Grid.Column="1">
+                    <Canvas  x:Name="pauseSymbol" Width="250" Height="300" Background="Black">
+                        <Canvas.Effect>
+                            <BlurEffect Radius="10"/>
+                        </Canvas.Effect>
+                        <Rectangle Canvas.Top="0" Canvas.Left="0" Width="100" Height="300" Fill="White" Stroke="Black" />
+                        <Rectangle Canvas.Top="0" Canvas.Left="150" Width="100" Height="300" Fill="White" Stroke="Black" />
+                    </Canvas>
+                </Viewbox>
+            </Grid>
+            <Grid x:Name="factsContainer" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                <Border x:Name="factsBorder" Background="#FF3A3A87" Margin="5" CornerRadius="10" MouseEnter="FactsBorder_MouseEnter" MouseLeave="FactsBorder_MouseLeave">
+                </Border>
+            </Grid>
+        </Grid>
+        <!-- 
+        <Grid x:Name="mediaGrid" Visibility="Hidden">
+            <Rectangle  Opacity="0.75" Fill="Black"></Rectangle>
+            <Grid Margin="50" >
+                <Grid.Effect>
+                    <DropShadowEffect ShadowDepth="10" BlurRadius="10"/>
+                </Grid.Effect>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <MediaElement x:Name="mediaPlayer" Grid.Row="0"></MediaElement>
+                <TextBlock x:Name="mediaTitle" Grid.Row="1" Foreground="White" Background="Black" HorizontalAlignment="Center">TITRE</TextBlock>
+            </Grid>
+        </Grid> -->
+    </Grid>
+
+</Page>

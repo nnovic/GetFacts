@@ -1,0 +1,95 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GetFacts"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="GetFacts.ParseGui"
+        mc:Ignorable="d"
+        Title="ParseGui" Height="300" Width="492.201">
+    <Grid>
+        
+        <!-- 
+        Affichage principal: 
+        grille qui sépare la fenêtre en deux moitiés égales
+        -->
+        <Grid> 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- à gauche, cette grille contient le code de la page consultée -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <DockPanel>
+                <Label Content="URL:" DockPanel.Dock="Left"/>
+                <Button Content="Get!" DockPanel.Dock="Right" Click="Button_Click"/>
+                    <ComboBox x:Name="UrlInput" IsEditable="True" >
+                        <System:String>https://www.leboncoin.fr/annonces/offres/rhone_alpes/</System:String>
+                        <System:String>http://sokrostream.cc/</System:String>
+                        <System:String>http://www.jeuxvideo.com/tests.htm</System:String>
+                        <System:String>https://www.youtube.com/user/joueurdugrenier</System:String>
+                    </ComboBox>
+                </DockPanel>
+                <FlowDocumentReader  x:Name="CodeSourceView"  Grid.Row="1"   />
+
+            </Grid>
+            
+            <!-- à droite, des onglets -->
+            <TabControl Grid.Column="1">
+                <TabItem Header="Selection">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel>
+                            <Label>XPath:</Label>
+                            <TextBox x:Name="XPathBox" IsReadOnly="True">(no selection)</TextBox>
+                        </DockPanel>
+                        <TreeView x:Name="CodeSourceTree" Grid.Row="1" SelectedItemChanged="CodeSourceTree_SelectedItemChanged" />
+                        <DataGrid x:Name="AttributesGrid" Grid.Row="2" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path=Name}" ClipboardContentBinding="{x:Null}" Header="Attribute"/>
+                                <DataGridTextColumn Binding="{Binding Path=Value}" ClipboardContentBinding="{x:Null}" Header="Value" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            
+            
+        </Grid>
+        
+        <!-- Affichage superposé pour "please wait" -->
+        <Grid x:Name="PleaseWait" Visibility="Collapsed">
+            <Grid Background="Black" Opacity="0.5"/>
+            <Border
+            MinWidth="250"
+            Background="Orange" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            CornerRadius="0,55,0,55" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="Please wait" FontWeight="Bold" FontFamily="Cambria" />
+                    <TextBlock Text="(put reason here!)" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="PleaseWaitCaption"/>
+                    <!-- 
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="okButton" Margin="5" Content="Yes" Background="{x:Null}" Click="okButton_Click"/>
+                        <Button x:Name="candelButton" Margin="5" Content="No" Background="{x:Null}" Click="cancelButton_Click" />
+                    </StackPanel>
+                    -->
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Grid>
+</Window>

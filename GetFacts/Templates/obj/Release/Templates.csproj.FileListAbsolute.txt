@@ -1,0 +1,8 @@
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Release\Templates\fr\www.developpez.com.json
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Release\Templates\fr\www.leboncoin.fr.json
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Release\Templates.dll.config
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Release\Templates.dll
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Release\Templates.pdb
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\obj\Release\Templates.csprojResolveAssemblyReference.cache
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\obj\Release\Templates.dll
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\obj\Release\Templates.pdb
