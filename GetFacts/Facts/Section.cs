@@ -42,7 +42,6 @@ namespace GetFacts.Facts
             if (a == null) throw new ArgumentNullException();
             if (Children.Contains(a) == false) throw new ArgumentException();
             Children.Remove(a);
-            OnArticleRemoved(a);
         }
 
         private void AddOrUpdateArticle(Article tmp)
@@ -73,7 +72,6 @@ namespace GetFacts.Facts
             if (bestCandidate == null)
             {
                 Children.Add(tmp);
-                OnArticleAdded(tmp);
             }
             else
             {
@@ -84,33 +82,6 @@ namespace GetFacts.Facts
 
 
         #region Articles
-
-        public event EventHandler<ArticleEventArgs> ArticleAdded;
-        public event EventHandler<ArticleEventArgs> ArticleRemoved;
-
-        public class ArticleEventArgs : EventArgs
-        {
-            public Section Section { get; set; }
-            public Article Article { get; set; }
-        }
-
-        protected void OnArticleAdded(Article a)
-        {
-            if(ArticleAdded!=null)
-            {
-                ArticleEventArgs args = new ArticleEventArgs() { Section = this, Article = a };
-                ArticleAdded(this, args);
-            }
-        }
-
-        protected void OnArticleRemoved(Article a)
-        {
-            if (ArticleRemoved != null)
-            {
-                ArticleEventArgs args = new ArticleEventArgs() { Section = this, Article = a };
-                ArticleRemoved(this, args);
-            }
-        }
 
         public int ArticlesCount
         {

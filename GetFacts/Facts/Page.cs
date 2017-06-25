@@ -13,19 +13,14 @@ namespace GetFacts.Facts
     public class Page:AbstractInfo
     {
         private readonly string pageUrl;
-        private readonly DownloadTask pageDownloadTask;
         private readonly Section defaultSection;
-        private readonly Timer refreshTimer;
         private bool timerEnabled = false;
 
         public Page(string url)
         {
             pageUrl = url;
             BaseUri = new Uri(url, UriKind.Absolute);
-            pageDownloadTask = DownloadManager.GetInstance().FindOrQueue(BaseUri);
-            pageDownloadTask.TaskFinished += PageDownloadTask_TaskFinished;
             defaultSection = new Section(String.Empty);
-            refreshTimer = new Timer(TimerProc);
         }
 
         public Page(PageConfig pc):this(pc.Url)
@@ -39,18 +34,6 @@ namespace GetFacts.Facts
             get { return timerEnabled; }
             set { timerEnabled = value; }
         }
-
-        /// <summary>
-        /// Should be called right after the Page has been instanciated.
-        /// If the document is already available locally, it will trigger
-        /// the parsing of the document, and the page will be available
-        /// for display as soon as this method is finished.
-        /// </summary>
-        internal void Initialize()
-        {
-            pageDownloadTask.TriggerIfTaskFinished();
-        }
-
 
         #region configuration
 
@@ -78,33 +61,13 @@ namespace GetFacts.Facts
 
         #region mise à jour 
 
-
-        private void TimerProc(object state)
+        internal void Update(string sourceFile)
         {
-            Console.WriteLine("The timer callback executes.");
-            pageDownloadTask.Reload();
+            Parser.Load(sourceFile);
+            Update(Parser.CreateNavigator());
         }
 
-
-
-        private void PageDownloadTask_TaskFinished(object sender, EventArgs e)
-        {
-            if(pageDownloadTask.Status== DownloadTask.DownloadStatus.Completed)
-            {
-                Parser.Load(pageDownloadTask.LocalFile);
-                Update(Parser.CreateNavigator());
-                if(TimerEnabled)
-                    refreshTimer.Change(10 * 1000, Timeout.Infinite);
-            }
-            else
-            {
-                // SO WHAT ???
-                if(TimerEnabled)
-                    refreshTimer.Change(10 * 1000, Timeout.Infinite);
-            }
-        }
-
-        void Update(XPathNavigator nav)
+        private void Update(XPathNavigator nav)
         {            
             BeginUpdate();
 
@@ -124,23 +87,6 @@ namespace GetFacts.Facts
         #endregion
 
         #region Sections
-
-        public class SectionEventArgs:EventArgs
-        {
-            public Page Page { get; set; }
-            public Section Section { get; set; }
-        }
-
-        public event EventHandler<SectionEventArgs> SectionAdded;
-
-        protected void OnSectionAdded(Section s)
-        {
-            if(SectionAdded!=null)
-            {
-                SectionEventArgs args = new SectionEventArgs() { Page = this, Section = s };
-                SectionAdded(this, args);
-            }
-        }
 
         public int SectionsCount
         {
@@ -209,7 +155,6 @@ namespace GetFacts.Facts
                     BaseUri = BaseUri
                 };
                 Children.Add(output);
-                OnSectionAdded(output);
             }
             else
             {

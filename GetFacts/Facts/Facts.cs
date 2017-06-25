@@ -1,6 +1,8 @@
-﻿using GetFacts.Parse;
+﻿using GetFacts.Download;
+using GetFacts.Parse;
 using GetFacts.Render;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,12 +52,35 @@ namespace GetFacts.Facts
             AddPage(pageQuiFoire);
         }
 
+        private readonly Hashtable downloadTasks = new Hashtable();
+
         public void Initialize()
         {
             foreach(Page p in pages)
             {
-                p.Initialize();
+                DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri);
+                downloadTasks.Add(task, p);
+                task.TaskFinished += DownloadTask_TaskFinished;
+                task.TriggerIfTaskFinished();
             }
+        }
+
+        private void DownloadTask_TaskFinished(object sender, EventArgs e)
+        {
+            DownloadTask task = (DownloadTask)sender;
+            Page p = downloadTasks[task] as Page;
+
+            if (task.Status == DownloadTask.DownloadStatus.Completed)
+            {
+                p.Update(task.LocalFile);
+            }
+
+            Task.Run(async delegate
+            {
+                await Task.Delay(10 * 1000);
+                Console.WriteLine("The timer callback executes.");
+                task.Reload();
+            });
         }
 
         #region Curseurs
@@ -109,14 +134,6 @@ namespace GetFacts.Facts
 
             articleIndex++;
             Article a = s.GetArticle(articleIndex);
-
-            if(outdatedItems.Contains(a) )
-            {
-                s.RemoveArticle(a);
-                outdatedItems.Remove(a);
-                a = null;
-            }
-
             return a;
         }
 
@@ -149,6 +166,7 @@ namespace GetFacts.Facts
             sectionChanged = false;
 
             Page p = CurrentPage();
+
             Section s = CurrentSection();
 
             for (int tryPage=0; tryPage<=pages.Count; tryPage++)
@@ -161,12 +179,6 @@ namespace GetFacts.Facts
                         {
                             for (int tryArticle = 0; tryArticle <= s.ArticlesCount; tryArticle++)
                             {
-                                /*articleIndex++;
-                                if (articleIndex >= s.ArticlesCount)
-                                {
-                                    break;
-                                }
-                                Article a = s.GetArticle(articleIndex);*/
                                 Article a = More(s);
                                 if (a != null) return a;
                             }
@@ -281,68 +293,11 @@ namespace GetFacts.Facts
                     throw new ArgumentException();
                 }
 
-                //p.Outdated += Page_Outdated;
-                p.SectionAdded += Page_SectionAdded;
                 pages.Add(p);
                 p.TimerEnabled = true;
             }
         }
 
-        /*private void Page_Outdated(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }*/
-
-        #endregion
-
-        #region Sections
-
-        private void Page_SectionAdded(object sender, Page.SectionEventArgs e)
-        {
-            Section s = e.Section;
-            s.Outdated += Section_Outdated;
-            s.ArticleAdded += Section_ArticleAdded;
-        }
-
-
-        private void Section_Outdated(object sender, EventArgs e)
-        {
-            // Todo: mark for deletion all articles in the section.
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-
-        #region Articles
-        
-
-        private void Section_ArticleAdded(object sender, Section.ArticleEventArgs e)
-        {
-            Article a = e.Article;
-            a.Outdated += Article_Outdated;
-            Console.WriteLine("Facts: new article added");
-        }
-
-
-
-        #endregion
-
-        #region outdated items
-
-        private readonly List<AbstractInfo> outdatedItems = new List<AbstractInfo>();
-
-        private void Article_Outdated(object sender, EventArgs e)
-        {
-            Article a = (Article)sender;
-            a.Outdated -= Article_Outdated;
-            Console.WriteLine("Facts: outdated article");
-
-            lock (_lock_)
-            {
-                outdatedItems.Add(a);
-            }
-        }
 
         #endregion
 

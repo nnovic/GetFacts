@@ -89,15 +89,23 @@ namespace GetFacts.Render
 
         private void IconTask_TaskFinished(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() => 
+            Dispatcher.BeginInvoke((Action)(() =>
             {
-                BitmapImage bmpI = new BitmapImage();
-                bmpI.BeginInit();
-                bmpI.UriSource = new Uri(iconTask.LocalFile, UriKind.RelativeOrAbsolute);
-                bmpI.EndInit();
-                articleIcon.Source = bmpI;
-                progressContainer.Visibility = Visibility.Hidden;
-            }), null);
+                try
+                {
+                    BitmapImage bmpI = new BitmapImage();
+                    bmpI.BeginInit();
+                    bmpI.UriSource = new Uri(iconTask.LocalFile, UriKind.RelativeOrAbsolute);
+                    bmpI.EndInit();
+                    articleIcon.Source = bmpI;
+                    progressContainer.Visibility = Visibility.Hidden;
+                }
+                // Since the action is executed asynchronously, the Dispatcher
+                // might execute the above code at a time when iconTask has
+                // already become invalid. Just ignore all errors.
+                catch { } 
+
+            } ), null);
         }
 
         #endregion

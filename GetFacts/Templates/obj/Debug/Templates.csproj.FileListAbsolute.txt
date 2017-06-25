@@ -11,6 +11,5 @@ C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\bin\Debug\Templates\fr
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\bin\Debug\Templates.dll.config
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\bin\Debug\Templates.dll
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\bin\Debug\Templates.pdb
-C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.csprojResolveAssemblyReference.cache
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.dll
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.pdb

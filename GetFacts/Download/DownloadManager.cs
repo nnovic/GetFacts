@@ -85,12 +85,9 @@ namespace GetFacts.Download
 
             foreach(string s in removeList)
             {
-                if( s== "C:\\985bd681-3e0b-4689-960e-a2f1b761765f")
-                {
-
-                }
                 try
                 {
+
                     File.Delete(s);
                 }
                 catch

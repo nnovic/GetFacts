@@ -34,17 +34,6 @@ namespace GetFacts.Facts
 
         #endregion
 
-        #region ContentChanged
-
-        public event EventHandler ContentChanged;
-
-        protected void OnContentChanged()
-        {
-            ContentChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        #endregion
-
         #region Parent
 
         private AbstractInfo parent = null;
@@ -79,9 +68,13 @@ namespace GetFacts.Facts
 
         #region Outdated
 
-        public event EventHandler Outdated = null;
         private bool upToDate = false;
 
+        /// <summary>
+        /// Clears the "up-to-date" flag of this object
+        /// and then does the same on all its children,
+        /// recursively calling their BeginUpdate() method.
+        /// </summary>
         protected void BeginUpdate()
         {
             upToDate = false;
@@ -91,29 +84,41 @@ namespace GetFacts.Facts
             }
         }
 
-        protected void EndUpdate()
+        /// <summary>
+        /// Check the state of the "up-to-date" flag of
+        /// this object and its Children. If the "up-to-date"
+        /// flag of this object is not raised (==false), returns false.
+        /// If the "up-to-date" flag of one of its Children is not raised,
+        /// remove it. Returns true if this object and its children are all
+        /// up-to-date.
+        /// </summary>
+        protected bool EndUpdate()
         {
             if (upToDate == false)
             {
-                OnOutdated();
+                return false;
             }
-            else
+
+            List<AbstractInfo> toBeRemoved = new List<AbstractInfo>();
+            foreach (AbstractInfo child in children)
             {
-                foreach (AbstractInfo child in children)
+                if(child.EndUpdate()==false)
                 {
-                    child.EndUpdate();
+                    toBeRemoved.Add(child);
                 }
             }
+
+            foreach(AbstractInfo deleted in toBeRemoved)
+            {
+                children.Remove(deleted);
+            }
+
+            return true;
         }
 
         protected void Updated()
         {
             upToDate = true;
-        }
-
-        protected void OnOutdated()
-        {
-            Outdated?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -134,7 +139,6 @@ namespace GetFacts.Facts
                 if (string.Compare(titleReadFromTheWeb, value) != 0)
                 {
                     titleReadFromTheWeb = value;
-                    OnContentChanged();
                 }
             }
         }
@@ -157,7 +161,6 @@ namespace GetFacts.Facts
                 if (string.Compare(textReadFromTheWeb, value) != 0)
                 {
                     textReadFromTheWeb = value;
-                    OnContentChanged();
                 }
             }
         }
@@ -191,7 +194,6 @@ namespace GetFacts.Facts
                 if (string.Compare(iconUrl, value) != 0)
                 {
                     iconUrl = value;
-                    OnContentChanged();
                 }
             }
         }
@@ -226,7 +228,6 @@ namespace GetFacts.Facts
                 if (string.Compare(mediaUrl, value) != 0)
                 {
                     mediaUrl = value;
-                    OnContentChanged();
                 }
             }
         }
@@ -262,7 +263,6 @@ namespace GetFacts.Facts
                 if (string.Compare(browserUrl, value) != 0)
                 {
                     browserUrl = value;
-                    OnContentChanged();
                 }
             }
         }
