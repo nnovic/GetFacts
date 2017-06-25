@@ -6,17 +6,9 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace GetFacts
 {
@@ -45,19 +37,23 @@ namespace GetFacts
         {
             lock(pauseLock)
             {
+                long remainingTime = PageDisplayDuration;
+
+                chrono.Restart();
+                RemoveTrash();
+                chrono.Stop();
+
+                remainingTime -= chrono.ElapsedMilliseconds;
+                //if (remainingTime < 100) remainingTime = 100;
+
                 do
-                {
+                {                    
                     chrono.Restart();
-                    RemoveTrash();
+                    Monitor.Wait(pauseLock, remainingTime>100?(int)remainingTime:100);
                     chrono.Stop();
+                    remainingTime -= chrono.ElapsedMilliseconds;
 
-                    long elapsed = chrono.ElapsedMilliseconds;
-                    int sleepDuration = Math.Min(PageDisplayDuration, (int)(PageDisplayDuration - elapsed));
-                    if (sleepDuration < 100) sleepDuration = 100;
-
-                    Monitor.Wait(pauseLock, sleepDuration);
-
-                } while (pauseCounter > 0);
+                } while( (pauseCounter > 0) || (remainingTime>0) );
             }
         }
 
