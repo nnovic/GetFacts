@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\
+C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\
 GetFacts
 none
 false
 DEBUG;TRACE
-C:\Users\alexandre\Documents\GetFacts\GetFacts\App.xaml
+C:\Users\avincon\Source\Repos\GetFacts\GetFacts\App.xaml
 8-1709151309
 1459282078
 37-917359606
-19311099467
+1954763002
 DownloadGui.xaml;MainGui.xaml;ParseGui.xaml;Render\ArticleDisplay.xaml;Render\MediaDisplay.xaml;Render\PageStructure.xaml;Render\WelcomePage.xaml;TestGui.xaml;
 
 False
