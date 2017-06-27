@@ -21,7 +21,7 @@ namespace GetFacts.Render
     /// <summary>
     /// Logique d'interaction pour ArticleDisplay.xaml
     /// </summary>
-    public partial class ArticleDisplay : UserControl
+    public partial class ArticleDisplay : UserControl, ICanDock
     {
         private readonly bool enableAnimations;
         private readonly int orderOfAppearance;
@@ -74,11 +74,7 @@ namespace GetFacts.Render
             if( e.PropertyName=="Progress")
             {
                 int progress = iconTask.Progress;
-                Dispatcher.BeginInvoke((Action)(() => 
-                {
-                    progressContainer.Visibility = Visibility.Visible;
-                    progressValue.Text = string.Format("{0} %", progress);
-                }));
+                mediaDisplay.ShowProgress(progress);
             }
         }
 
@@ -91,21 +87,9 @@ namespace GetFacts.Render
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                try
-                {
-                    BitmapImage bmpI = new BitmapImage();
-                    bmpI.BeginInit();
-                    bmpI.UriSource = new Uri(iconTask.LocalFile, UriKind.RelativeOrAbsolute);
-                    bmpI.EndInit();
-                    articleIcon.Source = bmpI;
-                    progressContainer.Visibility = Visibility.Hidden;
-                }
-                // Since the action is executed asynchronously, the Dispatcher
-                // might execute the above code at a time when iconTask has
-                // already become invalid. Just ignore all errors.
-                catch { } 
-
-            } ), null);
+                mediaDisplay.ShowImage(iconTask.LocalFile, articleTitle.Text);
+            }), null);
+            
         }
 
         #endregion
@@ -151,7 +135,7 @@ namespace GetFacts.Render
             Grid.SetColumn(textContainer, 1);
 
             rotatingGrid.LayoutTransform = new RotateTransform(90);
-            articleIcon.LayoutTransform = new RotateTransform(-90);
+            mediaDisplay.LayoutTransform = new RotateTransform(-90);
             textContainer.LayoutTransform = new RotateTransform(180);
 
             articleTitle.MaxWidth = ActualWidth * textWidthRatio;
@@ -166,7 +150,7 @@ namespace GetFacts.Render
             Grid.SetColumn(textContainer, 1);
 
             rotatingGrid.LayoutTransform = Transform.Identity;
-            articleIcon.LayoutTransform = Transform.Identity;
+            mediaDisplay.LayoutTransform = Transform.Identity;
             textContainer.LayoutTransform = Transform.Identity;
 
             articleTitle.MaxWidth = ActualWidth * textWidthRatio;
@@ -181,7 +165,7 @@ namespace GetFacts.Render
             Grid.SetColumn(textContainer, 0);
 
             rotatingGrid.LayoutTransform = Transform.Identity;
-            articleIcon.LayoutTransform = Transform.Identity;
+            mediaDisplay.LayoutTransform = Transform.Identity;
             textContainer.LayoutTransform = Transform.Identity;
 
             articleTitle.MaxWidth = ActualWidth * textWidthRatio;
@@ -203,7 +187,7 @@ namespace GetFacts.Render
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             textContainer.RowDefinitions[1].Height = new GridLength(0);
-            progressContainer.Visibility = Visibility.Hidden;
+            
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -240,24 +224,34 @@ namespace GetFacts.Render
 
         #region events
 
-        public class MediaEventArgs:EventArgs
+        private void ArticleIcon_MouseEnter(object sender, MouseEventArgs e)
         {
-            public Uri Media
+            FrameworkElement current = this.Parent as FrameworkElement;
+            ICanDock target = null;
+
+            while(  current !=null )
             {
-                get; internal set;
+                target = current as ICanDock;
+                if (target != null) break;
+                current = current.Parent as FrameworkElement;
+            }
+
+            if(target!=null)
+            {
+                Undock(mediaDisplay);
+                target.Dock(mediaDisplay);
             }
         }
 
-        public event EventHandler<MediaEventArgs> MediaTriggered;
-
-        private void ArticleIcon_MouseEnter(object sender, MouseEventArgs e)
+        public void Undock(MediaDisplay md)
         {
-            /*if (iconTask.IsFinished)
-            {
-                Uri uri = new Uri(iconTask.LocalFile);
-                MediaEventArgs mea = new MediaEventArgs() { Media = uri };
-                MediaTriggered?.Invoke(this, mea);
-            }*/
+            imageContainer.Children.Remove(md);
+        }
+
+
+        public void Dock(MediaDisplay md)
+        {
+            imageContainer.Children.Add(md);
         }
 
         #endregion

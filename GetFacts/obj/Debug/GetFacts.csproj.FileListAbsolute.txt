@@ -78,3 +78,5 @@ C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\GetFacts.Properties.Re
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\GetFacts.csproj.GenerateResource.Cache
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\GetFacts.exe
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\GetFacts.pdb
+C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\Render\MediaDisplay.g.cs
+C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\Render\MediaDisplay.baml

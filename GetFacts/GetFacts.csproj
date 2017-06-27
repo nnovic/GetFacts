@@ -79,13 +79,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConfigFactory.cs" />
-    <Compile Include="Demos\Dvp.cs" />
     <Compile Include="Facts\Article.cs" />
     <Compile Include="Facts\Facts.cs" />
     <Compile Include="Facts\GetFactsHeader.cs" />
     <Compile Include="Facts\PageConfig.cs" />
     <Compile Include="JaroWinkler.cs" />
-    <Compile Include="Demos\LbcPage.cs" />
     <Compile Include="MainGui.xaml.cs">
       <DependentUpon>MainGui.xaml</DependentUpon>
     </Compile>
@@ -93,7 +91,11 @@
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Render\GridLengthAnimation.cs" />
+    <Compile Include="Render\ICanDock.cs" />
     <Compile Include="Render\IFreezable.cs" />
+    <Compile Include="Render\MediaDisplay.xaml.cs">
+      <DependentUpon>MediaDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Render\PageStructure.xaml.cs">
       <DependentUpon>PageStructure.xaml</DependentUpon>
     </Compile>
@@ -132,6 +134,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Render\ArticleDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Render\MediaDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

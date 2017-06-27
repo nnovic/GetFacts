@@ -50,10 +50,10 @@
                 </Border>
             </Grid>
         </Grid>
-        <!-- 
+
         <Grid x:Name="mediaGrid" Visibility="Hidden">
             <Rectangle  Opacity="0.75" Fill="Black"></Rectangle>
-            <Grid Margin="50" >
+            <Grid x:Name="mediaDock" Margin="50" >
                 <Grid.Effect>
                     <DropShadowEffect ShadowDepth="10" BlurRadius="10"/>
                 </Grid.Effect>
@@ -61,10 +61,9 @@
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <MediaElement x:Name="mediaPlayer" Grid.Row="0"></MediaElement>
                 <TextBlock x:Name="mediaTitle" Grid.Row="1" Foreground="White" Background="Black" HorizontalAlignment="Center">TITRE</TextBlock>
             </Grid>
-        </Grid> -->
+        </Grid>
     </Grid>
 
 </Page>

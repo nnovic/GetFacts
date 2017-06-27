@@ -19,7 +19,7 @@ namespace GetFacts.Render
     /// <summary>
     /// Logique d'interaction pour PagePage.xaml
     /// </summary>
-    public partial class PageStructure : Page, IFreezable
+    public partial class PageStructure : Page, IFreezable, ICanDock
     {
         DoubleAnimation pauseAnimation;
         
@@ -117,10 +117,7 @@ namespace GetFacts.Render
 
         private void UnHost()
         {
-            foreach(ArticleDisplay ad in hostedArticles)
-            {
-                ad.MediaTriggered -= Ad_MediaTriggered;
-            }
+            hostedArticles.Clear();
         }
 
         protected void Host(ArticleDisplay ad)
@@ -129,14 +126,29 @@ namespace GetFacts.Render
                 return;
 
             hostedArticles.Add(ad);
-            ad.MediaTriggered += Ad_MediaTriggered;
         }
 
-        private void Ad_MediaTriggered(object sender, ArticleDisplay.MediaEventArgs e)
+        public void Undock(MediaDisplay md)
+        {
+
+        }
+
+        public void Dock(MediaDisplay md)
         {
             OnFrozen();
-            //mediaGrid.Visibility = Visibility.Visible;
-            //mediaPlayer.Source = e.Media;
+            mediaDock.Children.Add(md);
+
+            if( string.IsNullOrEmpty(md.Caption) )
+            {
+                mediaTitle.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                mediaTitle.Visibility = Visibility.Visible;
+                mediaTitle.Text = md.Caption;
+            }
+
+            mediaGrid.Visibility = Visibility.Visible;
         }
 
         #endregion

@@ -36,20 +36,12 @@ namespace GetFacts.Facts
 
         private void LoadConfiguration()
         {
-            List<PageConfig> config = ConfigFactory.GetInstance().CreateConfig("DefaultConfig.json");
-            Page pageQuiFoire = new Page(config[0]);
-            /*foreach(PageConfig pc in config)
+            List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig("DefaultConfig.json");
+            foreach(PageConfig config in listConfigs)
             {
-                Page p = new Page(pc);
+                Page p = new Page(config);
                 AddPage(p);
-            }*/
-            Page pageQuiMarche = new Demos.LbcPage("https://www.leboncoin.fr/annonces/offres/rhone_alpes/");
-
-            PageTemplate.Compare(pageQuiFoire.Template, pageQuiMarche.Template);
-            //AddPage(pageQuiMarche);
-            /*Page p2 = new Demos.Dvp();
-            AddPage(p2);*/
-            AddPage(pageQuiFoire);
+            }
         }
 
         private readonly Hashtable downloadTasks = new Hashtable();

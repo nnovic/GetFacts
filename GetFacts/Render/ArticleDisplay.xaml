@@ -18,16 +18,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid x:Name="imageContainer" MouseEnter="ArticleIcon_MouseEnter">
-                    <Image Margin="5" x:Name="articleIcon" Source="pack://siteoforigin:,,,/Render/DefaultIcon.jpg"  />
-                    <MediaElement Margin="5" x:Name="articleMedia" Visibility="Hidden" />
-                    <StackPanel x:Name="progressContainer" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="5,5,5,5">
-                        <Border  Background="White" Opacity="0.5" CornerRadius="5">
-                            <Border.Effect>
-                                <DropShadowEffect/>
-                            </Border.Effect>
-                            <TextBlock Margin="3" x:Name="progressValue" >100%</TextBlock>
-                        </Border>
-                    </StackPanel>
+                    <local:MediaDisplay x:Name="mediaDisplay" />
                 </Grid>
                 <Grid x:Name="textContainer" Grid.Column="1" MouseLeftButtonUp="TextContainer_MouseLeftButtonUp">
                     <Grid.RowDefinitions>
