@@ -128,28 +128,7 @@ namespace GetFacts.Render
             hostedArticles.Add(ad);
         }
 
-        public void Undock(MediaDisplay md)
-        {
 
-        }
-
-        public void Dock(MediaDisplay md)
-        {
-            OnFrozen();
-            mediaDock.Children.Add(md);
-
-            if( string.IsNullOrEmpty(md.Caption) )
-            {
-                mediaTitle.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                mediaTitle.Visibility = Visibility.Visible;
-                mediaTitle.Text = md.Caption;
-            }
-
-            mediaGrid.Visibility = Visibility.Visible;
-        }
 
         #endregion
 
@@ -182,6 +161,68 @@ namespace GetFacts.Render
         private void FactsBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             OnUnfrozen();
+        }
+
+        #endregion
+
+        #region media docking
+
+        decimal mouseMoveMeter = 0;
+        MediaDisplay dockedMedia = null;
+
+        public void Undock(MediaDisplay md)
+        {
+            if(dockedMedia!=md)
+            {
+                throw new Exception();
+            }
+
+            dockedMedia = null;
+            mediaGrid.MouseMove -= MediaGrid_MouseMove;
+            mediaDock.Children.Remove(md);            
+            mouseMoveMeter = 0;
+            mediaGrid.Visibility = Visibility.Hidden;
+            OnUnfrozen();
+            Console.WriteLine("Media detached from Page");
+        }
+
+        public void Dock(MediaDisplay md)
+        {
+            if( dockedMedia!=null)
+            {
+                throw new Exception();
+            }
+
+            OnFrozen();
+            dockedMedia = md;
+            mediaDock.Children.Add(md);
+
+            if (string.IsNullOrEmpty(md.Caption))
+            {
+                mediaTitle.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                mediaTitle.Visibility = Visibility.Visible;
+                mediaTitle.Text = md.Caption;
+            }
+
+            mouseMoveMeter = 0;
+            mediaGrid.MouseMove += MediaGrid_MouseMove;
+            mediaGrid.Visibility = Visibility.Visible;
+            Console.WriteLine("Media attached to Page");
+        }
+
+        private void MediaGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            mouseMoveMeter++;
+            if(mouseMoveMeter>50m)
+            {
+                MediaDisplay md = dockedMedia;
+                ICanDock target = md.Tag as ICanDock;
+                Undock(md);
+                target.Dock(md);
+            }
         }
 
         #endregion

@@ -17,7 +17,7 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Grid x:Name="imageContainer" MouseEnter="ArticleIcon_MouseEnter">
+                <Grid x:Name="imageContainer">
                     <local:MediaDisplay x:Name="mediaDisplay" />
                 </Grid>
                 <Grid x:Name="textContainer" Grid.Column="1" MouseLeftButtonUp="TextContainer_MouseLeftButtonUp">

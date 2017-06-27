@@ -44,16 +44,16 @@ namespace GetFacts
                 chrono.Stop();
 
                 remainingTime -= chrono.ElapsedMilliseconds;
-                //if (remainingTime < 100) remainingTime = 100;
-
+                Console.WriteLine("PAUSED");
                 do
                 {                    
-                    chrono.Restart();
+                    chrono.Restart();                    
                     Monitor.Wait(pauseLock, remainingTime>100?(int)remainingTime:100);
                     chrono.Stop();
                     remainingTime -= chrono.ElapsedMilliseconds;
 
                 } while( (pauseCounter > 0) || (remainingTime>0) );
+                Console.WriteLine("RESUMED");
             }
         }
 
@@ -138,13 +138,11 @@ namespace GetFacts
 
         private void Freezable_Unfrozen(object sender, FreezeEventArgs e)
         {
-            Console.WriteLine("RESUME");
             Resume();
         }
 
         private void Freezable_Frozen(object sender, FreezeEventArgs e)
-        {
-            Console.WriteLine("PAUSE");
+        {            
             Pause();
         }
 

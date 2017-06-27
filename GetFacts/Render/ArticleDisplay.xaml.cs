@@ -25,18 +25,20 @@ namespace GetFacts.Render
     {
         private readonly bool enableAnimations;
         private readonly int orderOfAppearance;
+        private readonly bool enableZooming;
         private string browserUrl = null;
         const double textWidthRatio = 0.5;
 
-        public ArticleDisplay(): this(false, 0, false)
+        public ArticleDisplay(): this(false, 0, false, false)
         {
 
         }
 
-        public ArticleDisplay(bool enableAnimations, int orderOfAppearance, bool enableHighlight)
+        public ArticleDisplay(bool enableAnimations, int orderOfAppearance, bool enableHighlight, bool enableZooming)
         {
             this.enableAnimations = enableAnimations;
             this.orderOfAppearance = orderOfAppearance;
+            this.enableZooming = enableZooming;
 
             InitializeComponent();
 
@@ -187,7 +189,11 @@ namespace GetFacts.Render
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             textContainer.RowDefinitions[1].Height = new GridLength(0);
-            
+
+            if (enableZooming)
+            {
+                imageContainer.MouseEnter += ArticleIcon_MouseEnter;
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -240,18 +246,24 @@ namespace GetFacts.Render
             {
                 Undock(mediaDisplay);
                 target.Dock(mediaDisplay);
+                OnMouseLeave(null);
             }
         }
 
         public void Undock(MediaDisplay md)
         {
+            imageContainer.MouseEnter -= ArticleIcon_MouseEnter;
             imageContainer.Children.Remove(md);
+            md.Tag = this;
+            Console.WriteLine("Media detached from ArticleDisplay");
         }
 
 
         public void Dock(MediaDisplay md)
         {
             imageContainer.Children.Add(md);
+            imageContainer.MouseEnter += ArticleIcon_MouseEnter;
+            Console.WriteLine("Media attached to ArticleDisplay");
         }
 
         #endregion

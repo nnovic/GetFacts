@@ -33,13 +33,13 @@ namespace GetFacts.Render
                 Height = new System.Windows.GridLength(2, System.Windows.GridUnitType.Star)
             });
 
-            _pageDisplay = new ArticleDisplay(false, 0, false);
+            _pageDisplay = new ArticleDisplay(false, 0, false, false);
             Host(_pageDisplay);
             _pageDisplay.Update(p);
             articlesGrid.Children.Add(_pageDisplay);
             Grid.SetRow(_pageDisplay, 0);
 
-            _sectionDisplay = new ArticleDisplay(false, 0, false);
+            _sectionDisplay = new ArticleDisplay(false, 0, false, false);
             Host(_sectionDisplay);
             _sectionDisplay.Update(s);
             articlesGrid.Children.Add(_sectionDisplay);

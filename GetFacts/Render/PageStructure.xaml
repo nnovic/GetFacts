@@ -51,17 +51,21 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="mediaGrid" Visibility="Hidden">
-            <Rectangle  Opacity="0.75" Fill="Black"></Rectangle>
+        <Grid x:Name="mediaGrid" Visibility="Hidden" >
+            <Rectangle  Opacity="0.80" Fill="Black"></Rectangle>
             <Grid x:Name="mediaDock" Margin="50" >
                 <Grid.Effect>
                     <DropShadowEffect ShadowDepth="10" BlurRadius="10"/>
                 </Grid.Effect>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="mediaTitle" Grid.Row="1" Foreground="White" Background="Black" HorizontalAlignment="Center">TITRE</TextBlock>
+                <Viewbox Grid.Row="1" Margin="10">
+                    <Border Background="Black">
+                        <TextBlock x:Name="mediaTitle" Foreground="White" />
+                    </Border>
+                </Viewbox>
             </Grid>
         </Grid>
     </Grid>
