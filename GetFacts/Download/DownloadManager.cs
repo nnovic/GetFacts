@@ -13,13 +13,21 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Download
 {
-    class DownloadManager
+    public class DownloadManager
     {
         #region singleton 
 
-        private static DownloadManager uniqueInstance = null;
+        protected static DownloadManager uniqueInstance = null;
         private static readonly object _lock_ = new object();
 
+        /// <summary>
+        /// Retourne l'instance unique du DownloadManager.
+        /// L'objet sera instancié s'il n'existe pas encore, 
+        /// la configuration sera lue depuis le fichier-listing
+        /// des téléchargements et le thread de téléchargement sera
+        /// démarré.
+        /// </summary>
+        /// <returns></returns>
         public static DownloadManager GetInstance()
         {
             lock(_lock_)
@@ -27,6 +35,7 @@ namespace GetFacts.Download
                 if (uniqueInstance == null)
                 {
                     uniqueInstance = new DownloadManager();
+                    uniqueInstance.Initialize();
                     Console.WriteLine("DownloadManager: instance created");
                 }
                 return uniqueInstance;
@@ -38,12 +47,15 @@ namespace GetFacts.Download
         private Regex downloadListPattern = new Regex("\"([^\"]+)\"\\s+\\{([^\\}]+)\\}");
         private ObservableCollection<DownloadTask> downloads = new ObservableCollection<DownloadTask>();
 
-        private DownloadManager()
+        protected DownloadManager()
+        {
+        }
+
+        private void Initialize()
         {
             LoadTasksFromFile();
             StartDownloadQueue();
         }
-
 
         public ISet<string> GetAllUrls()
         {
@@ -114,6 +126,17 @@ namespace GetFacts.Download
             }
         }
 
+        /// <summary>
+        /// Si 'true' (par défaut), le DownloadManager va lire le contenu
+        /// du fichier "DownloadsFile" pour connaître la liste
+        /// des DownloadTask en cours, et va sauvegarder cette liste
+        /// à chaque ajout/suppression d'une DownloadTask.        
+        /// </summary>
+        /// <remarks>/// Doit être overridé si on doit avoir 'false'.</remarks>
+        protected virtual bool DownloadsFileSupported
+        {
+            get { return true; }
+        }
 
         private string DownloadsFile
         {
@@ -128,33 +151,42 @@ namespace GetFacts.Download
 
         private void SaveTasksToFile()
         {
-            string path = DownloadsFile;
-            List<string> entries = new List<string>();
-            foreach (DownloadTask task in downloads)
+            if (DownloadsFileSupported)
             {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("\"{0}\"", task.Uri.AbsoluteUri).Append(" ");
-                sb.Append("{").Append(task.Guid).Append("}");
-                entries.Add(sb.ToString());
+                string path = DownloadsFile;
+                List<string> entries = new List<string>();
+                foreach (DownloadTask task in downloads)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("\"{0}\"", task.Uri.AbsoluteUri).Append(" ");
+                    sb.Append("{").Append(task.Guid).Append("}");
+                    entries.Add(sb.ToString());
+                }
+                File.WriteAllLines(path, entries.ToArray());
             }
-            File.WriteAllLines(path, entries.ToArray());
         }
 
         /// <summary>
-        /// 
+        /// Lit le contenu de DownloadsFile, et l'utilise pour
+        /// créer des DownloadTasks qui sont ajoutés à la liste
+        /// du présent DownloadManager.
+        /// Cette méthode ne fait rien si DownloadsFileSupported vaut 'false'.
         /// </summary>
-        /// <remarks>method called from the constructor, which is synchronized with the "_lock_" object.</remarks>
+        /// <remarks>method indirectly called from GetInstance() , which is synchronized with the "_lock_" object.</remarks>
         private void LoadTasksFromFile()
         {
             try
             {
-                string path = DownloadsFile;
-                string[] entries = File.ReadAllLines(path);
-                foreach (string entry in entries)
+                if (DownloadsFileSupported)
                 {
-                    DownloadTask dt = CreateTaskFromString(entry);
-                    downloads.Add(dt);
-                    Console.WriteLine("DownloadManager: task {0} added to list", dt.Uri.AbsoluteUri);
+                    string path = DownloadsFile;
+                    string[] entries = File.ReadAllLines(path);
+                    foreach (string entry in entries)
+                    {
+                        DownloadTask dt = CreateTaskFromString(entry);
+                        downloads.Add(dt);
+                        Console.WriteLine("DownloadManager: task {0} added to list", dt.Uri.AbsoluteUri);
+                    }
                 }
             }
             catch (FileNotFoundException)

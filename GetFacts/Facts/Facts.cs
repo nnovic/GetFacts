@@ -21,7 +21,7 @@ namespace GetFacts.Facts
             {
                 if(uniqueInstance==null)
                 {
-                    uniqueInstance = new Facts();
+                    uniqueInstance = new Facts("DefaultConfig.json");
                 }
                 return uniqueInstance;
             }
@@ -29,14 +29,14 @@ namespace GetFacts.Facts
 
         //---------------------------------------------------------------------
 
-        private Facts()
+        protected Facts(string path)
         {
-            LoadConfiguration();
+            LoadConfiguration(path);
         }
 
-        private void LoadConfiguration()
+        private void LoadConfiguration(string path)
         {
-            List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig("DefaultConfig.json");
+            List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig(path);
             foreach(PageConfig config in listConfigs)
             {
                 Page p = new Page(config);
@@ -83,11 +83,30 @@ namespace GetFacts.Facts
         
         private Page CurrentPage()
         {
-            if ((pageIndex >= 0) && (pageIndex < pages.Count))
+            if( (pageIndex>=0) && (pageIndex < pages.Count) )
             {
                 return pages[pageIndex];
             }
             return null;
+        }
+
+        /// <summary>
+        /// Incrémente l'index de page et retourne l'objet Page 
+        /// correspondant. Si la dernière page a été atteinte,
+        /// NextPage() réinitialise l'index et retourne la première page.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>Réinitialise l'index de section et l'index d'article</remarks>
+        private Page NextPage()
+        {
+            pageIndex++;
+            sectionIndex = -1;
+            articleIndex = -1;
+            if(pageIndex>=pages.Count)
+            {
+                pageIndex = 0;
+            }
+            return pages[pageIndex];
         }
 
         private Section CurrentSection()
@@ -95,106 +114,135 @@ namespace GetFacts.Facts
             Page p = CurrentPage();
             if (p == null) return null;
 
-            if ((sectionIndex >= 0) && (sectionIndex < p.SectionsCount))
+            if( (sectionIndex>=0) && (sectionIndex < p.SectionsCount) )
             {
                 return p.GetSection(sectionIndex);
             }            
             return null;
         }
-        
-        private Article More()
+
+        /// <summary>
+        /// Incrémente l'index de section et retourne
+        /// la section correspondante dans la Page
+        /// fournie en argument. Si le nouvel index
+        /// est en-dehors des limites, retourne null.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        /// <remarks>Réinitialise l'index d'article</remarks>
+        private Section NextSection(Page p)
         {
-            Section s = CurrentSection();
-            if (s == null) return null;
-
-
-            for (int tryArticle = 0; tryArticle <= s.ArticlesCount; tryArticle++)
-            {
-                Article a = More(s);
-                if (a != null) return a;
-            }
-
-            return null;
-        }
-
-        private Article More(Section s)
-        {
-            if ((articleIndex + 1) >= s.ArticlesCount)
+            if (p == null) throw new ArgumentNullException();
+            sectionIndex++;
+            articleIndex = -1;
+            if(sectionIndex>=p.SectionsCount)
             {
                 return null;
             }
-
-            articleIndex++;
-            Article a = s.GetArticle(articleIndex);
-            return a;
+            return p.GetSection(sectionIndex);
+        }
+        
+        public Article More()
+        {
+            Section s = CurrentSection();
+            return More(s);
         }
 
         /// <summary>
-        /// Trouve et retourne le prochain article à afficher, pris dans la liste
-        /// actuelle de tous les articles disponibles en mémoire, et en fonction 
-        /// de la position actuelle du curseur de lecture.
-        /// La méthode peut également retourner "null" s'il n'y a pas d'article 
-        /// à afficher. Cela peut se produire pour l'une des raisons suivantes:
-        /// - Si "sectionChanged" vaut "true", il n'y avait plus d'article à lire 
-        /// dans la section actuelle. La méthode a déjà déplacé le curseur de lecture
-        /// dans la prochaine section, et il est possible de refaire immédiatement un
-        /// appel à Next() pour obtenir le premier article de cette nouvelle section.
-        /// - Si "pageChanged" vaut "true", il n'y avait plus d'article à lire dans
-        /// la page actuelle (on avait donc déjà atteint le dernier article de la dernière
-        /// section). La méthode a déjà déplacé le curseur de lecture dans la prochaine
-        /// page, et il est possible de refaire immédiatement appel à Next() pour obtenir
-        /// le premier article disponible dans la nouvelle page.
-        /// - Sinon, il n'y a absolument aucun article à afficher. Il faut peut-être atteindre
-        /// que les données aient été téléchargées par le gestionnaire de téléchargement...
+        /// Increment the article index and return the
+        /// corresponding article in the provided Section.
+        /// The method will skip articles that do not provided any
+        /// displayable information.
+        /// </summary>
+        /// <param name="s">the Section from which articles are obtained</param>
+        /// <returns>The next article in the provided Section. returns null if a valid Article cannot be obtained from the Section, whatever the reason is.</returns>
+        /// <exception cref="ArgumentNullException">provided Section is null</exception>
+        private Article More(Section s)
+        {
+            if (s == null) throw new ArgumentNullException();
+
+            Article output = null;
+
+            do
+            {
+                if ((articleIndex + 1) >= s.ArticlesCount)
+                {
+                    return null;
+                }
+
+                articleIndex++;
+                output = s.GetArticle((int)articleIndex);
+
+            } while (output.HasContent == false);
+
+
+            return output;
+        }
+
+        /// <summary>
+        /// Fait appel à More() pour obtenir l'article suivant
+        /// dans la section en cours de la page courante.
+        /// En cas d'échec,
+        /// 
         /// </summary>
         /// <param name="pageChanged"></param>
         /// <param name="sectionChanged"></param>
-        /// <returns>Retourne le prochain article à afficher. Peut également retourner 'null'
-        /// s'il n'y a pas d'autre article à afficher.
-        /// </returns>
+        /// <returns></returns>
         private Article Next(out bool pageChanged, out bool sectionChanged)
         {
+            Page startingPage, currentPage;
+            Section startingSection, currentSection;
+            Article output;
+
             pageChanged = false;
             sectionChanged = false;
 
-            Page p = CurrentPage();
-
-            Section s = CurrentSection();
-
-            for (int tryPage=0; tryPage<=pages.Count; tryPage++)
+            // Essaye d'obtenir l'article suivant
+            // de la section en cours dans la page courante,
+            // et le retourne en cas de succès.
+            
+            startingPage = currentPage = CurrentPage();
+            if (currentPage == null)
             {
-                if (p != null)
-                {
-                    for (int trySection = 0; trySection <= p.SectionsCount; trySection++)
-                    {
-                        if (s != null)
-                        {
-                            for (int tryArticle = 0; tryArticle <= s.ArticlesCount; tryArticle++)
-                            {
-                                Article a = More(s);
-                                if (a != null) return a;
-                            }
-                        }
-                        articleIndex = -1;
-                        sectionIndex++;
-                        if (sectionIndex >= p.SectionsCount)
-                        {
-                            sectionIndex = 0;
-                        }
-                        s = p.GetSection(sectionIndex);
-                        sectionChanged = true;
-                    }
-                }
-                sectionIndex = -1;
-                pageIndex++;
-                if(pageIndex>=pages.Count)
-                {
-                    pageIndex = 0;
-                }
-                p = pages[pageIndex];
-                pageChanged = true;
+                startingSection = currentSection = null;
+                output = null;
+            }
+            else
+            {
+                startingSection = currentSection = CurrentSection();
+                output = More(currentSection);
+
+                if (output != null)
+                    return output;
             }
 
+            for (int tryPage = 0; tryPage <= pages.Count; tryPage++)
+            {
+                // Trouver la prochaine section de la page
+                // courante qui contiendrait au moins un article
+                // affichable.
+                if (currentPage != null)
+                {
+                    // section suivante
+                    currentSection = NextSection(currentPage);
+                    if (currentSection != null)
+                    {
+
+                        // premier article non-vide de la section
+                        output = More(currentSection);
+                        if (output != null)
+                        {
+                            sectionChanged = (currentSection != startingSection);
+                            pageChanged = (currentPage != startingPage);
+                            return output;
+                        }
+
+                    }
+                }
+                // Trouver la prochain page
+                currentPage = NextPage();
+            }
+            
             return null;
         }
 

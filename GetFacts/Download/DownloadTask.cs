@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Download
 {
-    class DownloadTask: INotifyPropertyChanged
+    public class DownloadTask: INotifyPropertyChanged
     {
         public const string TmpFileExtension = ".part";
         public const string BackupExtension = ".bak";
@@ -23,7 +23,7 @@ namespace GetFacts.Download
         private readonly Uri uri;
         private readonly Guid id;
 
-        internal DownloadTask(Uri uri, Guid id)
+        public DownloadTask(Uri uri, Guid id)
         {
             this.uri = uri;
             this.id = id;

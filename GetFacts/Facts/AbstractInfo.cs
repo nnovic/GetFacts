@@ -25,11 +25,29 @@ namespace GetFacts.Facts
 
         #region Identifier
 
-        string internalIdentifier;
+        string internalIdentifier = null;
 
+        /// <summary>
+        /// Une chaîne de caractère qui permet de différencier
+        /// à coup sûr cette instance d'AbstractInfo de n'importe
+        /// quelle autre. Si Identifier vaut null, il faudra utiliser
+        /// une autre stratégie, comme par exemple se baser sur BrowserUrl
+        /// ou la ressemblance des champs Title et Text.
+        /// </summary>
+        /// <remarks>Une fois initialisé à une valeur non nulle, il est interdit de modifier ce champ
+        /// à nouveau. Sinon, une Exception sera lancée.</remarks>
         internal string Identifier
         {
-            get { return internalIdentifier; }
+            get
+            {
+                return internalIdentifier;
+            }
+            set
+            {
+                if (internalIdentifier != null)
+                    throw new Exception("Identifier has already been set and cannot be changed");
+                internalIdentifier = value;
+            }
         }
 
         #endregion
@@ -280,6 +298,11 @@ namespace GetFacts.Facts
 
         protected void UpdateInfo(XPathNavigator nav, AbstractTemplate template)
         {
+            if(template.IdentifierTemplate != null )
+            {
+                Identifier = template.IdentifierTemplate.Execute(nav);
+            }
+
             if (template.TitleTemplate != null)
             {
                 Title = template.TitleTemplate.Execute(nav);
@@ -366,5 +389,21 @@ namespace GetFacts.Facts
         }
         */
         #endregion
+
+        /// <summary>
+        /// Returns true if this object has any non-empty string among
+        /// the following attributes: Title, Text.
+        /// Returns false if all theses attributes are null or empty strings, indicating
+        /// that this object holds no valuable information.
+        /// </summary>
+        public virtual bool HasContent
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Title) == false) return true;
+                if (string.IsNullOrEmpty(Text) == false) return true;
+                return false;
+            }
+        }
     }
 }

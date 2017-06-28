@@ -8,6 +8,11 @@ namespace GetFacts.Parse
 {
     public class AbstractTemplate
     {
+        public StringTemplate IdentifierTemplate
+        {
+            get; set;
+        }
+
         public StringTemplate TitleTemplate
         {
             get; set;
@@ -33,9 +38,11 @@ namespace GetFacts.Parse
             get; set;
         }
 
-
         protected virtual bool CompareTo(AbstractTemplate at)
         {
+            if (StringTemplate.CompareTo(IdentifierTemplate, at.IdentifierTemplate) == false)
+                return false;
+
             if (StringTemplate.CompareTo(TitleTemplate,at.TitleTemplate) == false)
                 return false;
 
@@ -50,7 +57,6 @@ namespace GetFacts.Parse
 
             if (StringTemplate.CompareTo(BrowserUrlTemplate,at.BrowserUrlTemplate) == false)
                 return false;
-
 
             return true;
         }
