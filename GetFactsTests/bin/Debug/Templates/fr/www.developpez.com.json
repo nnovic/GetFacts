@@ -1,0 +1,23 @@
+﻿{
+	"PageName" : "Developpez.com",
+	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"TextTemplate" : { "XPath" : "/html/head/meta[@name=\"description\"]/@content" },
+	"IconUrlTemplate" : { "XPath":"/html/head/meta[@property=\"og:image\"]/@content" },	
+	"Sections" :
+	[
+		{
+			"SectionName" : "A la une",
+            "XPathFilter" : ".//div[@class=\"alaune\"]",
+			"Articles" : 
+			[
+				{
+					"XPathFilter" : ".//div[@class=\"alaune2\"]",
+					"TitleTemplate" :  { "XPath" : ".//*[@class=\"alauneTitle\"]" },
+					"TextTemplate" : { "XPath" : ".//*[@class=\"alauneContent\"]" },
+					"IconUrlTemplate" : { "XPath" : "./img/@src" },
+					"BrowserUrlTemplate" : { "XPath" : ".//a[@class=\"alauneSuite\"]/@href" }
+				}
+			]
+		}
+	]
+}

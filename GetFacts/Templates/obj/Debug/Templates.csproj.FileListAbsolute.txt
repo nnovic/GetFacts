@@ -15,3 +15,4 @@ C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.dl
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.pdb
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\bin\Debug\Templates\fr\www.slate.fr.json
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\Templates\obj\Debug\Templates.csprojResolveAssemblyReference.cache
+C:\Users\alexandre\Documents\GetFacts\GetFacts\Templates\bin\Debug\Templates\fr\www.slate.fr.json

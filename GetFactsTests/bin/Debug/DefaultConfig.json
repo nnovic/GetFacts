@@ -1,0 +1,12 @@
+﻿[	
+	{
+		"Name":"slate",
+		"Url":"http://www.slate.fr/",
+		"Template":"fr\\www.slate.fr.json"
+	},
+	{
+		"Name":"leboncoin",
+		"Url":"https://www.leboncoin.fr/annonces/offres/rhone_alpes/",
+		"Template":"fr\\www.leboncoin.fr.json"
+	}
+]

@@ -83,3 +83,4 @@ C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\Render\MediaDisplay.bam
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\bin\Debug\Templates\fr\www.slate.fr.json
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\Render\MediaDisplay.g.cs
 C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\Render\MediaDisplay.baml
+C:\Users\alexandre\Documents\GetFacts\GetFacts\bin\Debug\Templates\fr\www.slate.fr.json

@@ -1,0 +1,21 @@
+﻿{
+	"PageName" : "Site1",
+	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"TextTemplate" : { "XPath":"/html/body/h1"},
+	"Sections" :
+	[
+		{
+			"SectionName" : "Contenu",
+            "XPathFilter" : "//div[@id=\"articles\"]",
+			"Articles" : 
+			[
+				{
+					"XPathFilter" : ".//div[@class=\"article\"]",
+					"IdentifierTemplate" : { "XPath" : "./@id" },
+					"TitleTemplate" :  { "XPath" : ".//h2" },
+					"TextTemplate" : { "XPath" : ".//p" }					
+				}
+			]
+		}
+	]
+}
