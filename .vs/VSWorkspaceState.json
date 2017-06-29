@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\GetFacts"
+    "\\GetFacts",
+    "\\GetFactsTests\\Facts",
+    "\\GetFacts\\Templates"
   ],
   "SelectedNode": "\\GetFacts\\GetFacts.sln",
   "PreviewInSolutionExplorer": false

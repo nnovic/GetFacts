@@ -89,7 +89,13 @@ namespace GetFacts.Render
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                mediaDisplay.ShowImage(iconTask.LocalFile);
+                try
+                {
+                    mediaDisplay.ShowImage(iconTask.LocalFile);
+                }
+                catch
+                {
+                }
             }), null);
             
         }

@@ -1,27 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GetFacts.Facts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GetFacts.Download;
 using System.IO;
+using GetFactsTests.Facts;
+using GetFactsTests.Download;
 
 namespace GetFacts.Facts.Tests
 {
     [TestClass()]
-    public class FactsTests
+    public class RotationTests
     {
-        private class TestableFacts:Facts
-        {
-            public TestableFacts():base("RotationTestConfig.json")
-            {
-
-            }
-        }
-
-        private class TestableDownloadManager: DownloadManager
+        /*private class TestableDownloadManager: DownloadManager
         {
             public TestableDownloadManager():base()
             {
@@ -32,7 +21,7 @@ namespace GetFacts.Facts.Tests
             {
                 get { return false; }
             }
-        }
+        }*/
 
         private class TestableDownloadTask:DownloadTask
         {
@@ -47,15 +36,18 @@ namespace GetFacts.Facts.Tests
 
 
         /// <summary>
-        /// Test of the Facts#More() method.
+        /// Test de la méthode Facts#More() dans un
+        /// scénario sans piège particulier.
         /// </summary>
         [TestMethod()]
-        public void MoreTest()
+        public void More_testSimple()
         {
-            Facts facts = new TestableFacts();
             DownloadManager dm = new TestableDownloadManager();
-            dm.Queue( new TestableDownloadTask("site1.html", "00000000-0000-0000-0000-000000000001") );
-            Assert.Fail();
+            dm.Queue(new TestableDownloadTask("http://www.site1.com/index.html", "00000000-0000-0000-0000-000000000001"));
+            dm.Queue(new TestableDownloadTask("http://www.site2.com/index.html", "00000000-0000-0000-0000-000000000002"));
+            Facts facts = new TestableFacts("RotationTestConfig.json");
+            facts.Initialize();
+            //Assert.Fail();
         }
     }
 }

@@ -36,6 +36,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Templates\fr\sokrostream.cc.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\fr\www.developpez.com.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

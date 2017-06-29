@@ -56,7 +56,10 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Facts\FactsTests.cs" />
+    <Compile Include="Download\TestableDownloadManager.cs" />
+    <Compile Include="Facts\RotationTests.cs" />
+    <Compile Include="Facts\SelfTest.cs" />
+    <Compile Include="Facts\TestableFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +67,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Templates\test\www.site2.com.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\test\www.site1.com.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -76,7 +82,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Cache\00000000-0000-0000-0000-000000000001.html" />
+    <Content Include="Cache\00000000-0000-0000-0000-000000000001.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Cache\00000000-0000-0000-0000-000000000002.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

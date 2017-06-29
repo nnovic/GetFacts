@@ -201,7 +201,6 @@ namespace GetFacts.Download
                 string fileName = id.ToString();
                 string extension = Path.GetExtension(uri.AbsoluteUri);
 
-                //string path = Path.ChangeExtension( Path.Combine(dirName, fileName), extension);
                 string path = Path.Combine(dirName, fileName);
                 if (string.IsNullOrEmpty(extension) == false)
                     path = Path.ChangeExtension(path, extension);

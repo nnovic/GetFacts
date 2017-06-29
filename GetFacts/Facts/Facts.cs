@@ -12,7 +12,7 @@ namespace GetFacts.Facts
 {
     public class Facts
     {
-        private static Facts uniqueInstance = null;
+        protected static Facts uniqueInstance = null;
         private readonly static object _lock_ = new object();
 
         public static Facts GetInstance()
@@ -322,7 +322,7 @@ namespace GetFacts.Facts
         }
 
 
-        private readonly List<Page> pages = new List<Page>();
+        protected readonly List<Page> pages = new List<Page>();
 
         void AddPage(Page p)
         {

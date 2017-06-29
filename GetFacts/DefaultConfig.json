@@ -1,5 +1,10 @@
 ﻿[
 	{
+		"Name":"sokrostream",
+		"Url":"http://sokrostream.cc/",
+		"Template":"fr\\sokrostream.cc.json"
+	},
+	{
 		"Name":"leboncoin",
 		"Url":"https://www.leboncoin.fr/annonces/offres/rhone_alpes/",
 		"Template":"fr\\www.leboncoin.fr.json"
