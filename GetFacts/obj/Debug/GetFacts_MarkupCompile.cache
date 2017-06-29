@@ -1,20 +1,20 @@
 ﻿GetFacts
 
 
-winexe
+library
 C#
 .cs
-C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\
+C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\
 GetFacts
 none
 false
 DEBUG;TRACE
-C:\Users\alexandre\Documents\GetFacts\GetFacts\App.xaml
-8-1709151309
+
+7-34599916
 1459282078
-37-917359606
-19311099467
-DownloadGui.xaml;MainGui.xaml;ParseGui.xaml;Render\ArticleDisplay.xaml;Render\MediaDisplay.xaml;Render\PageStructure.xaml;Render\WelcomePage.xaml;TestGui.xaml;
+351486355230
+18105399054
+DownloadGui.xaml;ParseGui.xaml;Render\ArticleDisplay.xaml;Render\MediaDisplay.xaml;Render\PageStructure.xaml;Render\WelcomePage.xaml;TestGui.xaml;
 
 False
 
