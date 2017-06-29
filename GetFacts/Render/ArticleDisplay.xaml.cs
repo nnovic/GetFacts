@@ -55,7 +55,7 @@ namespace GetFacts.Render
             articleText.Text = info.Text;
             mediaDisplay.Caption = info.Title;
 
-            browserUrl = info.BrowserUrl;
+            browserUrl = info.BrowserUri?.AbsoluteUri;
 
             if (string.IsNullOrEmpty(info.IconUrl) == false)
             {

@@ -187,11 +187,22 @@ namespace GetFacts.Facts
 
         #region BaseUri
 
-       // private Uri baseUri = null;
-
         internal Uri BaseUri
         {
             get; set;
+        }
+
+        Uri MakeUri(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return null;
+
+            Uri output = new Uri(url, UriKind.RelativeOrAbsolute);
+            if (output.IsAbsoluteUri == true)
+                return output;
+
+            output = new Uri(BaseUri, url);
+            return output;
         }
 
         #endregion
@@ -220,11 +231,7 @@ namespace GetFacts.Facts
         {
             get
             {
-                if (BaseUri == null)
-                    return new Uri(IconUrl, UriKind.Absolute);
-                else
-                    return new Uri(BaseUri, IconUrl);
-
+                return MakeUri(IconUrl);
             }
         }
 
@@ -254,11 +261,7 @@ namespace GetFacts.Facts
         {
             get
             {
-                if (BaseUri == null)
-                    return new Uri(MediaUrl, UriKind.Absolute);
-                else
-                    return new Uri(BaseUri, MediaUrl);
-
+                return MakeUri(MediaUrl);
             }
         }
 
@@ -285,12 +288,20 @@ namespace GetFacts.Facts
             }
         }
 
+        public Uri BrowserUri
+        {
+            get
+            {
+                return MakeUri(BrowserUrl);
+            }
+        }
         #endregion
 
         protected void UpdateInfo(AbstractInfo source)
         {
             Title = source.Title;
             Text = source.Text;
+            BaseUri = source.BaseUri;
             IconUrl = source.IconUrl;
             MediaUrl = source.MediaUrl;
             BrowserUrl = source.BrowserUrl;
@@ -348,46 +359,7 @@ namespace GetFacts.Facts
                 BrowserUrl = String.Empty;
             }
         }
-
-        #region "comparaison"
-        /*
-        protected virtual bool CompareTo(AbstractInfo info)
-        {
-            if (string.Compare(Identifier, info.Identifier) != 0)
-                return false;
-
-            if (string.Compare(BaseUri.AbsoluteUri, info.BaseUri.AbsoluteUri) != 0)
-                return false;
-
-            if (string.Compare(Title, info.Title) != 0)
-                return false;
-
-            if (string.Compare(Text, info.Text) != 0)
-                return false;
-
-            if (string.Compare(IconUrl, info.IconUrl) != 0)
-                return false;
-
-            if (string.Compare(MediaUrl, info.MediaUrl) != 0)
-                return false;
-
-            if (string.Compare(BrowserUrl, info.BrowserUrl) != 0)
-                return false;
-
-            int childrenCount1= Children.Count;
-            int childrenCount2 = info.Children.Count;
-            if (childrenCount1 != childrenCount2)
-                return false;
-
-            for(int childIndex=0;childIndex<childrenCount1;childIndex++)
-            {
-                if (Children[childIndex].CompareTo(info.Children[childIndex]) == false)
-                    return false;
-            }
-
-            return true;
-        }
-        */
+        
         #endregion
 
         /// <summary>
