@@ -360,8 +360,6 @@ namespace GetFacts.Facts
             }
         }
         
-        #endregion
-
         /// <summary>
         /// Returns true if this object has any non-empty string among
         /// the following attributes: Title, Text.
