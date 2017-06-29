@@ -43,10 +43,8 @@ namespace GetFacts.Render
             }));
         }
 
-        public void ShowImage(string file, string caption)
+        public void ShowImage(string file)
         {
-            Caption = caption;
-
             try
             {
                 BitmapImage bmpI = new BitmapImage();

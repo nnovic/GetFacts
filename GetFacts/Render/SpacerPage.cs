@@ -33,13 +33,13 @@ namespace GetFacts.Render
                 Height = new System.Windows.GridLength(2, System.Windows.GridUnitType.Star)
             });
 
-            _pageDisplay = new ArticleDisplay(false, 0, false, false);
+            _pageDisplay = new ArticleDisplay(false, 0);
             Host(_pageDisplay);
             _pageDisplay.Update(p);
             articlesGrid.Children.Add(_pageDisplay);
             Grid.SetRow(_pageDisplay, 0);
 
-            _sectionDisplay = new ArticleDisplay(false, 0, false, false);
+            _sectionDisplay = new ArticleDisplay(false, 0);
             Host(_sectionDisplay);
             _sectionDisplay.Update(s);
             articlesGrid.Children.Add(_sectionDisplay);
@@ -57,21 +57,6 @@ namespace GetFacts.Render
 
         private void SpacerPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            /*if(sectionDisplay!=null)
-            {
-                GridLengthAnimation gla = new GridLengthAnimation()
-                {
-                    From = new GridLength(0, GridUnitType.Star),
-                    To = new GridLength(2, GridUnitType.Star),
-                    Duration = new TimeSpan(0, 0, 1),
-                    BeginTime = new TimeSpan(0, 0, 1)
-                };
-                articlesGrid.RowDefinitions[1].BeginAnimation(RowDefinition.HeightProperty, gla);                            
-            }
-            else
-            {
-                
-            }*/
             articlesGrid.RowDefinitions[1].Height = new GridLength(0);
         }
     }

@@ -167,7 +167,6 @@ namespace GetFacts.Render
 
         #region media docking
 
-        decimal mouseMoveMeter = 0;
         MediaDisplay dockedMedia = null;
 
         public void Undock(MediaDisplay md)
@@ -178,9 +177,7 @@ namespace GetFacts.Render
             }
 
             dockedMedia = null;
-            mediaGrid.MouseMove -= MediaGrid_MouseMove;
             mediaDock.Children.Remove(md);            
-            mouseMoveMeter = 0;
             mediaGrid.Visibility = Visibility.Hidden;
             OnUnfrozen();
             Console.WriteLine("Media detached from Page");
@@ -207,24 +204,18 @@ namespace GetFacts.Render
                 mediaTitle.Text = md.Caption;
             }
 
-            mouseMoveMeter = 0;
-            mediaGrid.MouseMove += MediaGrid_MouseMove;
             mediaGrid.Visibility = Visibility.Visible;
             Console.WriteLine("Media attached to Page");
         }
 
-        private void MediaGrid_MouseMove(object sender, MouseEventArgs e)
-        {
-            mouseMoveMeter++;
-            if(mouseMoveMeter>50m)
-            {
-                MediaDisplay md = dockedMedia;
-                ICanDock target = md.Tag as ICanDock;
-                Undock(md);
-                target.Dock(md);
-            }
-        }
-
         #endregion
+
+        private void MediaGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MediaDisplay md = dockedMedia;
+            ICanDock target = md.Tag as ICanDock;
+            Undock(md);
+            target.Dock(md);
+        }
     }
 }

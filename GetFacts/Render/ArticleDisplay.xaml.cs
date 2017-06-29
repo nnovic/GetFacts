@@ -25,24 +25,22 @@ namespace GetFacts.Render
     {
         private readonly bool enableAnimations;
         private readonly int orderOfAppearance;
-        private readonly bool enableZooming;
         private string browserUrl = null;
         const double textWidthRatio = 0.5;
 
-        public ArticleDisplay(): this(false, 0, false, false)
+        public ArticleDisplay(): this(false, 0)
         {
 
         }
 
-        public ArticleDisplay(bool enableAnimations, int orderOfAppearance, bool enableHighlight, bool enableZooming)
+        public ArticleDisplay(bool enableAnimations, int orderOfAppearance)
         {
             this.enableAnimations = enableAnimations;
             this.orderOfAppearance = orderOfAppearance;
-            this.enableZooming = enableZooming;
 
             InitializeComponent();
 
-            if(enableHighlight)
+            if(enableAnimations)
             {
                 MouseEnter += UserControl_MouseEnter;
                 MouseLeave += UserControl_MouseLeave;
@@ -55,6 +53,8 @@ namespace GetFacts.Render
         {
             articleTitle.Text = info.Title;
             articleText.Text = info.Text;
+            mediaDisplay.Caption = info.Title;
+
             browserUrl = info.BrowserUrl;
 
             if (string.IsNullOrEmpty(info.IconUrl) == false)
@@ -89,7 +89,7 @@ namespace GetFacts.Render
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                mediaDisplay.ShowImage(iconTask.LocalFile, articleTitle.Text);
+                mediaDisplay.ShowImage(iconTask.LocalFile);
             }), null);
             
         }
@@ -190,9 +190,11 @@ namespace GetFacts.Render
         {
             textContainer.RowDefinitions[1].Height = new GridLength(0);
 
-            if (enableZooming)
+            if (enableAnimations)
             {
-                imageContainer.MouseEnter += ArticleIcon_MouseEnter;
+                imageContainer.Cursor = Cursors.Hand;
+                imageContainer.ToolTip = "Click to zoom";
+                imageContainer.MouseLeftButtonUp += ImageContainer_MouseLeftButtonUp;
             }
         }
 
@@ -230,7 +232,23 @@ namespace GetFacts.Render
 
         #region events
 
-        private void ArticleIcon_MouseEnter(object sender, MouseEventArgs e)
+        public void Undock(MediaDisplay md)
+        {
+            imageContainer.MouseLeftButtonUp -= ImageContainer_MouseLeftButtonUp;
+            imageContainer.Children.Remove(md);
+            md.Tag = this;
+            Console.WriteLine("Media detached from ArticleDisplay");
+        }
+
+
+        public void Dock(MediaDisplay md)
+        {
+            imageContainer.Children.Add(md);
+            imageContainer.MouseLeftButtonUp += ImageContainer_MouseLeftButtonUp;
+            Console.WriteLine("Media attached to ArticleDisplay");
+        }
+
+        private void ImageContainer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement current = this.Parent as FrameworkElement;
             ICanDock target = null;
@@ -248,22 +266,6 @@ namespace GetFacts.Render
                 target.Dock(mediaDisplay);
                 OnMouseLeave(null);
             }
-        }
-
-        public void Undock(MediaDisplay md)
-        {
-            imageContainer.MouseEnter -= ArticleIcon_MouseEnter;
-            imageContainer.Children.Remove(md);
-            md.Tag = this;
-            Console.WriteLine("Media detached from ArticleDisplay");
-        }
-
-
-        public void Dock(MediaDisplay md)
-        {
-            imageContainer.Children.Add(md);
-            imageContainer.MouseEnter += ArticleIcon_MouseEnter;
-            Console.WriteLine("Media attached to ArticleDisplay");
         }
 
         #endregion

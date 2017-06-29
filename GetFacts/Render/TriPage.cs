@@ -25,7 +25,7 @@ namespace GetFacts.Render
         {
             int rowCount = articlesGrid.RowDefinitions.Count;
 
-            ArticleDisplay ad = new ArticleDisplay(true, rowCount, true, true);
+            ArticleDisplay ad = new ArticleDisplay(true, rowCount);
             Host(ad);
 
             ad.Update(ai);
