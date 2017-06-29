@@ -16,7 +16,41 @@ namespace GetFacts.Parse
             get;set;
         }
 
-        
+        /// <summary>
+        /// Permet de faire un forçage du Charset (Encoding)
+        /// qu'il faudra utiliser pour lire le contenu
+        /// brut de la page. Vaut null par défaut, indiquant
+        /// que le charset devra être déterminé automatiquement.
+        /// </summary>
+        public string Charset
+        {
+            get;set;
+        }
+
+        /// <summary>
+        /// Retourne null si Charset est null. Sinon,
+        /// convertit la chaine Charset en une instance
+        /// correspondante de System.Text.Encoding.
+        /// Si la conversion Charset > Encoding échoue,
+        /// null est retourné.
+        /// </summary>
+        public Encoding Encoding
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Charset))
+                    return null;
+
+                try
+                {
+                    return Encoding.GetEncoding(Charset);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         public IList<SectionTemplate> Sections
         {

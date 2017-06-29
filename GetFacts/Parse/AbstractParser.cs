@@ -19,7 +19,13 @@ namespace GetFacts.Parse
 
         protected abstract Hashtable GetConcreteAttributesOf(object o);
 
-        public abstract void Load(string path);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="encoding">Si null, l'encoding sera déterminé
+        /// automatiquement</param>
+        public abstract void Load(string path, Encoding encoding);
 
         /// <summary>
         /// TO BE IMPROVED !!

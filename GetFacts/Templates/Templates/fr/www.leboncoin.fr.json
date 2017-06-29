@@ -1,5 +1,6 @@
 ﻿{
 	"PageName" : "Le bon coin",
+	"Charset" : "iso-8859-1",
 	"TitleTemplate" : { "XPath":"/html/head/title" },
 	"IconUrlTemplate" : { "XPath":"//img[@id=\"logoApp\"]/@src"},
 	"Sections" :

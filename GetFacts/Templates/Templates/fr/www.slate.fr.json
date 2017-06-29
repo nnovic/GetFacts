@@ -14,6 +14,7 @@
 					"XPathFilter" : ".//div[contains(@class, 'brick')]",
 					"TitleTemplate" :  { "XPath" : ".//h3" },
 					"TextTemplate" : { "XPath" : ".//h1" },
+					"IconUrlTemplate" : { "XPath" : ".//div[@class=\"img\"]//img/@src" },
 					"BrowserUrlTemplate" : { "XPath" : ".//h3/parent::a/@href" }
 				}
 			]

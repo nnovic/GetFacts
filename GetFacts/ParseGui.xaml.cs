@@ -58,7 +58,7 @@ namespace GetFacts
             StartWait("Analyzing page...");
 
             parser = new HtmlParser();
-            parser.Load(file);
+            parser.Load(file, null);
 
             this.Dispatcher.Invoke(()=> 
             {

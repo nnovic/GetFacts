@@ -23,10 +23,17 @@ namespace GetFacts.Parse
             htmlDoc = new HtmlDocument();
         }
 
-        public override void Load(string path)
+        public override void Load(string path, Encoding encoding)
         {
             Clear();
-            htmlDoc.Load(path);
+            if (encoding != null)
+            {
+                htmlDoc.Load(path, encoding);
+            }
+            else
+            {
+                htmlDoc.Load(path, true);
+            }
         }
 
         protected override void ClearSourceCode()
@@ -40,7 +47,7 @@ namespace GetFacts.Parse
             base.Clear();
             if( htmlDoc!=null)
             {
-                // Clear ??
+                // TODO: Clear ??
                 // New ??
             }
         }

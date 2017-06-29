@@ -62,8 +62,8 @@ namespace GetFacts.Facts
         #region mise à jour 
 
         internal void Update(string sourceFile)
-        {
-            Parser.Load(sourceFile);
+        {            
+            Parser.Load(sourceFile, Template.Encoding);
             Update(Parser.CreateNavigator());
         }
 
