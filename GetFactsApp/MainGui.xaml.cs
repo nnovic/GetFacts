@@ -171,7 +171,6 @@ namespace GetFacts
         
         private void RemoveTrash()
         {
-
             //remove active urls from downloads and
             //delete what remains:
             ISet<string> activeUrls = Facts.Facts.GetInstance().GetAllUrls();
@@ -181,7 +180,7 @@ namespace GetFacts
 
             // remove active files from content of the download directory
             // to obtain orphaned files, and remove those.
-            string downloadDir = ConfigurationManager.AppSettings.Get("DownloadDirectory");
+            string downloadDir = ConfigFactory.GetInstance().CacheDirectory;
             ISet<string> activeFiles = DownloadManager.GetInstance().GetAllFilesInUse();
             IEnumerable<string> tempFiles = Directory.EnumerateFiles(downloadDir);
             IEnumerable<string> deleteThoseFiles = tempFiles.Except(activeFiles);

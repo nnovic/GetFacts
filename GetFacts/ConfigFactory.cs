@@ -33,5 +33,73 @@ namespace GetFacts
             output = JsonConvert.DeserializeObject<List<PageConfig>>(text);
             return output;
         }
+
+        private string AppDir
+        {
+            get
+            {
+                return "GetFacts";
+            }
+        }
+
+        private string DefaultConfigFile
+        {
+            get
+            {
+                string location = this.GetType().Assembly.Location;
+                string dir = Path.GetDirectoryName(location);
+                return Path.Combine(dir, "DefaultConfig.json");
+            }
+        }
+
+        public string ConfigFile
+        {
+            get
+            {
+                return DefaultConfigFile;
+            }
+        }
+
+        private string DefaultCacheDirectory
+        {
+            get
+            {
+                string root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string path = Path.Combine(root, AppDir);
+                return path;
+            }
+        }
+
+        public string CacheDirectory
+        {
+            get
+            {
+                string path = DefaultCacheDirectory;
+                if( Directory.Exists(path) == false )
+                {
+                    Directory.CreateDirectory(path);
+                }
+                return path;
+            }
+        }
+
+        private string DownloadsListFile
+        {
+            get
+            {
+                return "downloads.lst";
+            }
+        }
+
+        public string DownloadsList
+        {
+            get
+            {
+                string dir = CacheDirectory;
+                string file = DownloadsListFile;
+                return Path.Combine(dir, file);
+            }
+        }
+
     }
 }

@@ -68,6 +68,7 @@ namespace GetFacts.Render
             if( string.IsNullOrEmpty(browserUrl)==false)
             {
                 textContainer.Cursor = Cursors.Hand;
+                textContainer.ToolTip = browserUrl;
             }
         }
 

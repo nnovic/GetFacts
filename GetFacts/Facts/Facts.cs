@@ -21,7 +21,8 @@ namespace GetFacts.Facts
             {
                 if(uniqueInstance==null)
                 {
-                    uniqueInstance = new Facts("DefaultConfig.json");
+                    string cfgFile = ConfigFactory.GetInstance().ConfigFile;
+                    uniqueInstance = new Facts(cfgFile);
                 }
                 return uniqueInstance;
             }
