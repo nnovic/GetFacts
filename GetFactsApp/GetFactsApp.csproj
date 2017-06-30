@@ -101,10 +101,6 @@
       <Project>{4cbb2135-25c3-4c9c-b7f3-dfbc9a7fe564}</Project>
       <Name>GetFacts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GetFacts\Templates\Templates.csproj">
-      <Project>{ddc76b87-e1e6-46d0-85f3-9e81ecddbf28}</Project>
-      <Name>Templates</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

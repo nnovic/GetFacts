@@ -1,0 +1,12 @@
+﻿[	
+	{
+		"Name":"site1",
+		"Url":"http://www.site1.com/index.html",
+		"Template":"test\\www.site1.com.json"
+	},
+	{
+		"Name":"site2",
+		"Url":"http://www.site2.com/index.html",
+		"Template":"test\\www.site2.com.json"
+	}
+]

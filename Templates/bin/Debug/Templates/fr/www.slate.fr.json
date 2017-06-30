@@ -1,0 +1,23 @@
+﻿{
+	"PageName" : "Slate",
+	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"TextTemplate" : { "XPath":"/html/head/meta[@property=\"og:description\"]/@content" },
+	"IconUrlTemplate" : { "XPath":"/html/head/link[@rel=\"apple-touch-icon\"]/@href" },
+	"Sections" :
+	[
+		{
+			"SectionName" : "Magazine",
+            "XPathFilter" : "//div[@class=\"bricks\"]",
+			"Articles" : 
+			[
+				{
+					"XPathFilter" : ".//div[contains(@class, 'brick')]",
+					"TitleTemplate" :  { "XPath" : ".//h3" },
+					"TextTemplate" : { "XPath" : ".//h1" },
+					"IconUrlTemplate" : { "XPath" : ".//div[@class=\"img\"]//img/@src" },
+					"BrowserUrlTemplate" : { "XPath" : ".//h3/parent::a/@href" }
+				}
+			]
+		}
+	]
+}

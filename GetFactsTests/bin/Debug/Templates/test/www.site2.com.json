@@ -1,0 +1,22 @@
+﻿{
+	"PageName" : "Site2",
+	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"TextTemplate" : { "XPath":"/html/body/h1"},
+	"Sections" :
+	[
+		{
+			"SectionName" : "Groupes",
+            "XPathFilter" : "//section[@class=\"groupe\"]",
+			"TitleTemplate" : { "XPath":".//h2" },
+			"Articles" : 
+			[
+				{
+					"XPathFilter" : ".//article[@class=\"item\"]",
+					"TitleTemplate" :  { "XPath" : ".//h3" },
+					"TextTemplate" : { "XPath" : ".//p" },
+					"BrowserUrlTemplate" : { "XPath" : ".//a/@href" }
+				}
+			]
+		}
+	]
+}

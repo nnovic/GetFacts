@@ -192,5 +192,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Templates\Templates.csproj">
+      <Project>{ddc76b87-e1e6-46d0-85f3-9e81ecddbf28}</Project>
+      <Name>Templates</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

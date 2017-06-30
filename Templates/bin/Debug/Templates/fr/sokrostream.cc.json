@@ -1,0 +1,19 @@
+﻿{
+	"PageName" : "sokrostream.cc",
+	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"Sections" :
+	[
+		{
+			"SectionName" : "Nouveautés",
+            "XPathFilter" : ".//div[@class=\"films-container\"]",
+			"Articles" : 
+			[
+				{
+					"XPathFilter" : ".//div[@class=\"moviefilm\"]",
+					"TitleTemplate" :  { "XPath" : ".//div[@class=\"movief\"]//text()" },
+					"BrowserUrlTemplate" : { "XPath" : "./a/@href" }
+				}
+			]
+		}
+	]
+}

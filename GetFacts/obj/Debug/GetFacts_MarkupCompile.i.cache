@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\avincon\Source\Repos\GetFacts\GetFacts\obj\Debug\
+C:\Users\alexandre\Documents\GetFacts\GetFacts\obj\Debug\
 GetFacts
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 7-34599916
 1459282078
-39-2053880504
-18105399054
+39-946562540
+19-1512955309
 DownloadGui.xaml;ParseGui.xaml;Render\ArticleDisplay.xaml;Render\MediaDisplay.xaml;Render\PageStructure.xaml;Render\WelcomePage.xaml;TestGui.xaml;
 
 True
