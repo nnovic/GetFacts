@@ -1,0 +1,28 @@
+﻿<Window x:Class="SetFactsApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SetFactsApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+    <Grid x:Name="MainContainer">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="SearchbarContainer">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="ConfigFileSelection" IsEnabled="False" SelectionChanged="ConfigFileSelection_SelectionChanged" />
+            <Button x:Name="BrowseButton" Grid.Column="1" IsEnabled="False">Browse</Button>
+        </Grid>
+        <Grid Grid.Row="1"  x:Name="ConfigContainer">
+            <ListBox x:Name="ConfigList">
+                
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

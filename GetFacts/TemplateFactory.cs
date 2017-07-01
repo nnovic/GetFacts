@@ -37,7 +37,8 @@ namespace GetFacts
         private PageTemplate GetJSONTemplate(string path)
         {
             PageTemplate output;
-            path = Path.Combine("Templates", path);
+            string dir = ConfigFactory.GetInstance().TemplatesDirectory;
+            path = Path.Combine(dir, path);
             string text = File.ReadAllText(path);
             output = JsonConvert.DeserializeObject<PageTemplate>(text);
             return output;

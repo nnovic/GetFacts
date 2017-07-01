@@ -101,5 +101,25 @@ namespace GetFacts
             }
         }
 
+
+        public string TemplatesDirectory
+        {
+            get
+            {
+                return DefaultTemplatesDirectory;
+            }
+        }
+
+        private string DefaultTemplatesDirectory
+        {
+            get
+            {
+                string location = this.GetType().Assembly.Location;
+                string dir = Path.GetDirectoryName(location);
+                string path = Path.Combine(dir, "Templates");
+                return path;
+            }
+        }
+
     }
 }
