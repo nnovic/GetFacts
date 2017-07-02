@@ -84,9 +84,24 @@ namespace GetFacts.Facts
 
         #endregion
 
-        #region Outdated
+        #region Outdated/New
 
+        public static bool NewStatusForNewInstance = true;
+        private bool newContent = NewStatusForNewInstance;
         private bool upToDate = false;
+
+        public bool IsNew
+        {
+            get
+            {
+                if(newContent==true)
+                {
+                    newContent = false;
+                    return true;
+                }
+                return false;
+            }
+        }
 
         /// <summary>
         /// Clears the "up-to-date" flag of this object
@@ -297,6 +312,8 @@ namespace GetFacts.Facts
         }
         #endregion
 
+        #region Content management
+
         protected void UpdateInfo(AbstractInfo source)
         {
             Title = source.Title;
@@ -375,5 +392,8 @@ namespace GetFacts.Facts
                 return false;
             }
         }
+
+        #endregion
+
     }
 }

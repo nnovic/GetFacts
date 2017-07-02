@@ -36,6 +36,8 @@ namespace GetFacts
         /// </summary>
         const int MinPageDisplayDuration = 5;
 
+        const int TimeoutInterval = 1;
+
         private Thread rotationThread = null;
         private bool isRotating = false;
         private readonly object pauseLock = new object();
@@ -49,7 +51,7 @@ namespace GetFacts
             {
                 long remainingTime = MaxPageDisplayDuration * 1000;
                 long elapsedTime = 0;
-
+                bool timedOut; 
                 chrono.Restart();
                 RemoveTrash();
                 chrono.Stop();
@@ -62,12 +64,10 @@ namespace GetFacts
                 // effectif d'affichage.
                 elapsedTime += chrono.ElapsedMilliseconds;
 
-                //Console.WriteLine("PAUSED");
-
                 do
                 {                    
                     chrono.Restart();                    
-                    Monitor.Wait(pauseLock, remainingTime>1000?(int)remainingTime:1000);
+                    timedOut = !Monitor.Wait(pauseLock, remainingTime>(TimeoutInterval *1000)? (int)remainingTime:(TimeoutInterval*1000));
                     chrono.Stop();
 
                     // décompter la durée du blocage du
@@ -82,16 +82,15 @@ namespace GetFacts
                     if(pauseForZoom_counter==0)
                         elapsedTime += chrono.ElapsedMilliseconds;
 
-                    Console.WriteLine("Pause: RT={0}/{1}, ET={2}/{3}",
-                        remainingTime, MaxPageDisplayDuration*1000,
-                        elapsedTime,MinPageDisplayDuration*1000);
+                    //Console.WriteLine("Pause: RT={0}/{1}, ET={2}/{3}",
+                    //    remainingTime, MaxPageDisplayDuration*1000,
+                    //    elapsedTime,MinPageDisplayDuration*1000);
 
-                } while( (pauseForRead_counter>0) 
-                || (pauseForZoom_counter > 0) 
-                || (remainingTime>0) 
-                || (elapsedTime<1000*MinPageDisplayDuration) );
-
-                //Console.WriteLine("RESUMED");
+                } while( (timedOut==false) 
+                || ( (pauseForRead_counter>0) 
+                    || (pauseForZoom_counter > 0) 
+                    || (remainingTime>0) 
+                    || (elapsedTime<1000*MinPageDisplayDuration)) );
             }
         }
 

@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -69,6 +70,14 @@ namespace GetFacts.Render
             {
                 textContainer.Cursor = Cursors.Hand;
                 textContainer.ToolTip = browserUrl;
+            }
+
+            if(enableAnimations)
+            {
+                if(info.IsNew)
+                {
+                    bgBorder.Background = Brushes.Green;
+                }
             }
         }
 
@@ -220,6 +229,9 @@ namespace GetFacts.Render
                     };
                     textContainer.RowDefinitions[1].BeginAnimation(
                         RowDefinition.HeightProperty, gla);
+
+                    ShakeShakeAnimation ssa = new ShakeShakeAnimation();
+                    this.BeginAnimation(FrameworkElement.MarginProperty, ssa);
                 }
                 else
                 {

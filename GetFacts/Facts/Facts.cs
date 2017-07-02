@@ -49,12 +49,20 @@ namespace GetFacts.Facts
 
         public void Initialize()
         {
-            foreach(Page p in pages)
+            try
             {
-                DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri);
-                downloadTasks.Add(task, p);
-                task.TaskFinished += DownloadTask_TaskFinished;
-                task.TriggerIfTaskFinished();
+                AbstractInfo.NewStatusForNewInstance = false;
+                foreach (Page p in pages)
+                {
+                    DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri);
+                    downloadTasks.Add(task, p);
+                    task.TaskFinished += DownloadTask_TaskFinished;
+                    task.TriggerIfTaskFinished();
+                }
+            }
+            finally
+            {
+                AbstractInfo.NewStatusForNewInstance = true;
             }
         }
 

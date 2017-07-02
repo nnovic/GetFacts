@@ -95,6 +95,7 @@
     <Compile Include="Render\PageStructure.xaml.cs">
       <DependentUpon>PageStructure.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Render\ShakeShakeAnimation.cs" />
     <Compile Include="Render\SpacerPage.cs" />
     <Compile Include="Render\TriPage.cs" />
     <Compile Include="Render\WelcomePage.xaml.cs">
