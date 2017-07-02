@@ -26,51 +26,97 @@ namespace GetFacts
 
         #region rotation of pages
 
-        const int PageDisplayDuration = 5000;
+        /// <summary>
+        /// (en secondes)
+        /// </summary>
+        const int MaxPageDisplayDuration = 10;
+
+        /// <summary>
+        /// (en secondes)
+        /// </summary>
+        const int MinPageDisplayDuration = 5;
+
         private Thread rotationThread = null;
         private bool isRotating = false;
         private readonly object pauseLock = new object();
-        private uint pauseCounter = 0;
+        private uint pauseForZoom_counter = 0;
+        private uint pauseForRead_counter = 0;
         private Stopwatch chrono = new Stopwatch();
 
         private void PauseIfRequired()
         {
             lock(pauseLock)
             {
-                long remainingTime = PageDisplayDuration;
+                long remainingTime = MaxPageDisplayDuration * 1000;
+                long elapsedTime = 0;
 
                 chrono.Restart();
                 RemoveTrash();
                 chrono.Stop();
 
+                // décompter la durée du nettoyage du temps
+                // d'affichage restant.
                 remainingTime -= chrono.ElapsedMilliseconds;
-                Console.WriteLine("PAUSED");
+
+                // ajouter la durée du nettoyage au temps
+                // effectif d'affichage.
+                elapsedTime += chrono.ElapsedMilliseconds;
+
+                //Console.WriteLine("PAUSED");
+
                 do
                 {                    
                     chrono.Restart();                    
-                    Monitor.Wait(pauseLock, remainingTime>100?(int)remainingTime:100);
+                    Monitor.Wait(pauseLock, remainingTime>1000?(int)remainingTime:1000);
                     chrono.Stop();
+
+                    // décompter la durée du blocage du
+                    // temps d'affichage restant, quelle que
+                    // soit la raison du blocage.
                     remainingTime -= chrono.ElapsedMilliseconds;
 
-                } while( (pauseCounter > 0) || (remainingTime>0) );
-                Console.WriteLine("RESUMED");
+                    // ajouter la durée du blocage au temps
+                    // effectif d'afficage, mais uniquement
+                    // si la pause n'est pas provoquée 
+                    // par un zoom d'un média
+                    if(pauseForZoom_counter==0)
+                        elapsedTime += chrono.ElapsedMilliseconds;
+
+                    Console.WriteLine("Pause: RT={0}/{1}, ET={2}/{3}",
+                        remainingTime, MaxPageDisplayDuration*1000,
+                        elapsedTime,MinPageDisplayDuration*1000);
+
+                } while( (pauseForRead_counter>0) 
+                || (pauseForZoom_counter > 0) 
+                || (remainingTime>0) 
+                || (elapsedTime<1000*MinPageDisplayDuration) );
+
+                //Console.WriteLine("RESUMED");
             }
         }
 
-        private void Pause()
+        private void Pause(CauseOfFreezing cause)
         {
             lock(pauseLock)
             {
-                pauseCounter++;
+                switch (cause)
+                {
+                    case CauseOfFreezing.CursorOnArticle: pauseForRead_counter++; break;
+                    case CauseOfFreezing.ZoomOnMedia: pauseForZoom_counter++; break;
+                }
                 Monitor.Pulse(pauseLock);
             }
         }
 
-        private void Resume()
+        private void Resume(CauseOfFreezing cause)
         {
             lock (pauseLock)
             {
-                if(pauseCounter>0) pauseCounter--;
+                switch (cause)
+                {
+                    case CauseOfFreezing.CursorOnArticle: if(pauseForRead_counter>0) pauseForRead_counter--; break;
+                    case CauseOfFreezing.ZoomOnMedia: if(pauseForZoom_counter>0) pauseForZoom_counter--; break;
+                }
                 Monitor.Pulse(pauseLock);
             }
         }
@@ -138,12 +184,12 @@ namespace GetFacts
 
         private void Freezable_Unfrozen(object sender, FreezeEventArgs e)
         {
-            Resume();
+            Resume(e.Cause);
         }
 
         private void Freezable_Frozen(object sender, FreezeEventArgs e)
         {            
-            Pause();
+            Pause(e.Cause);
         }
 
         private void StopRotationThread()

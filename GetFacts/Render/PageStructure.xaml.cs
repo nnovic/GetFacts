@@ -137,17 +137,17 @@ namespace GetFacts.Render
         public event EventHandler<FreezeEventArgs> Frozen;
         public event EventHandler<FreezeEventArgs> Unfrozen;
 
-        protected void OnFrozen()
+        protected void OnFrozen(CauseOfFreezing cause)
         {
-            FreezeEventArgs args = new FreezeEventArgs();            
+            FreezeEventArgs args = new FreezeEventArgs(cause);            
             Frozen?.Invoke(this, args);
             pauseSymbol.BeginAnimation(Canvas.OpacityProperty, pauseAnimation);
             pauseDisplay.Visibility = Visibility.Visible;
         }
 
-        protected void OnUnfrozen()
+        protected void OnUnfrozen(CauseOfFreezing cause)
         {
-            FreezeEventArgs args = new FreezeEventArgs();
+            FreezeEventArgs args = new FreezeEventArgs(cause);
             Unfrozen?.Invoke(this, args);
             pauseDisplay.Visibility = Visibility.Hidden;
             pauseSymbol.BeginAnimation(Canvas.OpacityProperty, null);
@@ -155,12 +155,12 @@ namespace GetFacts.Render
 
         private void FactsBorder_MouseEnter(object sender, MouseEventArgs e)
         {
-            OnFrozen();
+            OnFrozen(CauseOfFreezing.CursorOnArticle);
         }
 
         private void FactsBorder_MouseLeave(object sender, MouseEventArgs e)
         {
-            OnUnfrozen();
+            OnUnfrozen(CauseOfFreezing.CursorOnArticle);
         }
 
         #endregion
@@ -179,7 +179,7 @@ namespace GetFacts.Render
             dockedMedia = null;
             mediaDock.Children.Remove(md);            
             mediaGrid.Visibility = Visibility.Hidden;
-            OnUnfrozen();
+            OnUnfrozen(CauseOfFreezing.ZoomOnMedia); // restart stopwatch
             Console.WriteLine("Media detached from Page");
         }
 
@@ -190,7 +190,7 @@ namespace GetFacts.Render
                 throw new Exception();
             }
 
-            OnFrozen();
+            OnFrozen(CauseOfFreezing.ZoomOnMedia); // disable stop watch
             dockedMedia = md;
             mediaDock.Children.Add(md);
 
