@@ -8,6 +8,7 @@
         Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing">
     <DockPanel>
         <Grid>
+            <Image Source="GF_background.jpg" Stretch="UniformToFill" />
             <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
         </Grid>
     </DockPanel>
