@@ -77,6 +77,9 @@ namespace GetFacts.Render
                 if(info.IsNew)
                 {
                     bgBorder.Background = Brushes.Green;
+                    ShakeShakeAnimation ssa = new ShakeShakeAnimation(this.Margin);
+                    ssa.BeginTime = new TimeSpan(0, 0, 0, 1, 200 * orderOfAppearance);
+                    this.BeginAnimation(FrameworkElement.MarginProperty, ssa);
                 }
             }
         }
@@ -228,10 +231,7 @@ namespace GetFacts.Render
                         BeginTime = new TimeSpan(0, 0, 0, 2, 200 * orderOfAppearance)
                     };
                     textContainer.RowDefinitions[1].BeginAnimation(
-                        RowDefinition.HeightProperty, gla);
-
-                    ShakeShakeAnimation ssa = new ShakeShakeAnimation();
-                    this.BeginAnimation(FrameworkElement.MarginProperty, ssa);
+                        RowDefinition.HeightProperty, gla);                    
                 }
                 else
                 {

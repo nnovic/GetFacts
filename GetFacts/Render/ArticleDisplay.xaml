@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GetFacts.Render.ArticleDisplay"
+﻿<UserControl Margin="10" x:Class="GetFacts.Render.ArticleDisplay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:GetFacts.Render"
              mc:Ignorable="d" 
              d:DesignHeight="171.429" d:DesignWidth="436.607" Unloaded="UserControl_Unloaded" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded">
-    <Grid Margin="5" SizeChanged="Grid_SizeChanged">
+    <Grid SizeChanged="Grid_SizeChanged">
         <Border x:Name="bgBorder" Background="#FF81A08E" CornerRadius="10" >
             <Grid x:Name="rotatingGrid">
                 <Grid.ColumnDefinitions>

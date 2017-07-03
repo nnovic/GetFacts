@@ -46,12 +46,6 @@ namespace GetFacts.Render
             get { return factsBorder.Child; }
         }
 
-
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            UnHost();
-        }
-
         #region layout
 
         private bool IsVertical(Size s)
@@ -108,27 +102,6 @@ namespace GetFacts.Render
             Grid.SetColumn(factsContainer, 1);
             Grid.SetColumnSpan(factsContainer, 1);
         }
-
-        #endregion
-
-        #region articles hosting
-
-        private readonly List<ArticleDisplay> hostedArticles = new List<ArticleDisplay>();
-
-        private void UnHost()
-        {
-            hostedArticles.Clear();
-        }
-
-        protected void Host(ArticleDisplay ad)
-        {
-            if (hostedArticles.Contains(ad))
-                return;
-
-            hostedArticles.Add(ad);
-        }
-
-
 
         #endregion
 

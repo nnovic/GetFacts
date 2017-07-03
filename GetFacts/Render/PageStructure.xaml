@@ -7,7 +7,7 @@
       xmlns:core="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="500"
-      Title="PagePage" Unloaded="Page_Unloaded">
+      Title="PagePage">
 
     <Page.Resources>
         <core:Double x:Key="PauseOpacity">0.65</core:Double>
@@ -46,7 +46,7 @@
                 </Viewbox>
             </Grid>
             <Grid x:Name="factsContainer" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
-                <Border x:Name="factsBorder" Background="#FF3A3A87" Margin="5" CornerRadius="10" MouseEnter="FactsBorder_MouseEnter" MouseLeave="FactsBorder_MouseLeave">
+                <Border x:Name="factsBorder" MouseEnter="FactsBorder_MouseEnter" MouseLeave="FactsBorder_MouseLeave">
                 </Border>
             </Grid>
         </Grid>

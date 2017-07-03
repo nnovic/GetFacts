@@ -34,13 +34,11 @@ namespace GetFacts.Render
             });
 
             _pageDisplay = new ArticleDisplay(false, 0);
-            Host(_pageDisplay);
             _pageDisplay.Update(p);
             articlesGrid.Children.Add(_pageDisplay);
             Grid.SetRow(_pageDisplay, 0);
 
             _sectionDisplay = new ArticleDisplay(false, 0);
-            Host(_sectionDisplay);
             _sectionDisplay.Update(s);
             articlesGrid.Children.Add(_sectionDisplay);
             Grid.SetRow(_sectionDisplay, 1);
