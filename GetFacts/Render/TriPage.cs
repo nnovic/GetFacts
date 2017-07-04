@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace GetFacts.Render
 {
-    public class TriPage:PageStructure
+    public class TriPage:PageStructure,ICustomPause
     {
         private Grid articlesGrid;
 
@@ -20,6 +20,19 @@ namespace GetFacts.Render
             base.Embedded = articlesGrid;
         }
 
+        #region ICustomPause
+
+        public int MaxPageDisplayDuration
+        {
+            get { return 60; }
+        }
+
+        public int MinPageDisplayDuration
+        {
+            get { return 10; }
+        }
+
+        #endregion
 
         public void AddArticle(Facts.AbstractInfo ai)
         {

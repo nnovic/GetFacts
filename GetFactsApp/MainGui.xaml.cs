@@ -26,18 +26,8 @@ namespace GetFacts
 
         #region rotation of pages
 
-        /// <summary>
-        /// (en secondes)
-        /// </summary>
-        const int MaxPageDisplayDuration = 60;
-
-        /// <summary>
-        /// (en secondes)
-        /// </summary>
-        const int MinPageDisplayDuration = 10;
-
         const int TimeoutInterval = 1;
-
+        const int DefaultPauseDuration = 10; // secondes
         private Thread rotationThread = null;
         private bool isRotating = false;
         private readonly object pauseLock = new object();
@@ -45,11 +35,16 @@ namespace GetFacts
         private uint pauseForRead_counter = 0;
         private Stopwatch chrono = new Stopwatch();
 
-        private void PauseIfRequired()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="minDuration">(en secondes)</param>
+        /// <param name="maxDuration">(en secondes)</param>
+        private void PauseIfRequired(int minDuration, int maxDuration)
         {
-            lock(pauseLock)
+            lock (pauseLock)
             {
-                long remainingTime = MaxPageDisplayDuration * 1000;
+                long remainingTime = maxDuration * 1000;
                 long elapsedTime = 0;
                 bool timedOut; 
                 chrono.Restart();
@@ -90,7 +85,7 @@ namespace GetFacts
                 || ( (pauseForRead_counter>0) 
                     || (pauseForZoom_counter > 0) 
                     || (remainingTime>0) 
-                    || (elapsedTime<1000*MinPageDisplayDuration)) );
+                    || (elapsedTime<1000*minDuration)) );
             }
         }
 
@@ -122,6 +117,8 @@ namespace GetFacts
 
         private void RotationTask()
         {
+            int minPauseDuration = DefaultPauseDuration;
+            int maxPauseDuration = DefaultPauseDuration;
             Page nextPage = null;
             Queue<Page> poolOfPages = new Queue<Page>();
             Facts.Facts.GetInstance().Initialize();
@@ -130,7 +127,7 @@ namespace GetFacts
             {
                 try
                 {
-                    PauseIfRequired();
+                    PauseIfRequired(minPauseDuration, maxPauseDuration);
 
                     Dispatcher.Invoke(() => 
                     {
@@ -170,7 +167,19 @@ namespace GetFacts
                                 freezable.Unfrozen += Freezable_Unfrozen;
                             }
                             navigator.Navigate(nextPage);
-                            navigator.RemoveBackEntry();
+                            navigator.RemoveBackEntry();                            
+                        }
+
+                        if((nextPage!=null) && (nextPage is ICustomPause))
+                        {
+                            ICustomPause icp = (ICustomPause)nextPage;
+                            minPauseDuration = icp.MinPageDisplayDuration;
+                            maxPauseDuration = icp.MaxPageDisplayDuration;
+                        }
+                        else
+                        {
+                            minPauseDuration = DefaultPauseDuration;
+                            maxPauseDuration = DefaultPauseDuration;
                         }
                     });
                     
@@ -237,6 +246,7 @@ namespace GetFacts
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            refreshIndication.Visibility = Visibility.Hidden;
             StartpRotationThread();
         }
         

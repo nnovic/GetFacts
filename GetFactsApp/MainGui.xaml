@@ -6,11 +6,21 @@
         xmlns:local="clr-namespace:GetFacts"
         mc:Ignorable="d"
         Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing">
-    <DockPanel>
-        <Grid>
-            <Image Source="GF_background.jpg" Stretch="UniformToFill" />
-            <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
-        </Grid>
-    </DockPanel>
-    
+
+
+    <Grid>
+        <Image Source="GF_background.jpg" Stretch="UniformToFill" />
+        <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
+        <StackPanel VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Border x:Name="refreshIndication" Margin="5,5,0,5" Background="Black">
+                    <TextBlock Margin="5" Foreground="white">Refreshing</TextBlock>
+                </Border>
+                <Border Margin="5" Background="Black">
+                    <Button Padding="5">Menu</Button>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
 </Window>

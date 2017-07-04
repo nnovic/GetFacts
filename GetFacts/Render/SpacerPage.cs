@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace GetFacts.Render
 {
-    public class SpacerPage:PageStructure
+    public class SpacerPage:PageStructure, ICustomPause
     {
         private Grid articlesGrid;
         private ArticleDisplay _pageDisplay;
@@ -17,7 +17,6 @@ namespace GetFacts.Render
 
         public SpacerPage(Facts.Page p, Facts.Section s) : base( new GetFactsHeader() )
         {
-
             articlesGrid = new Grid()
             {
                 Margin = new System.Windows.Thickness(5)
@@ -47,6 +46,20 @@ namespace GetFacts.Render
             Initialized += SpacerPage_Initialized;
             Loaded += SpacerPage_Loaded;
         }
+
+        #region ICustomPause
+
+        public int MaxPageDisplayDuration
+        {
+            get { return 10; }
+        }
+
+        public int MinPageDisplayDuration
+        {
+            get { return 10; }
+        }
+
+        #endregion 
 
         private void SpacerPage_Initialized(object sender, EventArgs e)
         {

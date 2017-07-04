@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Render\GridLengthAnimation.cs" />
     <Compile Include="Render\ICanDock.cs" />
+    <Compile Include="Render\ICustomPause.cs" />
     <Compile Include="Render\IFreezable.cs" />
     <Compile Include="Render\MediaDisplay.xaml.cs">
       <DependentUpon>MediaDisplay.xaml</DependentUpon>
