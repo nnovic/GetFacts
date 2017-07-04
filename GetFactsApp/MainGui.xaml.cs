@@ -29,12 +29,12 @@ namespace GetFacts
         /// <summary>
         /// (en secondes)
         /// </summary>
-        const int MaxPageDisplayDuration = 10;
+        const int MaxPageDisplayDuration = 60;
 
         /// <summary>
         /// (en secondes)
         /// </summary>
-        const int MinPageDisplayDuration = 5;
+        const int MinPageDisplayDuration = 10;
 
         const int TimeoutInterval = 1;
 

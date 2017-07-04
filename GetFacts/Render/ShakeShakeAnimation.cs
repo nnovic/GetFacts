@@ -11,7 +11,7 @@ namespace GetFacts.Render
         public ShakeShakeAnimation(Thickness original)
         {
             originalThickness = original;
-
+            const double amplitude = 0.02;
             double tLeft, tRight;
             tLeft = original.Left;
             tRight = original.Right;
@@ -26,7 +26,7 @@ namespace GetFacts.Render
                     Right = originalThickness.Right+shakeQuantity,
                     Bottom = originalThickness.Bottom
                 },
-                KeyTime = KeyTime.FromPercent(0.05)
+                KeyTime = KeyTime.FromPercent(1* amplitude)
             };
 
             ThicknessKeyFrame kf2 = new LinearThicknessKeyFrame()
@@ -38,7 +38,7 @@ namespace GetFacts.Render
                     Right = originalThickness.Right - shakeQuantity,
                     Bottom = originalThickness.Bottom
                 },
-                KeyTime = KeyTime.FromPercent(0.15)
+                KeyTime = KeyTime.FromPercent(3* amplitude)
             };
 
             ThicknessKeyFrame kf3 = new LinearThicknessKeyFrame()
@@ -50,7 +50,7 @@ namespace GetFacts.Render
                     Right = originalThickness.Right + shakeQuantity,
                     Bottom = originalThickness.Bottom
                 },
-                KeyTime = KeyTime.FromPercent(0.25)
+                KeyTime = KeyTime.FromPercent(5* amplitude)
             };
 
             ThicknessKeyFrame kf4 = new LinearThicknessKeyFrame()
@@ -62,10 +62,10 @@ namespace GetFacts.Render
                     Right = originalThickness.Right,
                     Bottom = originalThickness.Bottom
                 },
-                KeyTime = KeyTime.FromPercent(0.30)
+                KeyTime = KeyTime.FromPercent(6* amplitude)
             };
 
-            Duration = new Duration(new TimeSpan(0, 0, 1));
+            Duration = new Duration(new TimeSpan(0, 0, 2));
             KeyFrames.Add(kf1);
             KeyFrames.Add(kf2);
             KeyFrames.Add(kf3);

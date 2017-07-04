@@ -8,6 +8,11 @@ namespace GetFacts.Facts
 {
     public class PageConfig
     {
+        PageConfig()
+        {
+            Refresh = 60;
+        }
+
         public string Name
         {
             get; set;
@@ -19,6 +24,14 @@ namespace GetFacts.Facts
         }
 
         public string Template
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// (en minutes)
+        /// </summary>
+        public int Refresh
         {
             get; set;
         }

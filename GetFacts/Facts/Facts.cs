@@ -78,7 +78,7 @@ namespace GetFacts.Facts
 
             Task.Run(async delegate
             {
-                await Task.Delay(10 * 1000);
+                await Task.Delay(p.RefreshDelay * 1000);
                 Console.WriteLine("The timer callback executes.");
                 task.Reload();
             });

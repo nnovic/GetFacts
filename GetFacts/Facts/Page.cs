@@ -21,18 +21,31 @@ namespace GetFacts.Facts
             pageUrl = url;
             BaseUri = new Uri(url, UriKind.Absolute);
             defaultSection = new Section(String.Empty);
+            RefreshDelay = 10;
         }
 
         public Page(PageConfig pc):this(pc.Url)
         {
             Parser = new HtmlParser(); 
-            Template = TemplateFactory.GetInstance().GetTemplate(pc.Template); 
+            Template = TemplateFactory.GetInstance().GetTemplate(pc.Template);
+            RefreshDelay = pc.Refresh * 60;
         }
 
         internal bool TimerEnabled
         {
             get { return timerEnabled; }
             set { timerEnabled = value; }
+        }
+
+        /// <summary>
+        /// delai (en secondes) entre le moment
+        /// où le téléchargement du document est terminé
+        /// et le moment où il va recommencer.
+        /// </summary>
+        internal int RefreshDelay
+        {
+            get;
+            set;
         }
 
         #region configuration

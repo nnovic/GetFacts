@@ -15,7 +15,7 @@ namespace GetFacts.Render
         {
             articlesGrid = new Grid()
             {
-                Margin = new System.Windows.Thickness(5)
+                //Margin = new System.Windows.Thickness(5)
             };
             base.Embedded = articlesGrid;
         }

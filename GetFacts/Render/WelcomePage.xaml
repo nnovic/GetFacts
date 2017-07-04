@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:GetFacts.Render"
+      xmlns:local1="clr-namespace:GetFacts.Ads"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="WelcomePage">
@@ -15,9 +16,30 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="0">
-            <Border Margin="5" Background="#FF9500B6" CornerRadius="10">
+            <Border Margin="10" Background="#FF9500B6" CornerRadius="10">
                 <Viewbox>
                     <TextBlock>GetFacts</TextBlock>
+                </Viewbox>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="hap_ad" Margin="10" CornerRadius="10" Background="#FFDE7D7D">
+                <Viewbox Margin="10">
+                    <local1:HtmlAgilityPack_Ad />
+                </Viewbox>
+            </Border>
+            <Border Grid.Row="1" x:Name="json_ad" Margin="10" CornerRadius="10" Background="#FF24BB62">
+                <Viewbox Margin="10">
+                    <local1:JsonNET />
                 </Viewbox>
             </Border>
         </Grid>

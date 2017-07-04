@@ -297,6 +297,7 @@ namespace GetFacts.Render
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             bgBorder.Background = Brushes.Yellow;
+            this.BeginAnimation(FrameworkElement.MarginProperty, null);
         }
     }
 
