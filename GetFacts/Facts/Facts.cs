@@ -17,9 +17,9 @@ namespace GetFacts.Facts
 
         public static Facts GetInstance()
         {
-            lock(_lock_)
+            lock (_lock_)
             {
-                if(uniqueInstance==null)
+                if (uniqueInstance == null)
                 {
                     string cfgFile = ConfigFactory.GetInstance().ConfigFile;
                     uniqueInstance = new Facts(cfgFile);
@@ -38,7 +38,7 @@ namespace GetFacts.Facts
         private void LoadConfiguration(string path)
         {
             List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig(path);
-            foreach(PageConfig config in listConfigs)
+            foreach (PageConfig config in listConfigs)
             {
                 Page p = new Page(config);
                 AddPage(p);
@@ -56,6 +56,7 @@ namespace GetFacts.Facts
                 {
                     DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri);
                     downloadTasks.Add(task, p);
+                    task.TaskStarted += Task_TaskStarted;
                     task.TaskFinished += DownloadTask_TaskFinished;
                     task.TriggerIfTaskFinished();
                 }
@@ -66,19 +67,30 @@ namespace GetFacts.Facts
             }
         }
 
+        private void Task_TaskStarted(object sender, EventArgs e)
+        {
+            IncrementPageRefreshCount();
+        }
+
         private void DownloadTask_TaskFinished(object sender, EventArgs e)
         {
+            DecrementPageRefreshCount();
             DownloadTask task = (DownloadTask)sender;
             Page p = downloadTasks[task] as Page;
+            int delay = p.RecoverDelay * 1000;
 
             if (task.Status == DownloadTask.DownloadStatus.Completed)
             {
                 p.Update(task.LocalFile);
+                if(task.StartCounter>0)
+                {
+                    delay = p.RefreshDelay * 1000;
+                }
             }
 
             Task.Run(async delegate
             {
-                await Task.Delay(p.RefreshDelay * 1000);
+                await Task.Delay(delay);
                 Console.WriteLine("The timer callback executes.");
                 task.Reload();
             });
@@ -89,10 +101,10 @@ namespace GetFacts.Facts
         private int pageIndex = -1;
         private int sectionIndex = -1;
         private int articleIndex = -1;
-        
+
         private Page CurrentPage()
         {
-            if( (pageIndex>=0) && (pageIndex < pages.Count) )
+            if ((pageIndex >= 0) && (pageIndex < pages.Count))
             {
                 return pages[pageIndex];
             }
@@ -111,7 +123,7 @@ namespace GetFacts.Facts
             pageIndex++;
             sectionIndex = -1;
             articleIndex = -1;
-            if(pageIndex>=pages.Count)
+            if (pageIndex >= pages.Count)
             {
                 pageIndex = 0;
             }
@@ -123,10 +135,10 @@ namespace GetFacts.Facts
             Page p = CurrentPage();
             if (p == null) return null;
 
-            if( (sectionIndex>=0) && (sectionIndex < p.SectionsCount) )
+            if ((sectionIndex >= 0) && (sectionIndex < p.SectionsCount))
             {
                 return p.GetSection(sectionIndex);
-            }            
+            }
             return null;
         }
 
@@ -144,13 +156,13 @@ namespace GetFacts.Facts
             if (p == null) throw new ArgumentNullException();
             sectionIndex++;
             articleIndex = -1;
-            if(sectionIndex>=p.SectionsCount)
+            if (sectionIndex >= p.SectionsCount)
             {
                 return null;
             }
             return p.GetSection(sectionIndex);
         }
-        
+
         public Article More()
         {
             Section s = CurrentSection();
@@ -209,7 +221,7 @@ namespace GetFacts.Facts
             // Essaye d'obtenir l'article suivant
             // de la section en cours dans la page courante,
             // et le retourne en cas de succès.
-            
+
             startingPage = currentPage = CurrentPage();
             if (currentPage == null)
             {
@@ -251,7 +263,7 @@ namespace GetFacts.Facts
                 // Trouver la prochain page
                 currentPage = NextPage();
             }
-            
+
             return null;
         }
 
@@ -266,7 +278,7 @@ namespace GetFacts.Facts
             List<System.Windows.Controls.Page> output = new List<System.Windows.Controls.Page>();
             Page p = null;
             Section s = null;
-            Article a1, a2, a3 = null;            
+            Article a1, a2, a3 = null;
             bool pageChanged = false;
             bool sectionChanged = false;
 
@@ -278,15 +290,15 @@ namespace GetFacts.Facts
                     return null;
                 }
 
-               // if (pageChanged || sectionChanged)
-               // {
-                    p = CurrentPage();
-                    s = CurrentSection();                    
+                // if (pageChanged || sectionChanged)
+                // {
+                p = CurrentPage();
+                s = CurrentSection();
                 //}
-               
+
                 a2 = More();
 
-                a3 = More();                
+                a3 = More();
             }
 
 
@@ -303,7 +315,7 @@ namespace GetFacts.Facts
             }
 
             sb.AppendLine("---------------------------------------------------------------------------");
-            if(a1!=null)
+            if (a1 != null)
             {
                 sb.AppendFormat("   Title={0}", a1.Title).AppendLine();
             }
@@ -350,6 +362,71 @@ namespace GetFacts.Facts
 
         #endregion
 
+
+        #region Page events
+
+        private readonly object pageRefreshEventLock = new object();
+        private int pageRefreshEventCount = 0;
+
+        private void IncrementPageRefreshCount()
+        {
+            lock(pageRefreshEventLock)
+            {
+                if(pageRefreshEventCount==0)
+                {
+                    OnPageRefreshBegins();
+                }
+                pageRefreshEventCount++;
+            }
+
+        }
+
+        private void DecrementPageRefreshCount()
+        {
+            lock(pageRefreshEventLock)
+            {
+                if(pageRefreshEventCount>0)
+                {
+                    pageRefreshEventCount--;
+                    if(pageRefreshEventCount==0)
+                    {
+                        OnPageRefreshEnds();
+                    }
+                }
+            }
+        }
+
+        public class PageRefreshEventArgs : EventArgs
+        {
+            private readonly bool begins;
+            public PageRefreshEventArgs(bool begins)
+            {
+                this.begins = begins;
+            }
+            public bool Begins
+            {
+                get { return begins; }
+            }
+            public bool Ends
+            {
+                get { return !begins; }
+            }
+        }
+
+        public event EventHandler<PageRefreshEventArgs> PageRefreshEvent;
+
+        protected void OnPageRefreshBegins()
+        {
+            PageRefreshEventArgs prea = new PageRefreshEventArgs(true);
+            PageRefreshEvent?.Invoke(this, prea);
+        }
+
+        protected void OnPageRefreshEnds()
+        {
+            PageRefreshEventArgs prea = new PageRefreshEventArgs(false);
+            PageRefreshEvent?.Invoke(this, prea);
+        }
+        #endregion
 
         public ISet<string> GetAllUrls()
         {

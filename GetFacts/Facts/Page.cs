@@ -40,12 +40,26 @@ namespace GetFacts.Facts
         /// <summary>
         /// delai (en secondes) entre le moment
         /// où le téléchargement du document est terminé
+        /// avec succès
         /// et le moment où il va recommencer.
         /// </summary>
         internal int RefreshDelay
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// délai (en secondes) entre le moment
+        /// où le téléchargement à échoué et celuis
+        /// où l'on va le retenter.
+        /// Utilisé aussi pour le temporiser le
+        /// tout premier téléchargé de la page, au
+        /// démarrage du programme.
+        /// </summary>
+        internal int RecoverDelay
+        {
+            get { return 10; }
         }
 
         #region configuration

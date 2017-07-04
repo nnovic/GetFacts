@@ -19,6 +19,7 @@ namespace GetFacts.Download
         private readonly object _lock_ = new object();
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler TaskFinished;
+        public event EventHandler TaskStarted;
 
         private readonly Uri uri;
         private readonly Guid id;
@@ -51,6 +52,11 @@ namespace GetFacts.Download
         private void FireTaskFinished()
         {
             TaskFinished?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void FireTaskStarted()
+        {
+            TaskStarted?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -224,13 +230,6 @@ namespace GetFacts.Download
 
         private void OpenConnection()
         {
-            /*if(File.Exists(LocalFile) )
-            {
-                Status = DownloadStatus.Completed;
-                FireTaskFinished();
-                return;
-            }*/
-
             if (pendingAsyncOperation == false)
             {
                 try
@@ -274,6 +273,8 @@ namespace GetFacts.Download
                 return;
             }
 
+            startDownloadCounter++;
+
             // the following condition might occur
             // if OpenReadAsync failed:
             if(readStream==null)
@@ -296,6 +297,7 @@ namespace GetFacts.Download
             downloadPath = Path.ChangeExtension(LocalFile, TmpFileExtension);
             writeStream = File.OpenWrite(downloadPath);
             Status = DownloadStatus.Started;
+            FireTaskStarted();
             Console.WriteLine("DownloadTask: start {0}", uri.AbsoluteUri);
         }        
 
@@ -363,6 +365,22 @@ namespace GetFacts.Download
             Status = DownloadStatus.Completed;
             FireTaskFinished();
             Console.WriteLine("DownloadTask: finished {0}", uri.AbsoluteUri);
+        }
+
+        #endregion
+
+
+        #region counters
+
+        private long startDownloadCounter = 0;
+
+        /// <summary>
+        /// Retourne le nombre de fois où cette tache
+        /// a été lancée depuis sa création.
+        /// </summary>
+        public long StartCounter
+        {
+            get { return startDownloadCounter; }
         }
 
         #endregion

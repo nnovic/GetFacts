@@ -246,10 +246,19 @@ namespace GetFacts
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            GetFacts.Facts.Facts.GetInstance().PageRefreshEvent += MainGui_PageRefreshEvent;
             refreshIndication.Visibility = Visibility.Hidden;
             StartpRotationThread();
         }
-        
+
+        private void MainGui_PageRefreshEvent(object sender, Facts.Facts.PageRefreshEventArgs e)
+        {
+            Dispatcher.Invoke(() => {
+                refreshIndication.Visibility = e.Begins ? Visibility.Visible : Visibility.Hidden;
+            });
+            
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             StopRotationThread();
