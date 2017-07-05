@@ -117,6 +117,7 @@
     <Compile Include="TestGui.xaml.cs">
       <DependentUpon>TestGui.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Toolkit.cs" />
     <Page Include="Ads\HtmlAgilityPack_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace GetFacts
 {
@@ -37,12 +38,36 @@ namespace GetFacts
         private PageTemplate GetJSONTemplate(string path)
         {
             PageTemplate output;
-            string dir = ConfigFactory.GetInstance().TemplatesDirectory;
+            string dir = TemplatesDirectory;
             path = Path.Combine(dir, path);
             string text = File.ReadAllText(path);
             output = JsonConvert.DeserializeObject<PageTemplate>(text);
             return output;
         }
 
+        /// <summary>
+        /// returns ConfigFactory.GetInstance().TemplatesDirectory
+        /// </summary>
+        public string TemplatesDirectory
+        {
+            get { return ConfigFactory.GetInstance().TemplatesDirectory; }
+        }
+
+        public List<string> CreateTemplatesList()
+        {
+            return CreateTemplatesList(TemplatesDirectory);
+        }
+
+
+        public static List<string> CreateTemplatesList(string dir)
+        {
+            List<string> output = new List<string>();
+            foreach (string path in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+            {
+                string file = Toolkit.GetRelativePath(path, dir);
+                output.Add(file);
+            }
+            return output;
+        }
     }
 }

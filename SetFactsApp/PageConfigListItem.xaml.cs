@@ -55,20 +55,6 @@ namespace SetFactsApp
         private static List<string> templates = null;
         private static readonly object _lock_ = new object();
 
-
-
-        static List<string> CreateTemplatesList()
-        {
-            List<string> output = new List<string>();
-            string dir = ConfigFactory.GetInstance().TemplatesDirectory;
-            foreach (string path in Directory.EnumerateFiles(dir,"*.json",SearchOption.AllDirectories))
-            {
-                string file = Toolkit.GetRelativePath(path, dir);
-                output.Add(file);
-            }
-            return output;
-        }
-
         List<string> Templates
         {
             get
@@ -77,7 +63,8 @@ namespace SetFactsApp
                 {
                     if(templates==null)
                     {
-                        templates = CreateTemplatesList();
+                        string dir = ConfigFactory.GetInstance().TemplatesDirectory;
+                        templates = TemplateFactory.CreateTemplatesList(dir);
                     }
                     return templates;
                 }

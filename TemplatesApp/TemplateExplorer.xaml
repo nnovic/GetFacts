@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="TemplatesApp.TemplateExplorer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TemplatesApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        
+        <!-- File/Dir nav -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <!-- current dir -->
+            <Grid x:Name="CurrentDirPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0">Directory:</TextBlock>
+                <ComboBox Grid.Column="1" x:Name="TemplatesDirSelection" IsEnabled="False" SelectionChanged="TemplatesDirSelection_SelectionChanged"/>
+                <Button Grid.Column="2">change</Button>
+            </Grid>
+
+            <!-- filename filter -->
+            <Grid Grid.Row="1" x:Name="FileFilterPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0">Filter:</TextBlock>
+                <TextBox Grid.Column="1" />
+                <Button Grid.Column="2">Apply</Button>
+            </Grid>
+
+            <!-- files -->
+            <Grid Grid.Row="2" x:Name="FilesListPanel">
+                <ListBox x:Name="FilesList" SelectionChanged="FilesList_SelectionChanged"></ListBox>
+            </Grid>
+            
+        </Grid>
+        
+        <!-- file content preview -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock>Preview:</TextBlock>
+            <RichTextBox x:Name="JsonPreview"  Grid.Row="2" IsReadOnly="True"></RichTextBox>
+        </Grid>
+    </Grid>
+</UserControl>
