@@ -189,6 +189,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Resources\README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

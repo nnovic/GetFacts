@@ -1,6 +1,7 @@
 ﻿{
 	"PageName" : "sokrostream.cc",
 	"TitleTemplate" : { "XPath":"/html/head/title" },
+	"IconUrlTemplate" :  { "XPath" : ".//div[@id=\"header\"]//img/@src" },
 	"Sections" :
 	[
 		{
@@ -11,6 +12,8 @@
 				{
 					"XPathFilter" : ".//div[@class=\"moviefilm\"]",
 					"TitleTemplate" :  { "XPath" : ".//div[@class=\"movief\"]//text()" },
+					"TextTemplate" :  { "XPath" : ".//div[contains(@class, 'movies')]" },
+					"IconUrlTemplate" :  { "XPath" : "./a/img/@src" },
 					"BrowserUrlTemplate" : { "XPath" : "./a/@href" }
 				}
 			]
