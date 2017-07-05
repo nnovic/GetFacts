@@ -38,7 +38,15 @@ namespace GetFacts.Facts
         private void LoadConfiguration(string path)
         {
             List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig(path);
-            foreach (PageConfig config in listConfigs)
+            IEnumerable<PageConfig> orderedList = listConfigs;
+
+            if(ShufflePages)
+            {
+                Random rnd = new Random();
+                orderedList = listConfigs.OrderBy<PageConfig, int>((item) => rnd.Next());
+            }
+
+            foreach (PageConfig config in orderedList)
             {
                 Page p = new Page(config);
                 AddPage(p);
@@ -359,6 +367,11 @@ namespace GetFacts.Facts
             }
         }
 
+
+        public bool ShufflePages
+        {
+            get { return true; }
+        }
 
         #endregion
 
