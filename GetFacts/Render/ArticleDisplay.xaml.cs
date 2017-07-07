@@ -60,7 +60,7 @@ namespace GetFacts.Render
 
             if (string.IsNullOrEmpty(info.IconUrl) == false)
             {
-                iconTask = DownloadManager.GetInstance().FindOrQueue(info.IconUri);
+                iconTask = DownloadManager.GetInstance().FindOrQueue(info.IconUri,null);
                 iconTask.TaskFinished += IconTask_TaskFinished;
                 iconTask.PropertyChanged += IconTask_PropertyChanged;
                 iconTask.TriggerIfTaskFinished();
@@ -77,8 +77,10 @@ namespace GetFacts.Render
                 if(info.IsNew)
                 {
                     bgBorder.Background = Brushes.Green;
-                    ShakeShakeAnimation ssa = new ShakeShakeAnimation(this.Margin);
-                    ssa.BeginTime = new TimeSpan(0, 0, 0, 1, 200 * orderOfAppearance);
+                    ShakeShakeAnimation ssa = new ShakeShakeAnimation(this.Margin)
+                    {
+                        BeginTime = new TimeSpan(0, 0, 0, 1, 200 * orderOfAppearance)
+                    };
                     this.BeginAnimation(FrameworkElement.MarginProperty, ssa);
                 }
             }
