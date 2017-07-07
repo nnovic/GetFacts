@@ -10,7 +10,7 @@
         <!-- Affichage principal -->
         <DockPanel>
             <ToolBar DockPanel.Dock="Top" >
-                <Button x:Name="addUrlButton" Content="Add download" Click="addUrlButton_Click" />
+                <Button x:Name="addUrlButton" Content="Add download" Click="AddUrlButton_Click" />
             </ToolBar>
             <DataGrid x:Name="downloadsGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
                 <DataGrid.Columns>
@@ -36,8 +36,8 @@
                     <TextBlock Margin="5" Text="Input Box:" FontWeight="Bold" FontFamily="Cambria" />
                     <TextBox MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="okButton" Margin="5" Content="Yes" Background="{x:Null}" Click="okButton_Click"/>
-                        <Button x:Name="candelButton" Margin="5" Content="No" Background="{x:Null}" Click="cancelButton_Click" />
+                        <Button x:Name="okButton" Margin="5" Content="Yes" Background="{x:Null}" Click="OkButton_Click"/>
+                        <Button x:Name="candelButton" Margin="5" Content="No" Background="{x:Null}" Click="CancelButton_Click" />
                     </StackPanel>
                 </StackPanel>
             </Border>

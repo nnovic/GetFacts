@@ -69,7 +69,28 @@ namespace GetFacts.Facts
             get;set;
         }
 
-        
+        /// <summary>
+        /// Retourne l'extension de fichier qui est
+        /// la plus communément utilisée pour pour
+        /// le type de fichier qui sert de source à
+        /// cette page.
+        /// Peut retourne null si cette information
+        /// n'est pas disponible.
+        /// </summary>
+        /// <example>Pour des données au format HTML, DefaultFileExtension
+        /// retournera ".html"</example>
+        /// <remarks>Retourne le tout premier élément de Parser.UsualFileExtensions</remarks>
+        public string DefaultFileExtension
+        {
+            get
+            {
+                if ((Parser.UsualFileExtensions == null)
+                    || (Parser.UsualFileExtensions.Length < 1))
+                    return null;
+                else
+                    return Parser.UsualFileExtensions[0];
+            }
+        }
 
         public string Url
         {

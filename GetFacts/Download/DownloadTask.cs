@@ -23,11 +23,13 @@ namespace GetFacts.Download
 
         private readonly Uri uri;
         private readonly Guid id;
+        private readonly string defaultFileExtension;
 
-        public DownloadTask(Uri uri, Guid id)
+        public DownloadTask(Uri uri, Guid id, string defaultFileExtension)
         {
             this.uri = uri;
             this.id = id;
+            this.defaultFileExtension = defaultFileExtension;
 
             if (File.Exists(LocalFile))
             {
@@ -38,7 +40,7 @@ namespace GetFacts.Download
 
         public Uri Uri { get { return this.uri; } }
         public Guid Guid { get { return this.id; } }
-
+        public string DefaultFileExtension { get { return this.defaultFileExtension; } }
 
         private void FirePropertyChanged(string p)
         {
@@ -138,7 +140,7 @@ namespace GetFacts.Download
             }
         }
 
-        internal void TriggerIfTaskFinished()
+        public void TriggerIfTaskFinished()
         {
             lock(_lock_)
             {
@@ -149,7 +151,7 @@ namespace GetFacts.Download
             }
         }
 
-        internal bool Reload()
+        public bool Reload()
         {
             lock(_lock_)
             {
@@ -199,15 +201,21 @@ namespace GetFacts.Download
             }
         }
 
+        /// <summary>
+        /// Absolute path the to file on the computer
+        /// that contains the downloaded data.
+        /// </summary>
         public string LocalFile
         {
             get
             {
                 string dirName = ConfigFactory.GetInstance().CacheDirectory;
-                string fileName = id.ToString();
-                string extension = Path.GetExtension(uri.AbsoluteUri);
-
+                string fileName = id.ToString();              
                 string path = Path.Combine(dirName, fileName);
+
+                string extension = Path.GetExtension(uri.AbsoluteUri);
+                if (string.IsNullOrEmpty(extension))
+                    extension = DefaultFileExtension;
                 if (string.IsNullOrEmpty(extension) == false)
                     path = Path.ChangeExtension(path, extension);
 

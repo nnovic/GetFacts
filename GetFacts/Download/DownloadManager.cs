@@ -44,7 +44,7 @@ namespace GetFacts.Download
 
         #endregion
 
-        private Regex downloadListPattern = new Regex("\"([^\"]+)\"\\s+\\{([^\\}]+)\\}");
+        private Regex downloadListPattern = null;
         private ObservableCollection<DownloadTask> downloads = new ObservableCollection<DownloadTask>();
 
         protected DownloadManager()
@@ -56,6 +56,32 @@ namespace GetFacts.Download
             LoadTasksFromFile();
             StartDownloadQueue();
         }
+
+        /// <summary>
+        /// Construit le Regex qui sera utilisé pour
+        /// analyser les lignes du fichier "dowloads.lst"
+        /// </summary>
+        /// <remarks>
+        /// Le Regex ainsi obtenu est stocké pour 
+        /// les prochains appels à cette propriété.
+        /// </remarks>
+        private Regex DownloadListPattern
+        {
+            get
+            {
+                if(downloadListPattern==null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("\"([^\"]+)\""); // any block of text that start and ends with quotes
+                    sb.Append("\\s+"); // any number of white spaces
+                    sb.Append("\\{([^\\}]+)\\}"); // any block of text that starts and ends with curly braces
+                    sb.Append("(?:\\s(\\.[\\w\\d]+))?"); // optional non-capturing group
+                    downloadListPattern = new Regex(sb.ToString());
+                }
+                return downloadListPattern;
+            }
+        }
+
 
         public ISet<string> GetAllUrls()
         {
@@ -139,7 +165,14 @@ namespace GetFacts.Download
         }
 
 
-
+        /// <summary>
+        /// Saves the list of currently known tasks into the 'DownloadsList' file.
+        /// Each line of text in the file is a task.
+        /// Each task is described by three components: 
+        /// - the URL from which the file has been downloaded [Mandatory]
+        /// - the GUID of the task (which also is corresponding local file's name without extension) [Mandatory]
+        /// - the extension of the local file name, which is only required if its missing from URL [Optional]
+        /// </summary>
         private void SaveTasksToFile()
         {
             if (DownloadsFileSupported)
@@ -148,9 +181,22 @@ namespace GetFacts.Download
                 List<string> entries = new List<string>();
                 foreach (DownloadTask task in downloads)
                 {
+                    string uri = task.Uri.AbsoluteUri;
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("\"{0}\"", task.Uri.AbsoluteUri).Append(" ");
+                    
+                    // URL (mandatory)
+                    sb.AppendFormat("\"{0}\"", uri).Append(" ");
+
+                    // Guid (mandatory)
                     sb.Append("{").Append(task.Guid).Append("}");
+
+
+                    if( Path.HasExtension(uri)==false )
+                    {
+                        string ext = Path.GetExtension(task.LocalFile);
+                        sb.AppendFormat(" {0}", ext);
+                    }
+
                     entries.Add(sb.ToString());
                 }
                 File.WriteAllLines(path, entries.ToArray());
@@ -192,14 +238,19 @@ namespace GetFacts.Download
 
         // "http:\\blabla\toto.ext" {Guid}
         /// <summary>
-        /// 
+        /// Analyse une ligne qui provient du fichier
+        /// "downloads.lst" grâce à l'expression régulière
+        /// donnée par la propriété DownloadListPattern.
+        /// Les informations ainsi obtenues permettent de 
+        /// créer une DownloadTask, qui est ensuite retournée.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
+        /// <param name="text">une ligne de "downloads.lst" à analyser</param>
+        /// <returns>un objet DownloadTask correspondant aux infos de la ligne passée en paramètre. La valeur null
+        /// sera retournée si l'analyse échoue.</returns>
         /// <remarks>method called from the constructor, which is synchronized with the "_lock_" object.</remarks>
         private DownloadTask CreateTaskFromString(string text)
         {
-            Match m = downloadListPattern.Match(text);
+            Match m = DownloadListPattern.Match(text);
             if( m.Success == false )
             {
                 return null;
@@ -207,10 +258,12 @@ namespace GetFacts.Download
 
             string url = m.Groups[1].Value;
             string guidAsString = m.Groups[2].Value;
+            string extension = (m.Groups.Count>=4)? m.Groups[3].Value:null;
+
 
             Guid guid = Guid.Parse(guidAsString);
             Uri uri = new Uri(url, UriKind.Absolute);
-            DownloadTask task = new DownloadTask(uri, guid);
+            DownloadTask task = new DownloadTask(uri, guid, extension);
 
             return task;
         }
@@ -230,7 +283,25 @@ namespace GetFacts.Download
             return false;
         }
 
-        public DownloadTask FindOrQueue(Uri uri)
+        /// <summary>
+        /// Retourne un objet DownloadTask associé à
+        /// l'Uri passé en paramètre. S'il en existe
+        /// déjà un dans la liste des tâches, c'est cet
+        /// instance qui sera retournée. Sinon, un nouveau
+        /// DowloadTask est créé, ajouté à la liste des tâches,
+        /// et retourné.
+        /// </summary>
+        /// <param name="uri">L'Uri pour lequel on veut obtenir
+        /// un objet DownloadTask</param>
+        /// <param name="defaultFileExtension">Précise l'extension de fichier qu'il faudrait associé à la ressource pointée par l'Uri. Doit être
+        /// précisé si l'Uri ne fait pas apparaître explicitement une extension de fichier. Peut valoir null si l'Uri indique
+        /// explicitement l'extension du fichier.</param>
+        /// <returns>La DownloadTask associé à uri.</returns>
+        /// <example>
+        /// FindOrQueue( new Uri("http://www.google.fr/"), ".html");
+        /// FindOrQueue( new Uri("http://www.site.com/index.htm", null);
+        /// </example>
+        public DownloadTask FindOrQueue(Uri uri, string defaultFileExtension)
         {
             DownloadTask output = null;
             lock(_lock_)
@@ -238,7 +309,7 @@ namespace GetFacts.Download
                 output = Find(uri);
                 if(output==null)
                 {
-                    output = Queue(uri);
+                    output = Queue(uri, defaultFileExtension);
                 }
             }
             return output;
@@ -299,7 +370,7 @@ namespace GetFacts.Download
             Console.WriteLine("DownloadManager: task {0} removed from list", task.Uri.AbsoluteUri);
         }
 
-        public DownloadTask Create(Uri uri)
+        public DownloadTask Create(Uri uri, string defaultFileExtension)
         {
             DownloadTask newTask = null;
             lock(_lock_)
@@ -310,18 +381,18 @@ namespace GetFacts.Download
                 }
 
                 Guid newId = GenerateUniqueId();
-                newTask = new DownloadTask(uri, newId);
+                newTask = new DownloadTask(uri, newId, defaultFileExtension);
             }
             return newTask;
         }
 
-        public DownloadTask Queue(Uri uri)
+        public DownloadTask Queue(Uri uri, string defaultFileExtension)
         {
             DownloadTask newTask = null;
 
             lock(_lock_)
             {
-                newTask = Create(uri);
+                newTask = Create(uri, defaultFileExtension);
                 Queue(newTask);
             }
 
@@ -340,8 +411,10 @@ namespace GetFacts.Download
 
         private void StartDownloadQueue()
         {
-            dThread = new Thread(DownloadLoop);
-            dThread.Name = "DownloadLoop";
+            dThread = new Thread(DownloadLoop)
+            {
+                Name = "DownloadLoop"
+            };
             isRunning = true;
             dThread.Start();
             Console.WriteLine("DownloadManager: thread started");

@@ -36,6 +36,15 @@ namespace GetFacts.Parse
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Should be ordering from most common to less common file extension.</remarks>
+        public override string[] UsualFileExtensions
+        {
+            get { return new string[] { ".html", ".htm" }; }
+        }
+
         protected override void ClearSourceCode()
         {
             base.ClearSourceCode();

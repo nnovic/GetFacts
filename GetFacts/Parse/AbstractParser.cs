@@ -28,6 +28,19 @@ namespace GetFacts.Parse
         public abstract void Load(string path, Encoding encoding);
 
         /// <summary>
+        /// Retourne une liste des extensions de fichier
+        /// qui sont le plus couramment associées au
+        /// type de resource qui est analysée par
+        /// ce Parser.
+        /// </summary>
+        /// <remarks>Should be ordering from most common to less common file extension.</remarks>
+        /// <example>HtmlParser retournera {".html", ".htm"}</example>
+        public abstract string[] UsualFileExtensions
+        {
+            get;
+        }
+
+        /// <summary>
         /// TO BE IMPROVED !!
         /// </summary>
         public virtual void Clear()

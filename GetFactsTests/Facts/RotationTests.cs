@@ -25,11 +25,12 @@ namespace GetFacts.Facts.Tests
 
         private class TestableDownloadTask:DownloadTask
         {
-            public TestableDownloadTask(string file, string id):base(  
+            public TestableDownloadTask(string file, string id, string defaultFileExtension) :base(  
                 new Uri(
                     Path.Combine("Cache",file), 
                     UriKind.Relative), 
-                Guid.Parse(id) )
+                Guid.Parse(id) ,
+                defaultFileExtension)
             {
             }
         }
@@ -43,8 +44,8 @@ namespace GetFacts.Facts.Tests
         public void More_testSimple()
         {
             DownloadManager dm = new TestableDownloadManager();
-            dm.Queue(new TestableDownloadTask("http://www.site1.com/index.html", "00000000-0000-0000-0000-000000000001"));
-            dm.Queue(new TestableDownloadTask("http://www.site2.com/index.html", "00000000-0000-0000-0000-000000000002"));
+            dm.Queue(new TestableDownloadTask("http://www.site1.com/index.html", "00000000-0000-0000-0000-000000000001", null));
+            dm.Queue(new TestableDownloadTask("http://www.site2.com/index.html", "00000000-0000-0000-0000-000000000002", null));
             Facts facts = new TestableFacts("RotationTestConfig.json");
             facts.Initialize();
             //Assert.Fail();

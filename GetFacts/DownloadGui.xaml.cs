@@ -27,23 +27,23 @@ namespace GetFacts
             downloadsGrid.ItemsSource = DownloadManager.GetInstance().Items;
         }
 
-        private void addUrlButton_Click(object sender, RoutedEventArgs e)
+        private void AddUrlButton_Click(object sender, RoutedEventArgs e)
         {
             InputBox.Visibility = Visibility.Visible;
         }
 
-        private void cancelButton_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void okButton_Click(object sender, RoutedEventArgs e)
+        private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             string url = InputTextBox.Text;
             Uri uri = new Uri(url, UriKind.Absolute);
             try
             {
-                DownloadTask task = DownloadManager.GetInstance().Queue(uri);                
+                DownloadTask task = DownloadManager.GetInstance().Queue(uri,null);                
             }
             catch(ArgumentException)
             {

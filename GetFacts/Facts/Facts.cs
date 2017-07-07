@@ -61,8 +61,8 @@ namespace GetFacts.Facts
             {
                 AbstractInfo.NewStatusForNewInstance = false;
                 foreach (Page p in pages)
-                {
-                    DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri);
+                {                    
+                    DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri, p.DefaultFileExtension);
                     downloadTasks.Add(task, p);
                     task.TaskStarted += Task_TaskStarted;
                     task.TaskFinished += DownloadTask_TaskFinished;
