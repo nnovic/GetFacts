@@ -14,6 +14,16 @@ using System.Xml.XPath;
 
 namespace GetFacts.Parse
 {
+    /// <summary>
+    /// La classe AbstractParser est le prototype
+    /// pour les classes en charges de tansformer
+    /// les documents téléchargés en informations
+    /// affichables dans GetFacts.
+    /// La méthode Load() doit être utilisée en premier pour
+    /// charger le contenu du document téléchargé. Ensuite,
+    /// il est possible d'utiliser CreateNavigator() pour obtenir
+    /// un objet permettant de naviguer dans la structure dudit document.
+    /// </summary>
     public abstract class AbstractParser:IXPathNavigable
     {
 
@@ -39,6 +49,30 @@ namespace GetFacts.Parse
         {
             get;
         }
+
+        /// <summary>
+        /// Retourne l'extension de fichier qui est
+        /// la plus communément utilisée pour pour
+        /// le type de fichier qui sert de source à
+        /// cette page.
+        /// Peut retourne null si cette information
+        /// n'est pas disponible.
+        /// </summary>
+        /// <example>Pour des données au format HTML, DefaultFileExtension
+        /// retournera ".html"</example>
+        /// <remarks>Retourne le tout premier élément de UsualFileExtensions</remarks>
+        public string MostProbableFileExtension
+        {
+            get
+            {
+                if ((UsualFileExtensions == null)
+                    || (UsualFileExtensions.Length < 1))
+                    return null;
+                else
+                    return UsualFileExtensions[0];
+            }
+        }
+        
 
         /// <summary>
         /// TO BE IMPROVED !!

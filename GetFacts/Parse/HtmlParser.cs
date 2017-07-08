@@ -14,7 +14,7 @@ using System.Xml.XPath;
 
 namespace GetFacts.Parse
 {
-    class HtmlParser:AbstractParser
+    public class HtmlParser:AbstractParser
     {
         private HtmlDocument htmlDoc = null;
 

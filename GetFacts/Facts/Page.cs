@@ -84,11 +84,7 @@ namespace GetFacts.Facts
         {
             get
             {
-                if ((Parser.UsualFileExtensions == null)
-                    || (Parser.UsualFileExtensions.Length < 1))
-                    return null;
-                else
-                    return Parser.UsualFileExtensions[0];
+                return Parser.MostProbableFileExtension;
             }
         }
 

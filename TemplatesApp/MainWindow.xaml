@@ -5,21 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TemplatesApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Initialized="Window_Initialized">
     <Grid>
-        <TabControl>
-            <TabItem Header="Select template file...">
+        <TabControl x:Name="TabControl">
+            <TabItem x:Name="SelectTab" Header="Select template file, ...">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <local:TemplateExplorer></local:TemplateExplorer>
+                    <local:TemplateExplorer TemplateSelectionChanged="TemplateExplorer_TemplateSelectionChanged"></local:TemplateExplorer>
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <Button>Select</Button>
-                        <Button>Create new</Button>
+                        <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" >Select</Button>
+                        <Button x:Name="CreateTemplateButton" >Create new</Button>
                     </StackPanel>
                 </Grid>
+            </TabItem>
+            <TabItem x:Name="ExploreTab" Header="explore source code, ...">
+                <Grid>
+                    <local:SourceExplorer x:Name="SourceExplorer"></local:SourceExplorer>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="EditTab" Header="edit template, ...">
+
+            </TabItem>
+            <TabItem x:Name="SaveTab" Header="and save.">
+
             </TabItem>
         </TabControl>
     </Grid>

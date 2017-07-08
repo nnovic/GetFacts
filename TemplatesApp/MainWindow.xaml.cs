@@ -24,5 +24,28 @@ namespace TemplatesApp
         {
             InitializeComponent();
         }
+
+        private void TemplateExplorer_TemplateSelectionChanged(object sender, TemplateExplorer.TemplateSelectionChangedEventArges e)
+        {
+            SelectTemplateButton.IsEnabled = (e.Path != null);
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {            
+            ExploreTab.IsEnabled = false;
+            EditTab.IsEnabled = false;
+            SaveTab.IsEnabled = false;
+
+            SelectTemplateButton.IsEnabled = false;
+            CreateTemplateButton.IsEnabled = false;
+        }
+
+        private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExploreTab.IsEnabled = true;
+            EditTab.IsEnabled = true;
+            SaveTab.IsEnabled = false;
+            TabControl.SelectedItem = ExploreTab;
+        }
     }
 }

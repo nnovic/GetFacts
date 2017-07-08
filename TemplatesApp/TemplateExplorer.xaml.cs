@@ -13,6 +13,7 @@ namespace TemplatesApp
     /// </summary>
     public partial class TemplateExplorer : UserControl
     {
+
         public TemplateExplorer()
         {
             InitializeComponent();
@@ -27,27 +28,50 @@ namespace TemplatesApp
 
         private void TemplatesDirSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string dir = TemplatesDirSelection.SelectedItem as string;
-            List<string> templates = TemplateFactory.CreateTemplatesList(dir);
-            templates.ForEach(t => FilesList.Items.Add(t));
+            FilesList.Items.Clear();
+
+            try
+            {
+                string dir = TemplatesDirSelection.SelectedItem as string;
+                List<string> templates = TemplateFactory.CreateTemplatesList(dir);
+                templates.ForEach(t => FilesList.Items.Add(t));
+            }
+            catch(DirectoryNotFoundException)
+            {
+            }
         }
 
         private void FilesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string dir = TemplatesDirSelection.SelectedItem as string;
-            string template = FilesList.SelectedItem as string;
-            string path = Path.Combine(dir, template);
-            Preview(path);         
+            try
+            {
+                string dir = TemplatesDirSelection.SelectedItem as string;
+                string template = FilesList.SelectedItem as string;
+                string path = Path.Combine(dir, template);
+                Preview(path);
+                OnTemplateSelectionChanged(path);
+            }
+            catch
+            {
+                Preview(null);
+                OnTemplateSelectionChanged(null);
+            }
         }
+
 
         private void Preview(string path)
         {
+            string text = string.Empty;
+
+            if (path != null)
+            {
+                text = File.ReadAllText(path);
+            }
+
             Dispatcher.Invoke( ()=> 
             {
                 try
                 {
-                    //FlowDocument fd = Toolkit.JSonToFlowDocument(path);
-                    string text = File.ReadAllText(path);
                     Run r = new Run(text);
                     Paragraph p = new Paragraph(r);
                     FlowDocument fd = new FlowDocument(p);
@@ -58,5 +82,32 @@ namespace TemplatesApp
                 }
             });
         }
+
+
+        #region TemplateSelectionChanged
+
+        public class TemplateSelectionChangedEventArges : EventArgs
+        {
+            private string path;
+            public TemplateSelectionChangedEventArges(string path)
+            {
+                this.path = path;
+            }
+            public string Path
+            {
+                get { return path; }
+            }
+        }
+
+        public event EventHandler<TemplateSelectionChangedEventArges> TemplateSelectionChanged;
+
+        void OnTemplateSelectionChanged(string path)
+        {
+            TemplateSelectionChangedEventArges args = new TemplateSelectionChangedEventArges(path);
+            TemplateSelectionChanged?.Invoke(this, args);
+        }
+
+        #endregion
+
     }
 }
