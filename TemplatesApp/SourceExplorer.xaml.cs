@@ -1,7 +1,6 @@
 ﻿using GetFacts.Download;
 using GetFacts.Parse;
 using System;
-using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,15 +17,32 @@ namespace TemplatesApp
         public SourceExplorer()
         {
             InitializeComponent();
-            Parser = new HtmlParser();
+            //Parser = new HtmlParser();
         }
 
 
         #region configuration
 
+        private PageTemplate pageTemplate;
+
+        public PageTemplate PageTemplate
+        {
+            get
+            {
+                return pageTemplate;
+            }
+            set
+            {
+                pageTemplate = value;
+                Parser = pageTemplate.GetParser();
+            }
+        }
+
+
         public AbstractParser Parser
         {
-            get; set;
+            get;
+            private set;
         }
 
         public Encoding Encoding

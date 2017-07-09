@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GetFacts;
+using GetFacts.Parse;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TemplatesApp
 {
@@ -20,6 +11,10 @@ namespace TemplatesApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string templateFile;
+        private PageTemplate pageTemplate;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -45,6 +40,11 @@ namespace TemplatesApp
             ExploreTab.IsEnabled = true;
             EditTab.IsEnabled = true;
             SaveTab.IsEnabled = false;
+
+            templateFile = TemplateSelection.SelectedTemplate;
+            pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
+
+            SourceExplorer.PageTemplate = pageTemplate;
             TabControl.SelectedItem = ExploreTab;
         }
     }

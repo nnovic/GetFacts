@@ -14,7 +14,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <local:TemplateExplorer TemplateSelectionChanged="TemplateExplorer_TemplateSelectionChanged"></local:TemplateExplorer>
+                    <local:TemplateExplorer x:Name="TemplateSelection" TemplateSelectionChanged="TemplateExplorer_TemplateSelectionChanged"></local:TemplateExplorer>
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" >Select</Button>
                         <Button x:Name="CreateTemplateButton" >Create new</Button>

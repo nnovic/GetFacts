@@ -59,6 +59,15 @@ namespace TemplatesApp
         }
 
 
+        public string SelectedTemplate
+        {
+            get
+            {
+                string template = FilesList.SelectedItem as string;
+                return template;
+            }
+        }
+
         private void Preview(string path)
         {
             string text = string.Empty;

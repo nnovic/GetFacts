@@ -1,7 +1,6 @@
 ﻿using GetFacts.Parse;
 using Newtonsoft.Json;
 using System.IO;
-using System;
 using System.Collections.Generic;
 
 namespace GetFacts

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
 
 namespace GetFacts.Parse
 {
@@ -14,6 +10,16 @@ namespace GetFacts.Parse
         public string PageName
         {
             get;set;
+        }
+
+        public string PageType
+        {
+            get;set;
+        }
+
+        public AbstractParser GetParser()
+        {
+            return new HtmlParser();
         }
 
         /// <summary>
