@@ -273,13 +273,40 @@ namespace GetFacts.Parse
         protected override TreeViewItem CreateSourceTree()
         {
             HtmlNode rootHtmlNode = htmlDoc.DocumentNode;
-            TreeViewItem root = new TreeViewItem();
-            Html_To_TreeViewItem(rootHtmlNode, root);
+            rootHtmlNode = rootHtmlNode.SelectSingleNode("/html");
+            TreeViewItem root = CreateTvi(rootHtmlNode);
+            
+            //Html_To_TreeViewItem(rootHtmlNode, root);
+            foreach (HtmlNode child in rootHtmlNode.ChildNodes)
+            {
+                Html_To_TreeViewItem(child, root);
+            }
+
             root.ExpandSubtree();
 
             return root;
         }
 
+
+        private TreeViewItem CreateTvi(HtmlNode node)
+        {
+
+            /*string xpath = node.XPath;
+            string[] xpathParts = xpath.Split(new char[] { '/' });
+            string lastPart = xpathParts[xpathParts.Length - 1];*/
+            HtmlNodeCollection siblings = node.SelectNodes("../" + node.Name);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(node.Name);
+            if( siblings.Count>1 )
+            {
+                sb.AppendFormat("[{0}]", siblings.IndexOf(node));
+            }
+
+            TreeViewItem tvi = new TreeViewItem();
+            tvi.Header = sb.ToString();           
+            return tvi;
+        }
 
         void Html_To_TreeViewItem(HtmlNode node, TreeViewItem parent)
         {
@@ -306,11 +333,16 @@ namespace GetFacts.Parse
             }
             */
 
-            string xpath = node.XPath;
+            /*string xpath = node.XPath;
             string[] xpathParts = xpath.Split(new char[] { '/' });
             string lastPart = xpathParts[xpathParts.Length - 1];
             TreeViewItem tvi = new TreeViewItem();
-            tvi.Header = lastPart;
+            tvi.Header = lastPart;*/
+
+            if (node.NodeType != HtmlNodeType.Element)
+                return;
+
+            TreeViewItem tvi = CreateTvi(node);
             parent.Items.Add(tvi);
 
             // PROCESS CHILDREN
@@ -318,6 +350,8 @@ namespace GetFacts.Parse
             {
                 Html_To_TreeViewItem(child, tvi);
             }
+
+
 
         }
 
