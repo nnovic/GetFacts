@@ -28,7 +28,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.leboncoin.fr/annonces/offres/rhone_alpes/"></ComboBox>
+            <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html"></ComboBox>
             <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
             <ComboBox Grid.Row="1" SelectedIndex="0" IsEnabled="False">
                 <ComboBoxItem>HtmlParser</ComboBoxItem>
@@ -45,7 +45,8 @@
         
         <!-- tree -->
         <Grid Grid.Column="1" Grid.Row="1">
-            <TreeView x:Name="TreeView"></TreeView>
+            <TreeView x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged">
+            </TreeView>
         </Grid>
         
     </Grid>

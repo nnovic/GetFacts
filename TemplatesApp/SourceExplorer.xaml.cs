@@ -17,7 +17,6 @@ namespace TemplatesApp
         public SourceExplorer()
         {
             InitializeComponent();
-            //Parser = new HtmlParser();
         }
 
 
@@ -83,13 +82,21 @@ namespace TemplatesApp
                 Dispatcher.Invoke(() => 
                 {
                     CodeSourceView.Document = Parser.SourceCode;
+                    CodeSourceTree.Items.Add(Parser.SourceTree);
                     //UrlBar.IsEnabled = true;
                 });
             }
         }
 
-        #endregion
-      
 
+        #endregion
+
+        private void CodeSourceTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            TreeViewItem selected = (TreeViewItem)e.NewValue;
+            selected.BringIntoView();
+            //CodeSourceTree.Focus();
+            selected.Focus();
+        }
     }
 }

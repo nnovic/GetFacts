@@ -1,4 +1,5 @@
 ﻿using GetFacts;
+using GetFacts.Download;
 using GetFacts.Parse;
 using System;
 using System.Windows;
@@ -33,6 +34,9 @@ namespace TemplatesApp
 
             SelectTemplateButton.IsEnabled = false;
             CreateTemplateButton.IsEnabled = false;
+
+            // Force early initialization of the download manager
+            DownloadManager.GetInstance();
         }
 
         private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
