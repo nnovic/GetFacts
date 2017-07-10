@@ -63,7 +63,7 @@ namespace GetFacts
             this.Dispatcher.Invoke(()=> 
             {
                 CodeSourceView.Document = parser.SourceCode;
-                CodeSourceTree.Items.Add(parser.SelectedSource);
+                //CodeSourceTree.Items.Add(parser.SelectedSource);
             });            
 
             StopWait();
@@ -79,7 +79,7 @@ namespace GetFacts
 
         private void CodeSourceTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            TreeViewItem oldItem = e.OldValue as TreeViewItem;
+            /*TreeViewItem oldItem = e.OldValue as TreeViewItem;
             TreeViewItem newItem = e.NewValue as TreeViewItem;
 
             if( oldItem != null )
@@ -113,7 +113,7 @@ namespace GetFacts
                     AttributesGrid.Items.Add(new { Name = key, Value = value });
                 }
             }
-
+            */
             
         }
     }

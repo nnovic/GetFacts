@@ -1,15 +1,9 @@
 ﻿using HtmlAgilityPack;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
-using System.Windows;
 using System.Xml.XPath;
 
 namespace GetFacts.Parse
@@ -45,20 +39,14 @@ namespace GetFacts.Parse
             get { return new string[] { ".html", ".htm" }; }
         }
 
-        protected override void ClearSourceCode()
-        {
-            base.ClearSourceCode();
-            htmlToTextElement.Clear();
-        }
 
         public override void Clear()
         {
             base.Clear();
-            if( htmlDoc!=null)
+            /*if( htmlDoc!=null)
             {
-                // TODO: Clear ??
-                // New ??
-            }
+                htmlDoc = null;
+            }*/
         }
 
         #region flow document
@@ -80,14 +68,6 @@ namespace GetFacts.Parse
         private readonly Brush styleColor = Brushes.Purple;
 
         private readonly Brush commentColor = Brushes.Green;
-
-        private Hashtable htmlToTextElement = new Hashtable();
-
-        protected override TextElement GetTextElementAssociatedWith(object o)
-        {
-            return (TextElement)htmlToTextElement[o];
-        }
-
 
         protected override FlowDocument CreateSourceCode()
         {
@@ -123,7 +103,6 @@ namespace GetFacts.Parse
             {
                 Span globalSpan = new Span();
                 parent.Inlines.Add(globalSpan);
-                htmlToTextElement.Add(node, globalSpan);
 
                 // HTML TAG (opening)
                 Run openingTag = new Run();
@@ -211,7 +190,7 @@ namespace GetFacts.Parse
                 Hyperlink r2 = AddHyperlink(attr.Value, attr);
                 r2.Foreground = defaultColor;
                 parent.Inlines.Add(r2);
-                htmlToTextElement.Add(attr, r2);
+                //htmlToTextElement.Add(attr, r2);
 
                 if (IsAttributeOfInterest(attr))
                 {
@@ -234,7 +213,7 @@ namespace GetFacts.Parse
             {
                 Hyperlink hlink = AddHyperlink(text, node);
                 hlink.Foreground = defaultColor;
-                htmlToTextElement.Add(node, hlink);
+                //htmlToTextElement.Add(node, hlink);
 
                 if (string.Compare(node.ParentNode.Name, "script", true) == 0)
                 {
@@ -265,7 +244,7 @@ namespace GetFacts.Parse
         #endregion
 
 
-
+        /*
         protected override Hashtable GetConcreteAttributesOf(object o)
         {
             Hashtable output = new Hashtable();
@@ -289,96 +268,111 @@ namespace GetFacts.Parse
 
             return output;
         }
+        */
 
+        protected override TreeViewItem CreateSourceTree()
+        {
+            HtmlNode rootHtmlNode = htmlDoc.DocumentNode;
+            TreeViewItem root = new TreeViewItem();
+            Html_To_TreeViewItem(rootHtmlNode, root);
+            root.ExpandSubtree();
+
+            return root;
+        }
+
+
+        void Html_To_TreeViewItem(HtmlNode node, TreeViewItem parent)
+        {
+            /*switch (node.NodeType)
+            {
+                case HtmlNodeType.Comment:
+                case HtmlNodeType.Text:
+                    HtmlText_To_TreeViewItem(node, parent);
+                    return;
+            }
+
+
+            if (node.NodeType != HtmlNodeType.Document)
+            {
+
+                // ATTRIBUTES ?
+                if (node.HasAttributes)
+                {
+                    foreach (HtmlAttribute attr in node.Attributes)
+                    {
+                        HtmlAttribute_To_TreeViewitem(attr, parent);
+                    }
+                }
+            }
+            */
+
+            string xpath = node.XPath;
+            string[] xpathParts = xpath.Split(new char[] { '/' });
+            string lastPart = xpathParts[xpathParts.Length - 1];
+            TreeViewItem tvi = new TreeViewItem();
+            tvi.Header = lastPart;
+            parent.Items.Add(tvi);
+
+            // PROCESS CHILDREN
+            foreach (HtmlNode child in node.ChildNodes)
+            {
+                Html_To_TreeViewItem(child, tvi);
+            }
+
+        }
+
+
+        /*
+        private TreeViewItem CreateTreeNode(HtmlNode htmlNode)
+        {
+            Span header = CreateTreeNodeHeader(htmlNode);
+            if ((header == null) || (header.Inlines.Count == 0))
+            {
+                return null;
+            }
         
+            TreeViewItem treeNode = AddTreeNode(header, htmlNode);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="o">Can be an instance of HtmlNode or HtmlAttribute</param>
-        protected override void UpdateCodeTree(object o, out TreeViewItem leaf)
-        {
-            HtmlNode node =null;
-            TreeViewItem child = null;
-            leaf = null;
-
-            if (o is HtmlNode)
+            foreach(HtmlNode htmlChildNode in htmlNode.ChildNodes)
             {
-                node = (HtmlNode)o;
-            }
-            else if(o is HtmlAttribute)
-            {                
-                child = new TreeViewItem();
-                child.Tag = o;
-                HtmlAttribute attr = (HtmlAttribute)o;
-                child.Header = string.Format("{0} = \"{1}\"", attr.Name, attr.Value);
-                node = attr.OwnerNode;
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
-
-            while( (node != null) && (node.NodeType!= HtmlNodeType.Document) )
-            {
-                if (leaf == null) leaf = child;
-
-                string idValue = node.GetAttributeValue("id", (string)null);
-                string classValue = node.GetAttributeValue("class", (string)null);
-
-                TreeViewItem parent = null;
-                if (node.ParentNode.NodeType == HtmlNodeType.Document)
+                TreeViewItem childNode = CreateTreeNode(htmlChildNode);
+                if (childNode != null)
                 {
-                    parent = SelectedSource;
+                    treeNode.Items.Add(childNode);
                 }
-                else
-                {
-                    parent = new TreeViewItem();
-                }
-                parent.Tag = node;
-
-                StringBuilder sb = new StringBuilder();
-                sb.Append(node.Name);
-                if (idValue != null) sb.AppendFormat(" id=\"{0}\"", idValue);
-                if( classValue != null ) sb.AppendFormat(" class=\"{0}\"", classValue);
-                parent.Header = sb.ToString();
-
-
-                if( child != null )
-                {
-                    parent.Items.Add(child);
-                }
-
-                child = parent;
-                node = node.ParentNode;
             }
+
+            return treeNode;
         }
 
-        #region tree view
-
-        /// <summary>
-        /// Returns the XPath that best represents the object provided
-        /// in arguments, regarding its place in the hierarchy of the
-        /// source code.
-        /// </summary>
-        /// <param name="o">An instance of HtmlNode or HtmlAttribure</param>
-        /// <returns></returns>
-        protected override string GetConcreteXPathOf(object o)
+        private Span CreateTreeNodeHeader(HtmlNode htmlNode)
         {
-            if( o is HtmlNode )
-            {
-                HtmlNode node = (HtmlNode)o;
-                return node.XPath;
-            }
-            else if ( o is HtmlAttribute )
-            {
-                HtmlAttribute a = (HtmlAttribute)o;
-                return a.XPath;
-            }
-            throw new ArgumentException();
-        }
+            Span header = new Span();
 
-        #endregion
+            switch (htmlNode.NodeType)
+            {
+                case HtmlNodeType.Comment:
+                case HtmlNodeType.Text:
+                    if( string.IsNullOrEmpty(htmlNode.InnerText)==false )
+                    {
+                        header.Inlines.Add(htmlNode.InnerText);
+                    }
+                    break;
+
+                default:
+                    header.Inlines.Add(htmlNode.OriginalName);
+                    break;
+            }
+
+            foreach(HtmlAttribute attribute in htmlNode.Attributes)
+            {
+                string attr = string.Format("{0}={1}", attribute.OriginalName, attribute.Value);
+                header.Inlines.Add(attr);
+            }
+
+            return header;
+        }
+        */
 
         public override XPathNavigator CreateNavigator()
         {

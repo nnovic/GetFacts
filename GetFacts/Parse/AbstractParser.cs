@@ -27,7 +27,7 @@ namespace GetFacts.Parse
     public abstract class AbstractParser:IXPathNavigable
     {
 
-        protected abstract Hashtable GetConcreteAttributesOf(object o);
+        //protected abstract Hashtable GetConcreteAttributesOf(object o);
 
         /// <summary>
         /// 
@@ -80,7 +80,7 @@ namespace GetFacts.Parse
         public virtual void Clear()
         {
             ClearSourceCode();
-            ClearSelectedSource();
+            ClearSourceTree();
         }       
 
         #region [optionel] flow document avec le code source de la page
@@ -124,9 +124,9 @@ namespace GetFacts.Parse
             get { return sourceCode != null; }
         }*/
 
-        protected abstract string GetConcreteXPathOf(object o);
+        //protected abstract string GetConcreteXPathOf(object o);
 
-        protected abstract TextElement GetTextElementAssociatedWith(object o);
+        //protected abstract TextElement GetTextElementAssociatedWith(object o);
 
         protected Hyperlink AddHyperlink(string text, object o)
         {
@@ -155,29 +155,17 @@ namespace GetFacts.Parse
 
         private void Output_Click(object sender, RoutedEventArgs e)
         {
-            Hyperlink hl = (Hyperlink)sender;
+            Hyperlink hl = (Hyperlink)sender;            
             object node = hyperlinksToConcreteType[hl];
-
-            TreeViewItem leaf = null;
-            try
-            {
-                //SelectedSource.BeginInit();
-                SelectedSource.Items.Clear();
-                UpdateCodeTree(node, out leaf);
-                SelectedSource.ExpandSubtree();
-                if (leaf != null) leaf.IsSelected = true;
-            }
-            finally
-            {
-                //SelectedSource.EndInit();
-            }
+            TreeViewItem tvi = (TreeViewItem)concreteTypesToTreeViewItems[node];
+            tvi.IsSelected = true;
         }
 
         #endregion
 
         #region [optionel] tree view pour un élément précis du code source
 
-        protected virtual void ClearSelectedSource()
+        /*protected virtual void ClearSelectedSource()
         {
             if( selectedCodePath!=null)
             {
@@ -185,24 +173,42 @@ namespace GetFacts.Parse
                 selectedCodePath = null;
             }
         }
+        */
 
-        private TreeViewItem selectedCodePath = null;
-        
-        public TreeViewItem SelectedSource
+        protected virtual void ClearSourceTree()
+        {
+            concreteTypesToTreeViewItems.Clear();
+            sourceTreeRoot = null;
+        }
+
+        private TreeViewItem sourceTreeRoot = null;
+        private Hashtable concreteTypesToTreeViewItems = new Hashtable();
+
+        public TreeViewItem SourceTree
         {
             get
             {
-                if( selectedCodePath==null )
+                if(sourceTreeRoot == null )
                 {
-                    selectedCodePath = new TreeViewItem()
-                    {
-                        Header = "Root"
-                    };
+                    sourceTreeRoot = CreateSourceTree();
                 }
-                return selectedCodePath;
+                return sourceTreeRoot;
             }
         }
+
+        protected TreeViewItem AddTreeNode(object header, object o)
+        {
+            TreeViewItem treeNode = new TreeViewItem();
+            treeNode.Header = header;
+            treeNode.Tag = o;
+            concreteTypesToTreeViewItems.Add(o, treeNode);
+            return treeNode;
+        }
+
+        protected abstract TreeViewItem CreateSourceTree();
         
+
+        /*
         protected abstract void UpdateCodeTree(object o, out TreeViewItem leaf);
 
         public Hashtable GetAttributesOf(TreeViewItem tvi)
@@ -240,29 +246,10 @@ namespace GetFacts.Parse
 
             return GetConcreteXPathOf(node);
         }
-
-        #endregion
-
-        /*
-        #region extraction des infos du code source
-
-        private XmlDocument xmlDoc = null;
-
-        public XmlDocument Document
-        {
-            get
-            {
-                if( xmlDoc==null )
-                {
-                    xmlDoc = new XmlDocument();
-                }
-                return xmlDoc;
-            }
-        }
-
-        #endregion
         */
 
+        #endregion
+        
         public abstract XPathNavigator CreateNavigator();
     }
 }
