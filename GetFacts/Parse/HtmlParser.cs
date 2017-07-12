@@ -5,6 +5,9 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Xml.XPath;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System;
 
 namespace GetFacts.Parse
 {
@@ -49,44 +52,123 @@ namespace GetFacts.Parse
             }*/
         }
 
+
+
+        #region styling
+
+        protected override InformationType EvaluateInformationType(object o)
+        {
+            if( o is HtmlNode)
+            {
+                return EvaluateInformationType((HtmlNode)o);
+            }
+            else if(o is HtmlAttribute)
+            {
+                return EvaluateInformationType((HtmlAttribute)o);
+            }
+            return InformationType.NeutralData;
+        }
+
+        private InformationType ScriptInformationType => InformationType.MeaninglessJunk;
+
+
+        private InformationType EvaluateInformationType(HtmlNode node)
+        {
+            string nodeName = node.Name.ToLower().Trim();
+            string parentName = node.ParentNode.Name.ToLower().Trim();
+
+            switch (nodeName)
+            {
+                case "script":
+                    return ScriptInformationType;
+            }
+
+            switch (parentName)
+            {
+                case "script":
+                    return ScriptInformationType;
+            }
+
+            switch (node.NodeType)
+            {
+                case HtmlNodeType.Comment:
+                    return InformationType.MeaninglessJunk;
+
+                case HtmlNodeType.Text:
+                    return InformationType.UsefulContent;
+            }
+
+            return InformationType.NeutralData;
+        }
+
+
+        private InformationType EvaluateInformationType(HtmlAttribute attr)
+        {
+            HtmlNode node = null;
+            string nodeName = null;
+            string attributeName = null;
+
+
+            attributeName = attr.Name.ToLower().Trim();
+            node = attr.OwnerNode;
+            nodeName = node.Name.ToLower().Trim();
+
+            switch (nodeName)
+            {
+                case "script":
+                    return ScriptInformationType;
+
+                case "img":
+                    {
+                        switch (attributeName)
+                        {
+                            case "src:":
+                                return InformationType.UsefulContent;
+                        }
+                    }
+                    break;
+            }
+
+            switch (attributeName)
+            {
+                case "id":
+                case "class":
+                    return InformationType.ValuableClue;
+            }
+
+            return InformationType.NeutralData;
+        }
+
+
+        #endregion
+
+
         #region flow document
 
-        private readonly FontFamily defaultFontFamily = new FontFamily("GlobalSanSerif.CompositeFont");
-        private readonly double defaultFontSize = 12;
-        private readonly Brush defaultColor = Brushes.DarkGray;
-
+        /*
         private readonly FontFamily scriptFontFamily = new FontFamily("GlobalMonospace.CompositeFont");
         private readonly Brush scriptColor = Brushes.Blue;
 
         private readonly FontFamily textFontFamily = new FontFamily("GlobalSerif.CompositeFont");
-        private readonly double textFontSize = 16;
+        private readonly double textFontSize = XL_FONT_SIZE;
         private readonly Brush textColor = Brushes.Black;
 
-        private readonly double attributeFontSize = 14;
+        private readonly double attributeFontSize = L_FONT_SIZE;
         private readonly Brush attributeColor = Brushes.DimGray;
+
+        private readonly Brush highlighted = Brushes.Yellow;
 
         private readonly Brush styleColor = Brushes.Purple;
 
         private readonly Brush commentColor = Brushes.Green;
-
-        protected override FlowDocument CreateSourceCode()
+        */
+        protected override void FillSourceCode(Span rootSpan)
         {
-            FlowDocument flowDoc = new FlowDocument()
-            {
-                FontFamily = defaultFontFamily,
-                FontSize = defaultFontSize,
-                Foreground = defaultColor
-            };
-            Paragraph mainSection = new Paragraph();
-            Span mainSpan = new Span();
-            mainSection.Inlines.Add(mainSpan);
-            flowDoc.Blocks.Add(mainSection);
-
             HtmlNode mainNode = htmlDoc.DocumentNode;
-            Html_To_Flow(mainNode, mainSpan);
-
-            return flowDoc;
+            Html_To_Flow(mainNode, rootSpan);
         }
+
+
 
         void Html_To_Flow(HtmlNode node, Span parent)
         {
@@ -103,6 +185,8 @@ namespace GetFacts.Parse
             {
                 Span globalSpan = new Span();
                 parent.Inlines.Add(globalSpan);
+                Stylize(globalSpan, node);
+
 
                 // HTML TAG (opening)
                 Run openingTag = new Run();
@@ -148,37 +232,7 @@ namespace GetFacts.Parse
             }
         }
 
-
-        bool IsAttributeOfInterest(HtmlAttribute attr)
-        {
-            HtmlNode node = attr.OwnerNode;
-            string nodeName = node.Name.ToLower().Trim();
-            string attrName = attr.Name.ToLower().Trim();
-
-            switch (nodeName)
-            {
-                /*case "a":
-                {
-                    switch (attrName)
-                    {
-                        case "href":
-                            return true;
-                    }
-                    break;
-                }*/
-                case "img":
-                    {
-                        switch (attrName)
-                        {
-                            case "src":
-                                return true;
-                        }
-                        break;
-                    }
-            }
-
-            return false;
-        }
+        
 
         void HtmlAttribute_To_Runs(HtmlAttribute attr, Span parent)
         {
@@ -188,15 +242,14 @@ namespace GetFacts.Parse
             if (string.IsNullOrEmpty(attr.Value) == false)
             {
                 Hyperlink r2 = AddHyperlink(attr.Value, attr);
-                r2.Foreground = defaultColor;
+                //r2.Foreground = defaultColor;
                 parent.Inlines.Add(r2);
-                //htmlToTextElement.Add(attr, r2);
 
-                if (IsAttributeOfInterest(attr))
+                /*if (IsAttributeProvidingData(attr))
                 {
                     r2.Foreground = attributeColor;
                     r2.FontSize = attributeFontSize;
-                }
+                }*/
             }
 
             Run r3 = new Run("\"");
@@ -212,10 +265,9 @@ namespace GetFacts.Parse
             if (string.IsNullOrEmpty(text) == false)
             {
                 Hyperlink hlink = AddHyperlink(text, node);
-                hlink.Foreground = defaultColor;
-                //htmlToTextElement.Add(node, hlink);
+                //hlink.Foreground = defaultColor;
 
-                if (string.Compare(node.ParentNode.Name, "script", true) == 0)
+                /*if (string.Compare(node.ParentNode.Name, "script", true) == 0)
                 {
                     hlink.FontFamily = scriptFontFamily;
                     hlink.Foreground = scriptColor;
@@ -236,7 +288,7 @@ namespace GetFacts.Parse
                     {
                         hlink.Foreground = commentColor;
                     }
-                }
+                }*/
                 parent.Inlines.Add(hlink);
             }
         }
@@ -270,11 +322,15 @@ namespace GetFacts.Parse
         }
         */
 
+        private readonly double nodenameFontSize = XL_FONT_SIZE;
+
+
+
         protected override TreeViewItem CreateSourceTree()
         {
             HtmlNode rootHtmlNode = htmlDoc.DocumentNode;
             rootHtmlNode = rootHtmlNode.SelectSingleNode("/html");
-            TreeViewItem root = CreateTvi(rootHtmlNode);
+            TreeViewItem root = CreateElementTvi(rootHtmlNode);
             
             //Html_To_TreeViewItem(rootHtmlNode, root);
             foreach (HtmlNode child in rootHtmlNode.ChildNodes)
@@ -288,23 +344,106 @@ namespace GetFacts.Parse
         }
 
 
-        private TreeViewItem CreateTvi(HtmlNode node)
+        private void AppendAttributesToSpan(HtmlNode node, Span parent, bool providingCluesFiltering)
         {
-
-            /*string xpath = node.XPath;
-            string[] xpathParts = xpath.Split(new char[] { '/' });
-            string lastPart = xpathParts[xpathParts.Length - 1];*/
-            HtmlNodeCollection siblings = node.SelectNodes("../" + node.Name);
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(node.Name);
-            if( siblings.Count>1 )
+            foreach (HtmlAttribute attr in node.Attributes)
             {
-                sb.AppendFormat("[{0}]", siblings.IndexOf(node));
+                //if (IsAttributeProvidingClues(attr) == providingCluesFiltering)
+                {
+                    parent.Inlines.Add(new LineBreak());
+                    parent.Inlines.Add(new Run("| ") { });
+
+                    Span span = new Span();
+                    span.Inlines.Add(new Run(string.Format("@{0}", attr.Name)) { });
+                    span.Inlines.Add(new Run(" = ") { });
+                    span.Inlines.Add(new Run("\"") { });
+                    span.Inlines.Add(new Run(attr.Value) { });
+                    span.Inlines.Add(new Run("\"") { });
+                    parent.Inlines.Add(span);
+
+                    if( providingCluesFiltering==true )
+                    {
+                        span.Foreground = Brushes.Orange;
+                    }
+                }
             }
+        }
+
+        private TreeViewItem CreateTextTvi(HtmlNode node)
+        {
+            string originalText = node.InnerText;
+            if (originalText == null)
+                return null;
+
+            string trimmedText = originalText.Trim();
+
+            string compressedText = Regex.Replace(trimmedText, @"\s+", @" ");
+
+            if (string.IsNullOrEmpty(compressedText))
+                return null;
+
+            Span header = new Span()
+            {
+                //FontFamily = textFontFamily,
+                //Foreground = defaultColor
+            };
+
+            // Nom du noeud html: "#text"
+            // Nom du noeud xpath : "text()"
+            Run nodeName = new Run("text()")
+            {
+                //FontSize = nodenameFontSize,
+                //Foreground = IsNodeMeaningless(node) ? defaultColor : textColor
+            };
+            header.Inlines.Add(nodeName);
+
+            header.Inlines.Add(new LineBreak());
+            header.Inlines.Add(new Run("| "));
+
+            Run textRun = new Run(compressedText)
+            {
+                //Foreground = textColor,
+                //FontSize = textFontSize,
+                FontStyle = FontStyles.Italic
+            };
+            header.Inlines.Add(textRun);
+
+            /*TreeViewItem tvi = new TreeViewItem();
+            tvi.Header = header;
+            return tvi;*/
+            return AddTreeNode(header, node);
+        }
+
+        /// <summary>
+        /// Crée un TreeViewItem qui permet de rendre le contenu
+        /// du HtmlNode passé en argument.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private TreeViewItem CreateElementTvi(HtmlNode node)
+        {
+            Span header = new Span()
+            {
+                //FontFamily = defaultFontFamily,
+                //FontSize = defaultFontSize,
+                //Foreground = defaultColor
+            };
+      
+            // Nom du noeud. Ex: "DIV"
+            Run nodeName = new Run(node.Name)
+            {
+                FontSize = nodenameFontSize,
+                //Foreground = IsNodeMeaningless(node) ? defaultColor : Brushes.Blue
+            };
+            header.Inlines.Add(nodeName);
+
+            // Attributs du noeud:
+            // mettre en priorité les attributs intéressants:
+            AppendAttributesToSpan(node, header, true);
+            //AppendAttributesToSpan(node, header, false);          
 
             TreeViewItem tvi = new TreeViewItem();
-            tvi.Header = sb.ToString();           
+            tvi.Header = header;
             return tvi;
         }
 
@@ -339,19 +478,27 @@ namespace GetFacts.Parse
             TreeViewItem tvi = new TreeViewItem();
             tvi.Header = lastPart;*/
 
-            if (node.NodeType != HtmlNodeType.Element)
-                return;
-
-            TreeViewItem tvi = CreateTvi(node);
-            parent.Items.Add(tvi);
-
-            // PROCESS CHILDREN
-            foreach (HtmlNode child in node.ChildNodes)
+            if (node.NodeType == HtmlNodeType.Element)
             {
-                Html_To_TreeViewItem(child, tvi);
+
+                TreeViewItem tvi = CreateElementTvi(node);
+                parent.Items.Add(tvi);
+
+                // PROCESS CHILDREN
+                foreach (HtmlNode child in node.ChildNodes)
+                {
+                    Html_To_TreeViewItem(child, tvi);
+                }
             }
 
-
+            else if(node.NodeType==HtmlNodeType.Text)
+            {
+                TreeViewItem tvi = CreateTextTvi(node);
+                if (tvi != null)
+                {
+                    parent.Items.Add(tvi);
+                }
+            }
 
         }
 

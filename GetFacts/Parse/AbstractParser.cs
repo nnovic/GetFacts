@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -24,11 +25,8 @@ namespace GetFacts.Parse
     /// il est possible d'utiliser CreateNavigator() pour obtenir
     /// un objet permettant de naviguer dans la structure dudit document.
     /// </summary>
-    public abstract class AbstractParser:IXPathNavigable
+    public abstract class AbstractParser : IXPathNavigable
     {
-
-        //protected abstract Hashtable GetConcreteAttributesOf(object o);
-
         /// <summary>
         /// 
         /// </summary>
@@ -72,7 +70,7 @@ namespace GetFacts.Parse
                     return UsualFileExtensions[0];
             }
         }
-        
+
 
         /// <summary>
         /// TO BE IMPROVED !!
@@ -81,7 +79,91 @@ namespace GetFacts.Parse
         {
             ClearSourceCode();
             ClearSourceTree();
-        }       
+        }
+
+        #region styling
+
+        protected const double M_FONT_SIZE = 12;
+        protected const double L_FONT_SIZE = 14;
+        protected const double XL_FONT_SIZE = 16;
+
+        protected readonly FontFamily sans_serif = new FontFamily("GlobalSanSerif.CompositeFont");
+
+
+        public enum InformationType
+        {
+            ValuableClue,       // +++
+            UsefulContent,      // ++
+            MildlyInteresting,  // +
+            NeutralData,        // =             
+            MeaninglessJunk     // -
+        }
+
+        protected abstract InformationType EvaluateInformationType(object o);
+
+        protected void Stylize(Inline te, object o)
+        {
+            InformationType it = EvaluateInformationType(o);
+            Stylize(te, it);
+        }
+
+        private void Stylize(Inline te, InformationType it)
+        {
+            ApplyDefaultStyle(te);
+            switch (it)
+            {
+                case InformationType.ValuableClue:
+                    ApplyValuableClueStyle(te);
+                    break;
+
+                case InformationType.UsefulContent:
+                    ApplyUsefulContentStyle(te);
+                    break;
+
+                case InformationType.MildlyInteresting:
+                    ApplyMildlyInterestingStyle(te);
+                    break;
+
+                default:
+                case InformationType.NeutralData:
+                    break;
+
+                case InformationType.MeaninglessJunk:
+                    ApplyMeaninglessJunkStyle(te);
+                    break;
+
+            }
+        }
+
+        protected virtual void ApplyDefaultStyle(Inline te)
+        {
+            te.FontFamily = sans_serif;
+            te.FontSize = M_FONT_SIZE;
+            te.Foreground = Brushes.DarkGray;
+            te.TextDecorations = null;
+        }
+
+        protected virtual void ApplyValuableClueStyle(TextElement te)
+        {
+            te.Background = Brushes.Yellow;
+        }
+
+        protected virtual void ApplyUsefulContentStyle(TextElement te)
+        {
+            te.Foreground = Brushes.Black;
+        }
+
+        protected virtual void ApplyMildlyInterestingStyle(TextElement te)
+        {
+            te.Foreground = Brushes.Green;
+        }
+
+        protected virtual void ApplyMeaninglessJunkStyle(TextElement te)
+        {
+            te.Foreground = Brushes.Purple;
+        }
+
+        #endregion
 
         #region [optionel] flow document avec le code source de la page
 
@@ -109,7 +191,7 @@ namespace GetFacts.Parse
         {
             get
             {
-                if( sourceCode==null)
+                if (sourceCode == null)
                 {
                     sourceCode = CreateSourceCode();
                 }
@@ -117,27 +199,35 @@ namespace GetFacts.Parse
             }
         }
 
-        protected abstract FlowDocument CreateSourceCode();
 
-       /* bool HasSourceCode
+        private FlowDocument CreateSourceCode()
         {
-            get { return sourceCode != null; }
-        }*/
+            FlowDocument flowDoc = new FlowDocument();            
+            Paragraph mainSection = new Paragraph();            
+            Span mainSpan = new Span();
+            ApplyDefaultStyle(mainSpan);
+            mainSection.Inlines.Add(mainSpan);
+            flowDoc.Blocks.Add(mainSection);
 
-        //protected abstract string GetConcreteXPathOf(object o);
+            FillSourceCode(mainSpan);
 
-        //protected abstract TextElement GetTextElementAssociatedWith(object o);
+            return flowDoc;
+        }
+
+        protected abstract void FillSourceCode(Span rootSpan);
+
 
         protected Hyperlink AddHyperlink(string text, object o)
         {
             Run r = new Run(text);
             Hyperlink hl = new Hyperlink(r);
             hl.Click += Output_Click;
-            hl.TextDecorations = null;
-            hl.Foreground = null;
             hl.MouseEnter += Hl_MouseEnter;
             hl.MouseLeave += Hl_MouseLeave;
             hyperlinksToConcreteType.Add(hl, o);
+
+            Stylize(hl, o);
+
             return hl;
         }
 
@@ -155,11 +245,14 @@ namespace GetFacts.Parse
 
         private void Output_Click(object sender, RoutedEventArgs e)
         {
-            Hyperlink hl = (Hyperlink)sender;            
+            Hyperlink hl = (Hyperlink)sender;
             object node = hyperlinksToConcreteType[hl];
             TreeViewItem tvi = (TreeViewItem)concreteTypesToTreeViewItems[node];
             tvi.IsSelected = true;
         }
+
+
+
 
         #endregion
 
@@ -188,7 +281,7 @@ namespace GetFacts.Parse
         {
             get
             {
-                if(sourceTreeRoot == null )
+                if (sourceTreeRoot == null)
                 {
                     sourceTreeRoot = CreateSourceTree();
                 }
@@ -206,7 +299,7 @@ namespace GetFacts.Parse
         }
 
         protected abstract TreeViewItem CreateSourceTree();
-        
+
 
         /*
         protected abstract void UpdateCodeTree(object o, out TreeViewItem leaf);
@@ -249,7 +342,7 @@ namespace GetFacts.Parse
         */
 
         #endregion
-        
+
         public abstract XPathNavigator CreateNavigator();
     }
 }
