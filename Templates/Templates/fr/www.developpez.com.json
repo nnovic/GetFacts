@@ -1,5 +1,6 @@
 ﻿{
 	"PageName" : "Developpez.com",
+	"Reference": "https://www.developpez.com/",
 	"TitleTemplate" : { "XPath":"/html/head/title" },
 	"TextTemplate" : { "XPath" : "/html/head/meta[@name=\"description\"]/@content" },
 	"IconUrlTemplate" : { "XPath":"/html/head/meta[@property=\"og:image\"]/@content" },	

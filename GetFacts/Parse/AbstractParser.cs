@@ -145,22 +145,23 @@ namespace GetFacts.Parse
 
         protected virtual void ApplyValuableClueStyle(TextElement te)
         {
-            te.Background = Brushes.Yellow;
+            te.Foreground = Brushes.Blue;
         }
 
         protected virtual void ApplyUsefulContentStyle(TextElement te)
         {
             te.Foreground = Brushes.Black;
+            te.FontSize = XL_FONT_SIZE;
         }
 
         protected virtual void ApplyMildlyInterestingStyle(TextElement te)
         {
-            te.Foreground = Brushes.Green;
+            te.Foreground = Brushes.Orange;
         }
 
         protected virtual void ApplyMeaninglessJunkStyle(TextElement te)
         {
-            te.Foreground = Brushes.Purple;
+            te.Foreground = Brushes.Green;
         }
 
         #endregion
@@ -169,11 +170,11 @@ namespace GetFacts.Parse
 
         protected virtual void ClearSourceCode()
         {
-            foreach (Hyperlink hl in hyperlinksToConcreteType.Keys)
+            foreach (Hyperlink hl in hyperlinksToConcreteType.TypedElements)
             {
-                hl.Click -= Output_Click;
-                hl.MouseEnter -= Hl_MouseEnter;
-                hl.MouseLeave -= Hl_MouseLeave;
+                hl.Click -= Hyperlink_Click;
+                hl.MouseEnter -= Hyperlink_MouseEnter;
+                hl.MouseLeave -= Hyperlink_MouseLeave;
             }
             hyperlinksToConcreteType.Clear();
 
@@ -185,7 +186,7 @@ namespace GetFacts.Parse
         }
 
         private FlowDocument sourceCode = null;
-        private Hashtable hyperlinksToConcreteType = new Hashtable();
+        private DoubleList<Hyperlink> hyperlinksToConcreteType = new DoubleList<Hyperlink>();
 
         public FlowDocument SourceCode
         {
@@ -221,9 +222,9 @@ namespace GetFacts.Parse
         {
             Run r = new Run(text);
             Hyperlink hl = new Hyperlink(r);
-            hl.Click += Output_Click;
-            hl.MouseEnter += Hl_MouseEnter;
-            hl.MouseLeave += Hl_MouseLeave;
+            hl.Click += Hyperlink_Click;
+            hl.MouseEnter += Hyperlink_MouseEnter;
+            hl.MouseLeave += Hyperlink_MouseLeave;
             hyperlinksToConcreteType.Add(hl, o);
 
             Stylize(hl, o);
@@ -231,23 +232,23 @@ namespace GetFacts.Parse
             return hl;
         }
 
-        private void Hl_MouseLeave(object sender, MouseEventArgs e)
+        private void Hyperlink_MouseLeave(object sender, MouseEventArgs e)
         {
             Hyperlink te = (Hyperlink)sender;
             te.TextDecorations = null;
         }
 
-        private void Hl_MouseEnter(object sender, MouseEventArgs e)
+        private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
         {
             Hyperlink te = (Hyperlink)sender;
             te.TextDecorations = TextDecorations.Underline;
         }
 
-        private void Output_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink hl = (Hyperlink)sender;
-            object node = hyperlinksToConcreteType[hl];
-            TreeViewItem tvi = (TreeViewItem)concreteTypesToTreeViewItems[node];
+            object node = hyperlinksToConcreteType.GetObjectOf(hl);
+            TreeViewItem tvi = concreteTypesToTreeViewItems.GetTypedElementOf(node);
             tvi.IsSelected = true;
         }
 
@@ -270,12 +271,18 @@ namespace GetFacts.Parse
 
         protected virtual void ClearSourceTree()
         {
+            foreach(TreeViewItem treeNode in concreteTypesToTreeViewItems.TypedElements)
+            {
+                treeNode.Selected -= TreeNode_Selected;
+                treeNode.Unselected -= TreeNode_Unselected;
+            }
             concreteTypesToTreeViewItems.Clear();
             sourceTreeRoot = null;
         }
 
         private TreeViewItem sourceTreeRoot = null;
-        private Hashtable concreteTypesToTreeViewItems = new Hashtable();
+        //private Hashtable concreteTypesToTreeViewItems = new Hashtable();
+        private DoubleList<TreeViewItem> concreteTypesToTreeViewItems = new DoubleList<TreeViewItem>();
 
         public TreeViewItem SourceTree
         {
@@ -294,8 +301,27 @@ namespace GetFacts.Parse
             TreeViewItem treeNode = new TreeViewItem();
             treeNode.Header = header;
             treeNode.Tag = o;
-            concreteTypesToTreeViewItems.Add(o, treeNode);
+            concreteTypesToTreeViewItems.Add(treeNode, o);
+            treeNode.Selected += TreeNode_Selected;
+            treeNode.Unselected += TreeNode_Unselected;
             return treeNode;
+        }
+
+        private void TreeNode_Unselected(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selected = (TreeViewItem)e.Source;
+            object concreteObject = selected.Tag;
+            TextElement te = hyperlinksToConcreteType.GetTypedElementOf(concreteObject);
+            te.Background = null;
+        }
+
+        private void TreeNode_Selected(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem selected = (TreeViewItem)e.Source;
+            object concreteObject = selected.Tag;
+            TextElement te = hyperlinksToConcreteType.GetTypedElementOf(concreteObject);
+            te.Background = Brushes.Yellow;
+            te.BringIntoView();
         }
 
         protected abstract TreeViewItem CreateSourceTree();
@@ -342,6 +368,22 @@ namespace GetFacts.Parse
         */
 
         #endregion
+
+
+        #region xpath
+
+
+        public string SuggestXPathFor(TreeViewItem tvi)
+        {
+            object o = concreteTypesToTreeViewItems.GetObjectOf(tvi);
+            return XPathOf(o);
+        }
+
+        protected abstract string XPathOf(object o);
+
+
+        #endregion
+
 
         public abstract XPathNavigator CreateNavigator();
     }

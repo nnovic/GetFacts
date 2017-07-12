@@ -84,6 +84,7 @@
       <DependentUpon>JsonNET_Ad.xaml</DependentUpon>
     </Compile>
     <Compile Include="ConfigFactory.cs" />
+    <Compile Include="DoubleList.cs" />
     <Compile Include="Facts\Article.cs" />
     <Compile Include="Facts\Facts.cs" />
     <Compile Include="Facts\GetFactsHeader.cs" />

@@ -34,6 +34,7 @@ namespace TemplatesApp
             {
                 pageTemplate = value;
                 Parser = pageTemplate.GetParser();
+                UrlInput.Text = pageTemplate.Reference;
             }
         }
 
@@ -43,6 +44,7 @@ namespace TemplatesApp
             get;
             private set;
         }
+
 
         public Encoding Encoding
         {
@@ -95,8 +97,10 @@ namespace TemplatesApp
         {
             TreeViewItem selected = (TreeViewItem)e.NewValue;
             selected.BringIntoView();
-            //CodeSourceTree.Focus();
             selected.Focus();
+
+            string xpath = Parser.SuggestXPathFor(selected);
+            XPathInput.Text = xpath;
         }
     }
 }

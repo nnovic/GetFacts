@@ -1,5 +1,6 @@
 ﻿{
 	"PageName" : "Slate",
+	"Reference": "http://www.slate.fr/",
 	"TitleTemplate" : { "XPath":"/html/head/title" },
 	"TextTemplate" : { "XPath":"/html/head/meta[@property=\"og:description\"]/@content" },
 	"IconUrlTemplate" : { "XPath":"/html/head/link[@rel=\"apple-touch-icon\"]/@href" },

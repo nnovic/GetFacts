@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -47,6 +48,11 @@
         <Grid Grid.Column="1" Grid.Row="1">
             <TreeView x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged">
             </TreeView>
+        </Grid>
+        
+        <!-- bread crumbs -->
+        <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBox x:Name="XPathInput" IsReadOnly="True" >BLABLA!</TextBox>
         </Grid>
         
     </Grid>

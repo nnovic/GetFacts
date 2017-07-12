@@ -49,6 +49,7 @@ namespace TemplatesApp
             pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
 
             SourceExplorer.PageTemplate = pageTemplate;
+            TemplateEditor.PageTemplate = pageTemplate;
             TabControl.SelectedItem = ExploreTab;
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace GetFacts.Parse
 {
     public class PageTemplate:AbstractTemplate
     {
-        private readonly List<SectionTemplate> sections = new List<SectionTemplate>();
+        private readonly ObservableCollection<SectionTemplate> sections = new ObservableCollection<SectionTemplate>();
         
         public string PageName
         {
@@ -19,7 +20,11 @@ namespace GetFacts.Parse
 
         public AbstractParser GetParser()
         {
-            return new HtmlParser();
+            switch(PageType)
+            {
+                default:
+                    return new HtmlParser();
+            }            
         }
 
         /// <summary>
@@ -29,6 +34,14 @@ namespace GetFacts.Parse
         /// que le charset devra être déterminé automatiquement.
         /// </summary>
         public string Charset
+        {
+            get;set;
+        }
+
+        /// <summary>
+        /// Une URL qui est suggérée pour effectuer des tests du template.
+        /// </summary>
+        public string Reference
         {
             get;set;
         }

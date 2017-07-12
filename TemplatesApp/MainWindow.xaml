@@ -27,7 +27,9 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="EditTab" Header="edit template, ...">
-
+                <Grid>
+                    <local:TemplateEditor x:Name="TemplateEditor"/>
+                </Grid>
             </TabItem>
             <TabItem x:Name="SaveTab" Header="and save.">
 

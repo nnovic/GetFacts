@@ -1,5 +1,6 @@
 ﻿{
 	"PageName" : "sokrostream.cc",
+	"Reference": "http://sokrostream.ws/",
 	"TitleTemplate" : { "XPath":"/html/head/title" },
 	"IconUrlTemplate" :  { "XPath" : ".//div[@id=\"header\"]//img/@src" },
 	"Sections" :

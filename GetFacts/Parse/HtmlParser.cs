@@ -559,5 +559,20 @@ namespace GetFacts.Parse
         {
             return htmlDoc.CreateNavigator();
         }
+
+        protected override string XPathOf(object o)
+        {
+            if( o is HtmlNode )
+            {
+                HtmlNode node = (HtmlNode)o;
+                return node.XPath;
+            }
+            else if( o is HtmlAttribute)
+            {
+                HtmlAttribute attr = (HtmlAttribute)o;
+                return attr.XPath;
+            }
+            return null;
+        }
     }
 }
