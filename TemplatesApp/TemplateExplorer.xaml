@@ -47,7 +47,7 @@
 
             <!-- files -->
             <Grid Grid.Row="2" x:Name="FilesListPanel">
-                <ListBox x:Name="FilesList" SelectionChanged="FilesList_SelectionChanged"></ListBox>
+                <ListBox x:Name="FilesList" SelectionChanged="FilesList_SelectionChanged" MouseDoubleClick="FilesList_MouseDoubleClick"></ListBox>
             </Grid>
             
         </Grid>

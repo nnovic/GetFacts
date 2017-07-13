@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GetFacts.Parse;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +25,38 @@ namespace TemplatesApp
         {
             InitializeComponent();
         }
+
+        #region StringTemplate
+
+        private StringTemplate stringTemplate = null;
+
+        public StringTemplate StringTemplate
+        {
+            get
+            {
+                return stringTemplate;
+            }
+            set
+            {
+                ClearTemplate();
+                stringTemplate = value;
+                InitTemplate();
+            }
+        }
+
+        private void ClearTemplate()
+        {
+        }
+
+        private void InitTemplate()
+        {
+            if (StringTemplate != null)
+            {
+                XPathInput.Text = StringTemplate.XPath;
+                RegexInput.Text = StringTemplate.Regex;
+            }
+        }
+
+        #endregion
     }
 }

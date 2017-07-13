@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" >
     <Border CornerRadius="10" Background="#FFD68D8D">
-        <Grid>
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
@@ -22,37 +22,47 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock>PageName:</TextBlock>
-            <TextBox Grid.Column="1">(write name here)</TextBox>
+            <TextBox x:Name="PageNameInput" Grid.Column="1">(write name here)</TextBox>
 
             <TextBlock Grid.Row="1">Page type:</TextBlock>
-            <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="0">
+            <ComboBox x:Name="PageTypeSelector" Grid.Row="1" Grid.Column="1" SelectedIndex="0">
                 <ComboBoxItem>Html</ComboBoxItem>
             </ComboBox>
             
             <TextBlock Grid.Row="2">Reference:</TextBlock>
-            <TextBox Grid.Row="2" Grid.Column="1">(write url here)</TextBox>
+            <TextBox x:Name="ReferenceInput" Grid.Row="2" Grid.Column="1">(write url here)</TextBox>
 
             <TextBlock Grid.Row="3">Charset:</TextBlock>
-            <ComboBox Grid.Row="3" Grid.Column="1" SelectedIndex="0">
-                <ComboBoxItem>UTF-8</ComboBoxItem>
+            <ComboBox 
+                x:Name="CharsetSelector" 
+                Grid.Row="3" Grid.Column="1" 
+                DisplayMemberPath="WebName"               >
+            
             </ComboBox>
 
-            <TextBlock Grid.Row="4">Title template:</TextBlock>
-            <local:StringTemplateEditor Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
-
-            <TextBlock Grid.Row="5">Text template:</TextBlock>
-            <local:StringTemplateEditor Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
+            <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ToggleButton>...</ToggleButton>
+            </StackPanel>
             
-            <TextBlock Grid.Row="6">Icon URL template:</TextBlock>
-            <local:StringTemplateEditor Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
-            
-            <TextBlock Grid.Row="7">Media URL template:</TextBlock>
-            <local:StringTemplateEditor Grid.Row="7" Grid.Column="1"></local:StringTemplateEditor>
+            <TextBlock Grid.Row="5">Title template:</TextBlock>
+            <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
 
-            <StackPanel Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Grid.Row="6">Text template:</TextBlock>
+            <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
+            
+            <TextBlock Grid.Row="7">Icon URL template:</TextBlock>
+            <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="7" Grid.Column="1"></local:StringTemplateEditor>
+            
+            <TextBlock Grid.Row="8">Media URL template:</TextBlock>
+            <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="8" Grid.Column="1"></local:StringTemplateEditor>
+
+            <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button>XPath help</Button>
+                <Button>Regex help</Button>
                 <Button x:Name="AddSectionButton" Click="AddSectionButton_Click">add section</Button>
             </StackPanel>
         </Grid>

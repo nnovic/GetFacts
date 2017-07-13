@@ -118,5 +118,9 @@ namespace TemplatesApp
 
         #endregion
 
+        private void FilesList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

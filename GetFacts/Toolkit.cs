@@ -65,6 +65,8 @@ namespace GetFacts
             return output;
         }*/
 
+        
+
         public static string GetRelativePath(string absolutePath, string root)
         {
             char[] separators = new char[] 

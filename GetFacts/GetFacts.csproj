@@ -90,6 +90,7 @@
     <Compile Include="Facts\GetFactsHeader.cs" />
     <Compile Include="Facts\PageConfig.cs" />
     <Compile Include="JaroWinkler.cs" />
+    <Compile Include="RegexTextBox.cs" />
     <Compile Include="Render\ArticleDisplay.xaml.cs">
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
     </Compile>
@@ -118,7 +119,9 @@
     <Compile Include="TestGui.xaml.cs">
       <DependentUpon>TestGui.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextBoxWithValidation.cs" />
     <Compile Include="Toolkit.cs" />
+    <Compile Include="XPathTextBox.cs" />
     <Page Include="Ads\HtmlAgilityPack_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +161,10 @@
     <Page Include="TestGui.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

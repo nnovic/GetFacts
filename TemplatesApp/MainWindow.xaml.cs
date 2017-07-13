@@ -52,5 +52,10 @@ namespace TemplatesApp
             TemplateEditor.PageTemplate = pageTemplate;
             TabControl.SelectedItem = ExploreTab;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DownloadManager.GetInstance().Stop();
+        }
     }
 }

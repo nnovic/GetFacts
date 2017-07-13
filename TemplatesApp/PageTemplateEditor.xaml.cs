@@ -26,15 +26,64 @@ namespace TemplatesApp
             InitializeComponent();
         }
 
+        #region PageTemplate
+
+        private PageTemplate pageTemplate = null;
+
         public PageTemplate PageTemplate
         {
-            get;set;
+            get
+            {
+                return pageTemplate;
+            }
+            set
+            {
+                ClearTemplate();
+                pageTemplate = value;
+                InitTemplate();
+            }
         }
+
+        private void ClearTemplate()
+        {
+
+        }
+
+        private void InitTemplate()
+        {
+            PageNameInput.Text = PageTemplate.PageName;
+            PageTypeSelector.SelectedItem = PageTemplate.PageType;
+            ReferenceInput.Text = PageTemplate.Reference;
+            CharsetSelector.SelectedItem = PageTemplate.Encoding;
+            TitleTemplateEditor.StringTemplate = PageTemplate.TitleTemplate;
+            TextTemplateEditor.StringTemplate = PageTemplate.TextTemplate;
+            IconTemplateEditor.StringTemplate = PageTemplate.IconUrlTemplate;
+            MediaTemplateEditor.StringTemplate = PageTemplate.MediaUrlTemplate;
+        }
+
+        #endregion
+
 
         private void AddSectionButton_Click(object sender, RoutedEventArgs e)
         {
             SectionTemplate newSection = new SectionTemplate();
             PageTemplate.Sections.Add(newSection);
+        }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+            PageTypeSelector.Items.Clear();
+            foreach(string type in AbstractParser.AvailableParsers() )
+            {
+                PageTypeSelector.Items.Add(type);
+            }
+            PageTypeSelector.SelectedItem = AbstractParser.DefaultParser;
+
+            CharsetSelector.Items.Clear();
+            foreach(EncodingInfo ei in Encoding.GetEncodings())
+            {                
+                CharsetSelector.Items.Add(ei.GetEncoding());
+            }
         }
     }
 }

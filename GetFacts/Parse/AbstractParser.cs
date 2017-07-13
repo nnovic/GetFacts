@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -386,5 +387,21 @@ namespace GetFacts.Parse
 
 
         public abstract XPathNavigator CreateNavigator();
+
+
+
+        public static IEnumerable<string> AvailableParsers()
+        {
+            var types = from t in Assembly.GetExecutingAssembly().GetTypes()
+                        where t.IsSubclassOf(typeof(AbstractParser)) && t.IsAbstract == false
+                        select t.Name;
+
+            return types;
+        }
+
+        public static string DefaultParser
+        {
+            get { return typeof(HtmlParser).Name; }
+        }
     }
 }

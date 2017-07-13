@@ -8,6 +8,13 @@ namespace GetFacts.Parse
     {
         private readonly ObservableCollection<SectionTemplate> sections = new ObservableCollection<SectionTemplate>();
         
+        public PageTemplate()
+        {
+            PageType = AbstractParser.DefaultParser;
+            Charset = UTF8Encoding.UTF8.WebName;
+        }
+
+
         public string PageName
         {
             get;set;
