@@ -1,4 +1,5 @@
 ﻿using GetFacts.Parse;
+using System;
 using System.Windows.Controls;
 
 namespace TemplatesApp
@@ -40,10 +41,25 @@ namespace TemplatesApp
         private void PopulateTreeView()
         {
             PageTemplateEditor pte = new PageTemplateEditor() { PageTemplate=PageTemplate };
-            ConfigTree.Items.Add(pte);
+            TreeViewItem pageRoot = new TreeViewItem() { Header = pte };
+            ConfigTree.Items.Add(pageRoot);
+
+            foreach(SectionTemplate st in PageTemplate.Sections)
+            {
+                SectionTemplateEditor ste = new SectionTemplateEditor() { SectionTemplate = st };
+                TreeViewItem sectionNode = new TreeViewItem() { Header = ste };
+                pageRoot.Items.Add(sectionNode);
+
+                foreach(ArticleTemplate at in st.Articles)
+                {
+                    ArticleTemplateEditor ate = new ArticleTemplateEditor() { ArticleTemplate = at };
+                    TreeViewItem articleLeaf = new TreeViewItem() { Header = ate };
+                    sectionNode.Items.Add(articleLeaf);
+                }
+
+            }
         }
 
         #endregion
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GetFacts.Parse;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,41 @@ namespace TemplatesApp
         {
             InitializeComponent();
         }
+
+        #region SectionTemplate
+
+        private SectionTemplate sectionTemplate = null;
+
+        public SectionTemplate SectionTemplate
+        {
+            get
+            {
+                return sectionTemplate;
+            }
+            set
+            {
+                ClearTemplate();
+                sectionTemplate = value;
+                InitTemplate();
+            }
+        }
+
+        private void ClearTemplate()
+        {
+
+        }
+
+        private void InitTemplate()
+        {
+            SectionNameInput.Text = SectionTemplate.SectionName;
+            XPathFilterInput.Text = SectionTemplate.XPathFilter;
+            TitleTemplateEditor.StringTemplate = SectionTemplate.TitleTemplate;
+            TextTemplateEditor.StringTemplate = SectionTemplate.TextTemplate;
+            IconTemplateEditor.StringTemplate = SectionTemplate.IconUrlTemplate;
+            MediaTemplateEditor.StringTemplate = SectionTemplate.MediaUrlTemplate;
+        }
+
+        #endregion
 
         private void AddArticleButton_Click(object sender, RoutedEventArgs e)
         {

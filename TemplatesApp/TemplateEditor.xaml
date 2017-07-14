@@ -9,11 +9,16 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         
         <!-- template edition -->
-        <TreeView x:Name="ConfigTree">
+        <TreeView x:Name="ConfigTree" >
         </TreeView>
+        
+        <!-- separation -->
+        <Button Grid.Column="1">Test!</Button>
+        
     </Grid>
 </UserControl>

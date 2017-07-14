@@ -60,6 +60,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ArticleTemplateEditor.xaml.cs">
+      <DependentUpon>ArticleTemplateEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PageTemplateEditor.xaml.cs">
       <DependentUpon>PageTemplateEditor.xaml</DependentUpon>
     </Compile>
@@ -78,6 +81,10 @@
     <Compile Include="TemplateExplorer.xaml.cs">
       <DependentUpon>TemplateExplorer.xaml</DependentUpon>
     </Compile>
+    <Page Include="ArticleTemplateEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
