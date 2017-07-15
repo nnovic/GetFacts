@@ -33,7 +33,9 @@ namespace TemplatesApp
             set
             {
                 pageTemplate = value;
-                Parser = pageTemplate.GetParser();
+                string pageType = pageTemplate.PageType;
+                PageTypeSelector.SelectedValue = pageType;
+                CharsetSelector.SelectedValue = pageTemplate.Charset;
                 UrlInput.Text = pageTemplate.Reference;
             }
         }
@@ -48,7 +50,14 @@ namespace TemplatesApp
 
         public Encoding Encoding
         {
-            get; set;
+            get;
+            private set;
+        }
+
+        public string Url
+        {
+            get;
+            private set;
         }
 
         #endregion
@@ -60,12 +69,12 @@ namespace TemplatesApp
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string url = UrlInput.Text;
+            Url = UrlInput.Text;
             UrlBar.IsEnabled = false;
 
             if(downloadTask==null)
             {
-                Uri uri = new Uri(url);
+                Uri uri = new Uri(Url);
                 downloadTask = DownloadManager.GetInstance().FindOrQueue(uri, Parser.MostProbableFileExtension);
                 downloadTask.TaskFinished += DownloadTask_TaskFinished;
                 downloadTask.TriggerIfTaskFinished();
@@ -86,12 +95,29 @@ namespace TemplatesApp
                     CodeSourceView.Document = Parser.SourceCode;
                     CodeSourceTree.Items.Add(Parser.SourceTree);
                     //UrlBar.IsEnabled = true;
+                    OnPageLoaded();
                 });
+                
             }
         }
 
-
         #endregion
+
+        public class PageLoadedEventArgs : EventArgs
+        {
+            public string Url { get; internal set; }
+            public AbstractParser Parser { get; internal set; }
+            public Encoding Encoding { get; internal set; }
+        }
+
+        public event EventHandler<PageLoadedEventArgs> PageLoaded;
+
+        private void OnPageLoaded()
+        {
+            PageLoadedEventArgs plea = new PageLoadedEventArgs() { Url = Url, Parser=Parser, Encoding=Encoding };
+            PageLoaded?.Invoke(this, plea);
+        }
+
 
         private void CodeSourceTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -101,6 +127,32 @@ namespace TemplatesApp
 
             string xpath = Parser.SuggestXPathFor(selected);
             XPathInput.Text = xpath;
+        }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+            PageTypeSelector.Items.Clear();
+            foreach (string type in AbstractParser.AvailableParsers())
+            {
+                PageTypeSelector.Items.Add(type);
+            }
+
+            CharsetSelector.Items.Clear();
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                CharsetSelector.Items.Add(ei.GetEncoding());
+            }
+        }
+
+        private void PageTypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Parser = new HtmlParser();
+        }
+
+        private void CharsetSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            object selectedEncoding = CharsetSelector.SelectedItem;
+            Encoding = selectedEncoding as Encoding;
         }
     }
 }

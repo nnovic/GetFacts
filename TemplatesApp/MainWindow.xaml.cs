@@ -42,9 +42,7 @@ namespace TemplatesApp
         private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
         {
             ExploreTab.IsEnabled = true;
-            EditTab.IsEnabled = true;
-            SaveTab.IsEnabled = false;
-
+            
             templateFile = TemplateSelection.SelectedTemplate;
             pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
 
@@ -56,6 +54,11 @@ namespace TemplatesApp
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DownloadManager.GetInstance().Stop();
+        }
+
+        private void SourceExplorer_PageLoaded(object sender, SourceExplorer.PageLoadedEventArgs e)
+        {
+            EditTab.IsEnabled = true;
         }
     }
 }

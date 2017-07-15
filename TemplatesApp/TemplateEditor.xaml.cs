@@ -61,5 +61,16 @@ namespace TemplatesApp
         }
 
         #endregion
+
+        #region test template
+
+        private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            //GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
+            //page.Parser = Parser;
+            //page.Template = PageTemplate;
+        }
+
+        #endregion
     }
 }

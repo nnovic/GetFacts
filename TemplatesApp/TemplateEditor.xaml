@@ -18,7 +18,7 @@
         </TreeView>
         
         <!-- separation -->
-        <Button Grid.Column="1">Test!</Button>
+        <Button  x:Name="TestTemplateButton" Grid.Column="1" Click="TestTemplateButton_Click">Test!</Button>
         
     </Grid>
 </UserControl>

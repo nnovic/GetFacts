@@ -20,19 +20,23 @@ namespace GetFacts.Parse
             get;set;
         }
 
+        /// <summary>
+        /// définit le parser à utiliser.
+        /// </summary>
         public string PageType
         {
-            get;set;
+            get;
+            set;
         }
 
-        public AbstractParser GetParser()
+        /*public AbstractParser GetParser()
         {
             switch(PageType)
             {
                 default:
                     return new HtmlParser();
             }            
-        }
+        }*/
 
         /// <summary>
         /// Permet de faire un forçage du Charset (Encoding)

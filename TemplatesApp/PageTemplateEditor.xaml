@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" >
+             d:DesignHeight="300" d:DesignWidth="300" >
     <Border CornerRadius="10" Background="#FFD68D8D">
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
@@ -21,48 +21,32 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock>PageName:</TextBlock>
             <TextBox x:Name="PageNameInput" Grid.Column="1">(write name here)</TextBox>
 
-            <TextBlock Grid.Row="1">Page type:</TextBlock>
-            <ComboBox x:Name="PageTypeSelector" Grid.Row="1" Grid.Column="1" SelectedIndex="0">
-                <ComboBoxItem>Html</ComboBoxItem>
-            </ComboBox>
-            
-            <TextBlock Grid.Row="2">Reference:</TextBlock>
-            <TextBox x:Name="ReferenceInput" Grid.Row="2" Grid.Column="1">(write url here)</TextBox>
+            <TextBlock Grid.Row="1">Reference:</TextBlock>
+            <TextBox x:Name="ReferenceInput" Grid.Row="1" Grid.Column="1">(write url here)</TextBox>
 
-            <TextBlock Grid.Row="3">Charset:</TextBlock>
-            <ComboBox 
-                x:Name="CharsetSelector" 
-                Grid.Row="3" Grid.Column="1" 
-                DisplayMemberPath="WebName"               >
-            
-            </ComboBox>
 
-            <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ToggleButton>...</ToggleButton>
             </StackPanel>
             
-            <TextBlock Grid.Row="5">Title template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
+            <TextBlock Grid.Row="3">Title template:</TextBlock>
+            <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="3" Grid.Column="1"></local:StringTemplateEditor>
 
-            <TextBlock Grid.Row="6">Text template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
+            <TextBlock Grid.Row="4">Text template:</TextBlock>
+            <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
             
-            <TextBlock Grid.Row="7">Icon URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="7" Grid.Column="1"></local:StringTemplateEditor>
+            <TextBlock Grid.Row="5">Icon URL template:</TextBlock>
+            <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
             
-            <TextBlock Grid.Row="8">Media URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="8" Grid.Column="1"></local:StringTemplateEditor>
+            <TextBlock Grid.Row="6">Media URL template:</TextBlock>
+            <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
 
-            <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button>XPath help</Button>
-                <Button>Regex help</Button>
+            <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="AddSectionButton" Click="AddSectionButton_Click">add section</Button>
             </StackPanel>
         </Grid>

@@ -130,18 +130,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DownloadGui.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="DownloadGui.xaml.cs">
-      <DependentUpon>DownloadGui.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="ParseGui.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Render\ArticleDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -175,9 +163,6 @@
     <Compile Include="Facts\AbstractInfo.cs" />
     <Compile Include="Facts\Page.cs" />
     <Compile Include="Facts\Section.cs" />
-    <Compile Include="ParseGui.xaml.cs">
-      <DependentUpon>ParseGui.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Parse\AbstractParser.cs" />
     <Compile Include="Parse\HtmlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

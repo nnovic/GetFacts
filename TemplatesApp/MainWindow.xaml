@@ -23,7 +23,7 @@
             </TabItem>
             <TabItem x:Name="ExploreTab" Header="explore source code, ...">
                 <Grid>
-                    <local:SourceExplorer x:Name="SourceExplorer"></local:SourceExplorer>
+                    <local:SourceExplorer x:Name="SourceExplorer" PageLoaded="SourceExplorer_PageLoaded"></local:SourceExplorer>
                 </Grid>
             </TabItem>
             <TabItem x:Name="EditTab" Header="edit template, ...">
