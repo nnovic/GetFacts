@@ -81,6 +81,7 @@
     <Compile Include="TemplateExplorer.xaml.cs">
       <DependentUpon>TemplateExplorer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Workflow.cs" />
     <Page Include="ArticleTemplateEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

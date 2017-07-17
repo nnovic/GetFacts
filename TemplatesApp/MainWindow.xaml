@@ -10,15 +10,7 @@
         <TabControl x:Name="TabControl">
             <TabItem x:Name="SelectTab" Header="Select template file, ...">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <local:TemplateExplorer x:Name="TemplateSelection" TemplateSelectionChanged="TemplateExplorer_TemplateSelectionChanged"></local:TemplateExplorer>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" >Select</Button>
-                        <Button x:Name="CreateTemplateButton" >Create new</Button>
-                    </StackPanel>
+                    <local:TemplateExplorer x:Name="TemplateSelection" ></local:TemplateExplorer>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ExploreTab" Header="explore source code, ...">

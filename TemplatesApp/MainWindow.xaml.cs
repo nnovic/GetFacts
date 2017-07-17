@@ -12,43 +12,52 @@ namespace TemplatesApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string templateFile;
-        private PageTemplate pageTemplate;
-
+        private readonly Workflow workflow = new Workflow();
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void TemplateExplorer_TemplateSelectionChanged(object sender, TemplateExplorer.TemplateSelectionChangedEventArges e)
-        {
-            SelectTemplateButton.IsEnabled = (e.Path != null);
+            workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
         }
 
         private void Window_Initialized(object sender, EventArgs e)
-        {            
-            ExploreTab.IsEnabled = false;
+        {
+            /*ExploreTab.IsEnabled = false;
             EditTab.IsEnabled = false;
             SaveTab.IsEnabled = false;
 
             SelectTemplateButton.IsEnabled = false;
             CreateTemplateButton.IsEnabled = false;
+            */
+
+            TemplateSelection.Workflow = workflow;
+            SourceExplorer.Workflow = workflow;
 
             // Force early initialization of the download manager
             DownloadManager.GetInstance();
+
+            workflow.OnWorkflowUpdated();
+        }
+
+        private void Workflow_WorkflowUpdated(object sender, EventArgs e)
+        {
+            SelectTab.IsEnabled = true;
+            ExploreTab.IsEnabled = workflow.IsReadyForSourceExplorer;
+            EditTab.IsEnabled = false;
+            SaveTab.IsEnabled = false;
         }
 
         private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
         {
-            ExploreTab.IsEnabled = true;
-            
+            /*ExploreTab.IsEnabled = true;
+            EditTab.IsEnabled = false;
+
             templateFile = TemplateSelection.SelectedTemplate;
             pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
 
             SourceExplorer.PageTemplate = pageTemplate;
             TemplateEditor.PageTemplate = pageTemplate;
-            TabControl.SelectedItem = ExploreTab;
+            TabControl.SelectedItem = ExploreTab;*/
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -58,7 +67,9 @@ namespace TemplatesApp
 
         private void SourceExplorer_PageLoaded(object sender, SourceExplorer.PageLoadedEventArgs e)
         {
-            EditTab.IsEnabled = true;
+            //EditTab.IsEnabled = true;
+            //TemplateEditor.Url = e.Url;
+            //TemplateEditor.Parser = e.Parser;
         }
     }
 }

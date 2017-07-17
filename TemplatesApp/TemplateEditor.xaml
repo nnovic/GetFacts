@@ -19,6 +19,10 @@
         
         <!-- separation -->
         <Button  x:Name="TestTemplateButton" Grid.Column="1" Click="TestTemplateButton_Click">Test!</Button>
+
+        <!-- template edition -->
+        <TreeView Grid.Column="2" x:Name="PreviewTree" >
+        </TreeView>
         
     </Grid>
 </UserControl>

@@ -26,19 +26,19 @@ namespace TemplatesApp
             }
             set
             {
-                ClearTreeView();
+                ClearTemplateTree();
                 pageTemplate = value;
-                PopulateTreeView();
+                PopulateTemplateTree();
 
             }
         }
 
-        private void ClearTreeView()
+        private void ClearTemplateTree()
         {
 
         }
 
-        private void PopulateTreeView()
+        private void PopulateTemplateTree()
         {
             PageTemplateEditor pte = new PageTemplateEditor() { PageTemplate=PageTemplate };
             TreeViewItem pageRoot = new TreeViewItem() { Header = pte };
@@ -62,13 +62,37 @@ namespace TemplatesApp
 
         #endregion
 
+
+        #region other parameters
+
+        internal string Url
+        {
+            get;set;
+        }
+
+        internal AbstractParser Parser
+        {
+            get;set;
+        }
+
+        #endregion
+
+
         #region test template
 
         private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
+            ClearPreviewTree();
+            GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
             //page.Parser = Parser;
             //page.Template = PageTemplate;
+
+
+        }
+
+        private void ClearPreviewTree()
+        {
+            PreviewTree.Items.Clear();
         }
 
         #endregion

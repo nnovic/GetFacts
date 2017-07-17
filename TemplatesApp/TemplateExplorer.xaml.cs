@@ -14,9 +14,20 @@ namespace TemplatesApp
     public partial class TemplateExplorer : UserControl
     {
 
+        private Workflow workflow;
+
         public TemplateExplorer()
         {
             InitializeComponent();
+        }
+
+        internal Workflow Workflow
+        {
+            set
+            {
+                workflow = value;
+                workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -49,12 +60,10 @@ namespace TemplatesApp
                 string template = FilesList.SelectedItem as string;
                 string path = Path.Combine(dir, template);
                 Preview(path);
-                OnTemplateSelectionChanged(path);
             }
             catch
             {
                 Preview(null);
-                OnTemplateSelectionChanged(null);
             }
         }
 
@@ -92,35 +101,20 @@ namespace TemplatesApp
             });
         }
 
-
-        #region TemplateSelectionChanged
-
-        public class TemplateSelectionChangedEventArges : EventArgs
-        {
-            private string path;
-            public TemplateSelectionChangedEventArges(string path)
-            {
-                this.path = path;
-            }
-            public string Path
-            {
-                get { return path; }
-            }
-        }
-
-        public event EventHandler<TemplateSelectionChangedEventArges> TemplateSelectionChanged;
-
-        void OnTemplateSelectionChanged(string path)
-        {
-            TemplateSelectionChangedEventArges args = new TemplateSelectionChangedEventArges(path);
-            TemplateSelectionChanged?.Invoke(this, args);
-        }
-
-        #endregion
-
         private void FilesList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            //TODO
+        }
 
+        private void Workflow_WorkflowUpdated(object sender, EventArgs e)
+        {
+            // no action required.
+        }
+
+        private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
+        {
+            string template = FilesList.SelectedItem as string;
+            workflow.TemplateFile = template;
         }
     }
 }

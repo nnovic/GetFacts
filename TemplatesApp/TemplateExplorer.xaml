@@ -7,6 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -62,5 +66,9 @@
             <TextBlock>Preview:</TextBlock>
             <RichTextBox x:Name="JsonPreview"  Grid.Row="2" IsReadOnly="True"></RichTextBox>
         </Grid>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" >Select</Button>
+        </StackPanel>
     </Grid>
 </UserControl>
