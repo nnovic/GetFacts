@@ -403,5 +403,24 @@ namespace GetFacts.Parse
         {
             get { return typeof(HtmlParser).Name; }
         }
+
+        /// <summary>
+        /// Crée un instance concrète d'AbstractParser
+        /// en se basant sur le nom de Type passé en argument.
+        /// </summary>
+        /// <param name="name">Nom du type à instancier. Doit être un type dérive d'AbstractParser.</param>
+        /// <returns>L'object créé.</returns>
+        public static AbstractParser NewInstance(string name)
+        {
+            var types = from t in Assembly.GetExecutingAssembly().GetTypes()
+                        where t.IsSubclassOf(typeof(AbstractParser)) && t.IsAbstract == false
+                        select t;
+
+            Type parserType = types.ElementAt(0);
+
+            ConstructorInfo ci = parserType.GetConstructor(Type.EmptyTypes);
+            object parser = ci.Invoke(null);
+            return (AbstractParser)parser;
+        }
     }
 }

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
-             d:DesignHeight="432.692" d:DesignWidth="742.308">
+             d:DesignHeight="432.692" d:DesignWidth="742.308" Initialized="UserControl_Initialized">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />

@@ -15,7 +15,7 @@
             </TabItem>
             <TabItem x:Name="ExploreTab" Header="explore source code, ...">
                 <Grid>
-                    <local:SourceExplorer x:Name="SourceExplorer" PageLoaded="SourceExplorer_PageLoaded"></local:SourceExplorer>
+                    <local:SourceExplorer x:Name="SourceExplorer" ></local:SourceExplorer>
                 </Grid>
             </TabItem>
             <TabItem x:Name="EditTab" Header="edit template, ...">
@@ -24,7 +24,7 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="SaveTab" Header="and save.">
-
+                <local:SaveTemplate x:Name="SaveTemplate" ></local:SaveTemplate>
             </TabItem>
         </TabControl>
     </Grid>

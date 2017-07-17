@@ -17,21 +17,16 @@ namespace TemplatesApp
         public MainWindow()
         {
             InitializeComponent();
-            workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
+            
         }
 
         private void Window_Initialized(object sender, EventArgs e)
         {
-            /*ExploreTab.IsEnabled = false;
-            EditTab.IsEnabled = false;
-            SaveTab.IsEnabled = false;
-
-            SelectTemplateButton.IsEnabled = false;
-            CreateTemplateButton.IsEnabled = false;
-            */
-
             TemplateSelection.Workflow = workflow;
             SourceExplorer.Workflow = workflow;
+            TemplateEditor.Workflow = workflow;
+            SaveTemplate.Workflow = workflow;
+            workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
 
             // Force early initialization of the download manager
             DownloadManager.GetInstance();
@@ -41,35 +36,20 @@ namespace TemplatesApp
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
-            SelectTab.IsEnabled = true;
-            ExploreTab.IsEnabled = workflow.IsReadyForSourceExplorer;
-            EditTab.IsEnabled = false;
-            SaveTab.IsEnabled = false;
+            Dispatcher.Invoke(() => {
+                SelectTab.IsEnabled = true;
+                ExploreTab.IsEnabled = workflow.IsReadyForSourceExplorer;
+                EditTab.IsEnabled = workflow.IsReadyForTemplateEditor;
+                SaveTab.IsEnabled = workflow.IsReadyToSaveTemplate;
+            });
+            
         }
 
-        private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
-        {
-            /*ExploreTab.IsEnabled = true;
-            EditTab.IsEnabled = false;
-
-            templateFile = TemplateSelection.SelectedTemplate;
-            pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
-
-            SourceExplorer.PageTemplate = pageTemplate;
-            TemplateEditor.PageTemplate = pageTemplate;
-            TabControl.SelectedItem = ExploreTab;*/
-        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DownloadManager.GetInstance().Stop();
         }
 
-        private void SourceExplorer_PageLoaded(object sender, SourceExplorer.PageLoadedEventArgs e)
-        {
-            //EditTab.IsEnabled = true;
-            //TemplateEditor.Url = e.Url;
-            //TemplateEditor.Parser = e.Parser;
-        }
     }
 }

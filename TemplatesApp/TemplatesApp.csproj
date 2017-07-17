@@ -66,6 +66,9 @@
     <Compile Include="PageTemplateEditor.xaml.cs">
       <DependentUpon>PageTemplateEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SaveTemplate.xaml.cs">
+      <DependentUpon>SaveTemplate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SectionTemplateEditor.xaml.cs">
       <DependentUpon>SectionTemplateEditor.xaml</DependentUpon>
     </Compile>
@@ -99,6 +102,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PageTemplateEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SaveTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,13 +9,64 @@ namespace TemplatesApp
     /// </summary>
     public partial class TemplateEditor : UserControl
     {
+        private Workflow workflow = null;
+        private bool isReady = false;
+
         public TemplateEditor()
         {
             InitializeComponent();
         }
 
+        internal Workflow Workflow
+        {
+            get
+            {
+                return workflow;
+            }
+            set
+            {
+                workflow = value;
+                workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
+            }
+        }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Workflow_WorkflowUpdated(object sender, EventArgs e)
+        {
+            if (workflow.IsReadyForTemplateEditor != isReady)
+            {
+                isReady = workflow.IsReadyForTemplateEditor;
+                if (isReady)
+                {
+                    InitTemplateEditor();
+                }
+                else
+                {
+                    ClearTemplateEditor();
+                }
+            }
+        }
+
+
+
+
         #region get/set template
 
+        private void InitTemplateEditor()
+        {
+            // TODO
+        }
+
+        private void ClearTemplateEditor()
+        {
+            // TODO
+        }
+
+        /*
         private PageTemplate pageTemplate = null;
 
         public PageTemplate PageTemplate
@@ -59,22 +110,22 @@ namespace TemplatesApp
 
             }
         }
-
+        */
         #endregion
 
 
         #region other parameters
+        /*
+                internal string Url
+                {
+                    get;set;
+                }
 
-        internal string Url
-        {
-            get;set;
-        }
-
-        internal AbstractParser Parser
-        {
-            get;set;
-        }
-
+                internal AbstractParser Parser
+                {
+                    get;set;
+                }
+                */
         #endregion
 
 
@@ -82,19 +133,21 @@ namespace TemplatesApp
 
         private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ClearPreviewTree();
-            GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
+            //ClearPreviewTree();
+            //GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
             //page.Parser = Parser;
             //page.Template = PageTemplate;
 
 
         }
 
-        private void ClearPreviewTree()
-        {
-            PreviewTree.Items.Clear();
-        }
+        /* private void ClearPreviewTree()
+         {
+             PreviewTree.Items.Clear();
+         }*/
 
         #endregion
+
+
     }
 }

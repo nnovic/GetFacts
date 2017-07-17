@@ -140,13 +140,24 @@ namespace GetFacts.Download
             }
         }
 
-        public void TriggerIfTaskFinished()
+        /// <summary>
+        /// Provoque le déclenchement de l'évènement TaskFinished
+        /// si et seulement si Status==Completed.
+        /// </summary>
+        /// <returns>retourne 'true' si TaskFinished a été déclenché.
+        /// retourne 'false' dans le cas contraire.</returns>
+        public bool TriggerIfTaskFinished()
         {
             lock(_lock_)
             {
                 if( Status== DownloadStatus.Completed)
                 {
                     FireTaskFinished();
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
         }

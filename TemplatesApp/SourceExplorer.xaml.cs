@@ -19,6 +19,7 @@ namespace TemplatesApp
     {
         private Workflow workflow = null;
         private bool isReady = false;
+        private AbstractParser parser = null;
 
         public SourceExplorer()
         {
@@ -58,7 +59,7 @@ namespace TemplatesApp
             if( workflow.IsReadyForSourceExplorer != isReady )
             {
                 isReady = workflow.IsReadyForSourceExplorer;
-                if (  isReady )
+                if ( isReady )
                 {
                     InitSourceExplorer();
                 }
@@ -81,30 +82,12 @@ namespace TemplatesApp
 
         #region configuration
 
-        /*private PageTemplate pageTemplate;
 
-        public PageTemplate PageTemplate
-        {
-            get
-            {
-                return pageTemplate;
-            }
-            set
-            {
-                if (pageTemplate != value)
-                {
-                    ClearTemplate();
-                    pageTemplate = value;
-                    InitTemplate();                    
-                }
-            }
-        }
-        */
         private void ClearSourceExplorer()
         {
             CodeSourceView.Document = null;
             CodeSourceTree.Items.Clear();
-            //Parser?.Clear();
+            Parser?.Clear();
         }
 
         private void InitSourceExplorer()
@@ -117,71 +100,62 @@ namespace TemplatesApp
 
             string url = Workflow.PageTemplate.Reference;
             UrlInput.Text = url;
-        }
+        }        
 
-
-        /*public AbstractParser Parser
+        public AbstractParser Parser
         {
-            get;
-            private set;
+            get
+            {
+                return parser;
+            }
+            set
+            {
+                ClearSourceExplorer();
+                parser = value;
+                InitSourceExplorer();
+            }
         }
-
-        public Encoding Encoding
-        {
-            get;
-            private set;
-        }
-
-        public string Url
-        {
-            get;
-            private set;
-        }*/
-
+        
         #endregion
 
 
         #region loading the html document
 
-        private DownloadTask downloadTask = null;
-
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            UrlBar.IsEnabled = false;
+            UrlBar.IsEnabled = false;            
 
-            Workflow.PageTemplate.Reference= UrlInput.Text;
-            Workflow.PageTemplate.Charset = (string)CharsetSelector.SelectedValue;
-            Workflow.PageTemplate.PageType = (string)PageTypeSelector.SelectedItem;
-
-
-
-            if(downloadTask==null)
+            if(Workflow.DownloadTask==null)
             {
                 Uri uri = new Uri(Workflow.PageTemplate.Reference);
-                downloadTask = DownloadManager.GetInstance().FindOrQueue(uri, Parser.MostProbableFileExtension);
-                downloadTask.TaskFinished += DownloadTask_TaskFinished;
-                downloadTask.TriggerIfTaskFinished();
+                Workflow.DownloadTask = DownloadManager.GetInstance().FindOrQueue(uri, Parser.MostProbableFileExtension);
+                Workflow.DownloadTask.TaskFinished += DownloadTask_TaskFinished;
+                Workflow.DownloadTask.TriggerIfTaskFinished();
             }
             else
             {
-                downloadTask.Reload();
+                Workflow.DownloadTask.Reload();
             }
         }
 
         private void DownloadTask_TaskFinished(object sender, EventArgs e)
         {
-            if (downloadTask.Status == DownloadTask.DownloadStatus.Completed)
-            {
-                /*Parser.Load(downloadTask.LocalFile, Encoding);
+            if (Workflow.DownloadTask.Status == DownloadTask.DownloadStatus.Completed)
+            {                
                 Dispatcher.Invoke(() => 
                 {
+                    Parser.Load(Workflow.DownloadTask.LocalFile, Workflow.PageTemplate.Encoding);
                     CodeSourceView.Document = Parser.SourceCode;
-                    CodeSourceTree.Items.Add(Parser.SourceTree);
-                    //UrlBar.IsEnabled = true;
-                    OnPageLoaded();
+                    CodeSourceTree.Items.Clear();
+                    CodeSourceTree.Items.Add(Parser.SourceTree);                    
                 });
-                */
             }
+
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                UrlBar.IsEnabled = true;
+                BrowseButton.Content = "Reload";
+            }));
         }
 
         #endregion
@@ -196,6 +170,22 @@ namespace TemplatesApp
             XPathInput.Text = xpath;*/
         }
 
+        private void PageTypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Workflow.PageTemplate.PageType = (string)PageTypeSelector.SelectedItem;
+            Parser = AbstractParser.NewInstance(Workflow.PageTemplate.PageType);
+        }
 
+        private void CharsetSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Workflow.PageTemplate.Charset = (string)CharsetSelector.SelectedValue;
+        }
+
+        private void UrlInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Workflow.PageTemplate.Reference = UrlInput.Text;
+            Workflow.DownloadTask = null;
+            BrowseButton.Content = "Browse";
+        }
     }
 }
