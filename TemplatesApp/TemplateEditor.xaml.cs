@@ -168,7 +168,10 @@ namespace TemplatesApp
 
             // PAGE
 
-            ArticleDisplay pageDisplay = new ArticleDisplay(false, 0) { DesiredOrientation=ArticleDisplay.Orientation.Horizontal };
+            ArticleDisplay pageDisplay = new ArticleDisplay(false, 0) {
+                DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
+                Width = 500, Height=200
+            };
             pageDisplay.Update(page);
             TreeViewItem rootItem = new TreeViewItem() { Header = pageDisplay };
 
@@ -178,7 +181,10 @@ namespace TemplatesApp
             for(int sectionIndex=0; sectionIndex<sectionsCount; sectionIndex++)
             {
                 GetFacts.Facts.Section section = page.GetSection(sectionIndex);
-                ArticleDisplay sectionDisplay = new ArticleDisplay(false, 0) { DesiredOrientation = ArticleDisplay.Orientation.Horizontal };
+                ArticleDisplay sectionDisplay = new ArticleDisplay(false, 0) {
+                    DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
+                    Width=500, Height=200
+                };
                 sectionDisplay.Update(section);
                 TreeViewItem sectionItem = new TreeViewItem() { Header = sectionDisplay };
                 rootItem.Items.Add(sectionItem);
@@ -189,7 +195,10 @@ namespace TemplatesApp
                 for(int articleIndex=0; articleIndex<articlesCount; articleIndex++)
                 {
                     GetFacts.Facts.Article article = section.GetArticle(articleIndex);
-                    ArticleDisplay articleDisplay = new ArticleDisplay(false, 0) { DesiredOrientation = ArticleDisplay.Orientation.Horizontal };
+                    ArticleDisplay articleDisplay = new ArticleDisplay(false, 0) {
+                        DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
+                        Width=500, Height=200
+                    };
                     articleDisplay.Update(article);
                     TreeViewItem articleItem = new TreeViewItem() { Header =articleDisplay };
                     sectionItem.Items.Add(articleItem);

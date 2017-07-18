@@ -26,7 +26,7 @@
                         <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
                     <Viewbox x:Name="titleView" Grid.Row="0" HorizontalAlignment="Left">
-                        <TextBlock x:Name="articleTitle" TextWrapping="Wrap" MaxWidth="500">bla bla bla </TextBlock>
+                        <TextBlock x:Name="articleTitle" TextWrapping="Wrap" MaxWidth="500">bla bla bla</TextBlock>
                     </Viewbox>
                     <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Black">
                         <Viewbox x:Name="textView"  HorizontalAlignment="Left">

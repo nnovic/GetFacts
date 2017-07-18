@@ -18,7 +18,7 @@
         
         
         <!-- File/Dir nav -->
-        <Grid>
+        <Grid Margin="10" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -26,38 +26,38 @@
             </Grid.RowDefinitions>
             
             <!-- current dir -->
-            <Grid x:Name="CurrentDirPanel">
+            <Grid Margin="0,0,0,5" x:Name="CurrentDirPanel">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0">Directory:</TextBlock>
-                <ComboBox Grid.Column="1" x:Name="TemplatesDirSelection" IsEnabled="False" SelectionChanged="TemplatesDirSelection_SelectionChanged"/>
-                <Button Grid.Column="2">change</Button>
+                <TextBlock Margin="0,0,3,0"  Grid.Column="0">Directory:</TextBlock>
+                <ComboBox Margin="0,0,3,0" Grid.Column="1" x:Name="TemplatesDirSelection" IsEnabled="False" SelectionChanged="TemplatesDirSelection_SelectionChanged"/>
+                <Button Grid.Column="2" Padding="3,1">Change</Button>
             </Grid>
 
             <!-- filename filter -->
-            <Grid Grid.Row="1" x:Name="FileFilterPanel">
+            <Grid Margin="0,0,0,5" Grid.Row="1" x:Name="FileFilterPanel">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0">Filter:</TextBlock>
-                <TextBox Grid.Column="1" />
-                <Button Grid.Column="2">Apply</Button>
+                <TextBlock Margin="0,0,3,0" Grid.Column="0">Filter:</TextBlock>
+                <TextBox Margin="0,0,3,0" Grid.Column="1" />
+                <Button Grid.Column="2" Padding="3,1">Apply</Button>
             </Grid>
 
             <!-- files -->
-            <Grid Grid.Row="2" x:Name="FilesListPanel">
+            <Grid  Grid.Row="2" x:Name="FilesListPanel">
                 <ListBox x:Name="FilesList" SelectionChanged="FilesList_SelectionChanged" MouseDoubleClick="FilesList_MouseDoubleClick"></ListBox>
             </Grid>
             
         </Grid>
         
         <!-- file content preview -->
-        <Grid Grid.Column="1">
+        <Grid Margin="10"  Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -67,8 +67,8 @@
             <RichTextBox x:Name="JsonPreview"  Grid.Row="2" IsReadOnly="True"></RichTextBox>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" >Select</Button>
+        <StackPanel Margin="0,0,10,10" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="SelectTemplateButton" Click="SelectTemplateButton_Click" Padding="5,5" >Select</Button>
         </StackPanel>
     </Grid>
 </UserControl>

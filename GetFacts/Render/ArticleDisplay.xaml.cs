@@ -52,6 +52,13 @@ namespace GetFacts.Render
 
         public void Update(Facts.AbstractInfo info)
         {
+            if(info.HasContent==false)
+            {
+                articleTitle.Text = "(no content to display)";
+                articleText.Text = "O_o";
+                return;
+            }
+
             articleTitle.Text = info.Title;
             articleText.Text = info.Text;
             mediaDisplay.Caption = info.Title;
