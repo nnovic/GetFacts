@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" >
-    <Border CornerRadius="10" Background="#FFD68D8D">
+    <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

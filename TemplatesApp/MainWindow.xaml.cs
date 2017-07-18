@@ -38,9 +38,9 @@ namespace TemplatesApp
         {
             Dispatcher.Invoke(() => {
                 SelectTab.IsEnabled = true;
-                ExploreTab.IsEnabled = workflow.IsReadyForSourceExplorer;
-                EditTab.IsEnabled = workflow.IsReadyForTemplateEditor;
-                SaveTab.IsEnabled = workflow.IsReadyToSaveTemplate;
+                ExploreTab.IsEnabled = workflow.IsTemplateDataAvailable;
+                EditTab.IsEnabled = workflow.IsPageDataAvailable;
+                SaveTab.IsEnabled = workflow.IsTemplateDataAvailable && workflow.IsPageDataAvailable;
             });
             
         }

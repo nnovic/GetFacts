@@ -64,7 +64,7 @@ namespace GetFacts.Facts
 
         #region configuration
 
-        protected AbstractParser Parser
+        public AbstractParser Parser
         {
             get;set;
         }
@@ -96,7 +96,7 @@ namespace GetFacts.Facts
             }
         }
 
-        internal PageTemplate Template
+        public PageTemplate Template
         {
             get;set;
         }
@@ -105,7 +105,7 @@ namespace GetFacts.Facts
 
         #region mise à jour 
 
-        internal void Update(string sourceFile)
+        public void Update(string sourceFile)
         {            
             Parser.Load(sourceFile, Template.Encoding);
             Update(Parser.CreateNavigator());

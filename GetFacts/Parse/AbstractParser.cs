@@ -140,7 +140,7 @@ namespace GetFacts.Parse
         {
             te.FontFamily = sans_serif;
             te.FontSize = M_FONT_SIZE;
-            te.Foreground = Brushes.DarkGray;
+            te.Foreground = Brushes.DimGray;
             te.TextDecorations = null;
         }
 
@@ -162,7 +162,7 @@ namespace GetFacts.Parse
 
         protected virtual void ApplyMeaninglessJunkStyle(TextElement te)
         {
-            te.Foreground = Brushes.Green;
+            te.Foreground = Brushes.DarkGray;
         }
 
         #endregion
@@ -251,6 +251,8 @@ namespace GetFacts.Parse
             object node = hyperlinksToConcreteType.GetObjectOf(hl);
             TreeViewItem tvi = concreteTypesToTreeViewItems.GetTypedElementOf(node);
             tvi.IsSelected = true;
+            tvi.BringIntoView();
+            tvi.IsExpanded = true;
         }
 
 
@@ -259,16 +261,6 @@ namespace GetFacts.Parse
         #endregion
 
         #region [optionel] tree view pour un élément précis du code source
-
-        /*protected virtual void ClearSelectedSource()
-        {
-            if( selectedCodePath!=null)
-            {
-                selectedCodePath.Items.Clear();
-                selectedCodePath = null;
-            }
-        }
-        */
 
         protected virtual void ClearSourceTree()
         {
@@ -282,7 +274,6 @@ namespace GetFacts.Parse
         }
 
         private TreeViewItem sourceTreeRoot = null;
-        //private Hashtable concreteTypesToTreeViewItems = new Hashtable();
         private DoubleList<TreeViewItem> concreteTypesToTreeViewItems = new DoubleList<TreeViewItem>();
 
         public TreeViewItem SourceTree

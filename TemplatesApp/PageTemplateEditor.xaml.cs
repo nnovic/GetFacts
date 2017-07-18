@@ -67,7 +67,5 @@ namespace TemplatesApp
             SectionTemplate newSection = new SectionTemplate();
             PageTemplate.Sections.Add(newSection);
         }
-
-
     }
 }

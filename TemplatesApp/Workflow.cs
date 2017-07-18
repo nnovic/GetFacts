@@ -38,9 +38,21 @@ namespace TemplatesApp
             {
                 if( string.Compare(templateFile, value)!=0 )
                 {
-                    templateFile = value;
-                    pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
-                    OnWorkflowUpdated();
+                    // Provoquer le passage vers l'état 'invalide'
+                    if (templateFile != null)
+                    {
+                        templateFile = null;
+                        pageTemplate = null;
+                        OnWorkflowUpdated();
+                    }
+
+                    // Provoquer le passage vers l'état 'valide'
+                    if (value != null)
+                    {
+                        templateFile = value;
+                        pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
+                        OnWorkflowUpdated();
+                    }
                 }
             }
         }
@@ -63,7 +75,7 @@ namespace TemplatesApp
         /// Retourne true si toutes les informations requises pour 
         /// l'étape 'SourceExplorer' sont réunies.
         /// </summary>
-        public bool IsReadyForSourceExplorer
+        public bool IsTemplateDataAvailable
         {
             get
             {
@@ -115,32 +127,23 @@ namespace TemplatesApp
         /// Retourne true si toutes les informations requises pour 
         /// l'étape 'TemplateEditor' sont réunies.
         /// </summary>
-        public bool IsReadyForTemplateEditor
+        public bool IsPageDataAvailable
         {
             get
             {
-                return false;
+                if ((DownloadTask!=null) 
+                    && (DownloadTask.Status==DownloadTask.DownloadStatus.Completed) )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
         #endregion
 
-
-        #region collect TemplateEditor data for SaveTemplate step
-
-
-        /// <summary>
-        /// Retourne true si toutes les informations requises pour 
-        /// l'étape 'SaveTemplate' sont réunies.
-        /// </summary>
-        public bool IsReadyToSaveTemplate
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        #endregion
     }
 }

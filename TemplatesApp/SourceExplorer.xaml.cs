@@ -56,9 +56,9 @@ namespace TemplatesApp
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
-            if( workflow.IsReadyForSourceExplorer != isReady )
+            if( workflow.IsTemplateDataAvailable != isReady )
             {
-                isReady = workflow.IsReadyForSourceExplorer;
+                isReady = workflow.IsTemplateDataAvailable;
                 if ( isReady )
                 {
                     InitSourceExplorer();
@@ -115,7 +115,27 @@ namespace TemplatesApp
                 InitSourceExplorer();
             }
         }
-        
+
+
+        private void PageTypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Workflow.PageTemplate.PageType = (string)PageTypeSelector.SelectedItem;
+            Parser = AbstractParser.NewInstance(Workflow.PageTemplate.PageType);
+        }
+
+        private void CharsetSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Encoding selected = (Encoding)e.AddedItems[0];
+            Workflow.PageTemplate.Charset = selected.WebName;
+        }
+
+        private void UrlInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Workflow.PageTemplate.Reference = UrlInput.Text;
+            Workflow.DownloadTask = null;
+            BrowseButton.Content = "Browse";
+        }
+
         #endregion
 
 
@@ -160,6 +180,8 @@ namespace TemplatesApp
 
         #endregion
 
+        #region navigation dans le code source
+
         private void CodeSourceTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             /*TreeViewItem selected = (TreeViewItem)e.NewValue;
@@ -170,22 +192,7 @@ namespace TemplatesApp
             XPathInput.Text = xpath;*/
         }
 
-        private void PageTypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Workflow.PageTemplate.PageType = (string)PageTypeSelector.SelectedItem;
-            Parser = AbstractParser.NewInstance(Workflow.PageTemplate.PageType);
-        }
+        #endregion
 
-        private void CharsetSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Workflow.PageTemplate.Charset = (string)CharsetSelector.SelectedValue;
-        }
-
-        private void UrlInput_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Workflow.PageTemplate.Reference = UrlInput.Text;
-            Workflow.DownloadTask = null;
-            BrowseButton.Content = "Browse";
-        }
     }
 }

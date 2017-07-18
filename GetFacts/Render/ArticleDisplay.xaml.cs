@@ -50,7 +50,7 @@ namespace GetFacts.Render
             DoLayout(new Size(ActualWidth, ActualHeight));
         }
 
-        internal void Update(Facts.AbstractInfo info)
+        public void Update(Facts.AbstractInfo info)
         {
             articleTitle.Text = info.Title;
             articleText.Text = info.Text;
@@ -119,6 +119,19 @@ namespace GetFacts.Render
 
         #region layout
 
+        public enum Orientation
+        {
+            Automatic =0, // will be the default value
+            Horizontal,
+            Vertical,
+            Square
+        }
+
+        public Orientation DesiredOrientation
+        {
+            get; set;
+        }
+
         private bool IsVertical(Size s)
         {
             return s.Height >= (1.5* s.Width);
@@ -136,11 +149,11 @@ namespace GetFacts.Render
 
         private void DoLayout(Size s)
         {
-            if (IsVertical(s))
+            if (IsVertical(s) || (DesiredOrientation==Orientation.Vertical) )
             {
                 DispositionVerticale();
             }
-            else if(IsHorizontal(s))
+            else if(IsHorizontal(s) || (DesiredOrientation==Orientation.Horizontal) )
             {
                 DispositionHorizontale();
             }

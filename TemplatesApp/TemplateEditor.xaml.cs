@@ -1,4 +1,5 @@
 ﻿using GetFacts.Parse;
+using GetFacts.Render;
 using System;
 using System.Windows.Controls;
 
@@ -10,7 +11,8 @@ namespace TemplatesApp
     public partial class TemplateEditor : UserControl
     {
         private Workflow workflow = null;
-        private bool isReady = false;
+        private bool templateDataReady = false;
+        private bool pageDataReady = false;
 
         public TemplateEditor()
         {
@@ -37,16 +39,30 @@ namespace TemplatesApp
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
-            if (workflow.IsReadyForTemplateEditor != isReady)
+            if( Workflow.IsTemplateDataAvailable != templateDataReady )
             {
-                isReady = workflow.IsReadyForTemplateEditor;
-                if (isReady)
+                templateDataReady = workflow.IsTemplateDataAvailable;
+                if (templateDataReady)
                 {
-                    InitTemplateEditor();
+                    InitTemplateTree();
                 }
                 else
                 {
-                    ClearTemplateEditor();
+                    ClearTemplateTree();
+                    ClearPreviewTree();
+                }
+            }
+
+            if (Workflow.IsPageDataAvailable != pageDataReady)
+            {
+                pageDataReady = workflow.IsPageDataAvailable;
+                if (pageDataReady)
+                {
+                    InitPreviewTree();
+                }
+                else
+                { 
+                    ClearPreviewTree();
                 }
             }
         }
@@ -54,17 +70,39 @@ namespace TemplatesApp
 
 
 
-        #region get/set template
+        #region template
 
-        private void InitTemplateEditor()
+
+        private void ClearTemplateTree()
         {
-            // TODO
+            ConfigTree.Items.Clear();
         }
 
-        private void ClearTemplateEditor()
+        private void InitTemplateTree()
         {
-            // TODO
+            PageTemplateEditor pte = new PageTemplateEditor() { PageTemplate = Workflow.PageTemplate };
+            TreeViewItem pageRoot = new TreeViewItem() { Header = pte };
+            ConfigTree.Items.Add(pageRoot);
+
+            foreach (SectionTemplate st in Workflow.PageTemplate.Sections)
+            {
+                SectionTemplateEditor ste = new SectionTemplateEditor() { SectionTemplate = st };
+                TreeViewItem sectionNode = new TreeViewItem() { Header = ste };
+                pageRoot.Items.Add(sectionNode);
+
+                foreach (ArticleTemplate at in st.Articles)
+                {
+                    ArticleTemplateEditor ate = new ArticleTemplateEditor() { ArticleTemplate = at };
+                    TreeViewItem articleLeaf = new TreeViewItem() { Header = ate };
+                    sectionNode.Items.Add(articleLeaf);
+                }
+            }
+
+            pageRoot.ExpandSubtree();
         }
+
+
+
 
         /*
         private PageTemplate pageTemplate = null;
@@ -114,37 +152,69 @@ namespace TemplatesApp
         #endregion
 
 
-        #region other parameters
-        /*
-                internal string Url
-                {
-                    get;set;
-                }
-
-                internal AbstractParser Parser
-                {
-                    get;set;
-                }
-                */
-        #endregion
-
 
         #region test template
 
         private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //ClearPreviewTree();
-            //GetFacts.Facts.Page page = new GetFacts.Facts.Page(Url);
+            ClearPreviewTree();
+
+            // ANALYSE
+
+            GetFacts.Facts.Page page = new GetFacts.Facts.Page(Workflow.PageTemplate.Reference);
+            page.Template = Workflow.PageTemplate;
+            page.Parser = AbstractParser.NewInstance(Workflow.PageTemplate.PageType);
+            page.Update(Workflow.DownloadTask.LocalFile);
+
+            // PAGE
+
+            ArticleDisplay pageDisplay = new ArticleDisplay(false, 0) { DesiredOrientation=ArticleDisplay.Orientation.Horizontal };
+            pageDisplay.Update(page);
+            TreeViewItem rootItem = new TreeViewItem() { Header = pageDisplay };
+
+            // SECTIONS
+
+            int sectionsCount = page.SectionsCount;
+            for(int sectionIndex=0; sectionIndex<sectionsCount; sectionIndex++)
+            {
+                GetFacts.Facts.Section section = page.GetSection(sectionIndex);
+                ArticleDisplay sectionDisplay = new ArticleDisplay(false, 0) { DesiredOrientation = ArticleDisplay.Orientation.Horizontal };
+                sectionDisplay.Update(section);
+                TreeViewItem sectionItem = new TreeViewItem() { Header = sectionDisplay };
+                rootItem.Items.Add(sectionItem);
+
+                // ARTICLES
+
+                int articlesCount = section.ArticlesCount;
+                for(int articleIndex=0; articleIndex<articlesCount; articleIndex++)
+                {
+                    GetFacts.Facts.Article article = section.GetArticle(articleIndex);
+                    ArticleDisplay articleDisplay = new ArticleDisplay(false, 0) { DesiredOrientation = ArticleDisplay.Orientation.Horizontal };
+                    articleDisplay.Update(article);
+                    TreeViewItem articleItem = new TreeViewItem() { Header =articleDisplay };
+                    sectionItem.Items.Add(articleItem);
+                }
+            }
+
+            PreviewTree.Items.Add(rootItem);
+            rootItem.ExpandSubtree();
             //page.Parser = Parser;
             //page.Template = PageTemplate;
 
 
+
         }
 
-        /* private void ClearPreviewTree()
-         {
-             PreviewTree.Items.Clear();
-         }*/
+
+        private void InitPreviewTree()
+        {
+
+        }
+
+        private void ClearPreviewTree()
+        {
+            PreviewTree.Items.Clear();
+        }
 
         #endregion
 

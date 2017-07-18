@@ -49,7 +49,7 @@ namespace TemplatesApp
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
-            if (workflow.IsReadyToSaveTemplate != isReady)
+            /*if (workflow.IsReadyToSaveTemplate != isReady)
             {
                 isReady = workflow.IsReadyToSaveTemplate;
                 if (isReady)
@@ -60,7 +60,7 @@ namespace TemplatesApp
                 {
                     ClearSaveTemplate();
                 }
-            }
+            }*/
         }
 
         private void InitSaveTemplate()
