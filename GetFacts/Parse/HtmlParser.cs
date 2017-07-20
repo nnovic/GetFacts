@@ -145,32 +145,14 @@ namespace GetFacts.Parse
 
         #region flow document
 
-        /*
-        private readonly FontFamily scriptFontFamily = new FontFamily("GlobalMonospace.CompositeFont");
-        private readonly Brush scriptColor = Brushes.Blue;
-
-        private readonly FontFamily textFontFamily = new FontFamily("GlobalSerif.CompositeFont");
-        private readonly double textFontSize = XL_FONT_SIZE;
-        private readonly Brush textColor = Brushes.Black;
-
-        private readonly double attributeFontSize = L_FONT_SIZE;
-        private readonly Brush attributeColor = Brushes.DimGray;
-
-        private readonly Brush highlighted = Brushes.Yellow;
-
-        private readonly Brush styleColor = Brushes.Purple;
-
-        private readonly Brush commentColor = Brushes.Green;
-        */
         protected override void FillSourceCode(Span rootSpan)
         {
             HtmlNode mainNode = htmlDoc.DocumentNode;
             Html_To_Flow(mainNode, rootSpan);
         }
 
-
-
-        void Html_To_Flow(HtmlNode node, Span parent)
+        
+        private void Html_To_Flow(HtmlNode node, Span parent)
         {
             switch (node.NodeType)
             {
@@ -180,19 +162,16 @@ namespace GetFacts.Parse
                     return;
             }
 
-
             if (node.NodeType != HtmlNodeType.Document)
             {
                 Span globalSpan = new Span();
                 parent.Inlines.Add(globalSpan);
                 Stylize(globalSpan, node);
 
-
                 // HTML TAG (opening)
                 Run openingTag = new Run();
                 openingTag.Text = string.Format("<{0}", node.OriginalName);
                 globalSpan.Inlines.Add(openingTag);
-
 
                 // ATTRIBUTES ?
                 if (node.HasAttributes)
@@ -204,7 +183,6 @@ namespace GetFacts.Parse
                 }
 
                 // HTML TAG (close opening tag)
-
                 if (node.HasChildNodes == false)
                 {
                     globalSpan.Inlines.Add(" />");
@@ -215,6 +193,7 @@ namespace GetFacts.Parse
                 }
 
                 parent = globalSpan;
+                AddTextElement(globalSpan, node);
             }
 
             // PROCESS CHILDREN
@@ -331,8 +310,7 @@ namespace GetFacts.Parse
             HtmlNode rootHtmlNode = htmlDoc.DocumentNode;
             rootHtmlNode = rootHtmlNode.SelectSingleNode("/html");
             TreeViewItem root = CreateElementTvi(rootHtmlNode);
-            
-            //Html_To_TreeViewItem(rootHtmlNode, root);
+
             foreach (HtmlNode child in rootHtmlNode.ChildNodes)
             {
                 Html_To_TreeViewItem(child, root);
@@ -442,45 +420,16 @@ namespace GetFacts.Parse
             AppendAttributesToSpan(node, header, true);
             //AppendAttributesToSpan(node, header, false);          
 
-            TreeViewItem tvi = new TreeViewItem();
+            /*TreeViewItem tvi = new TreeViewItem();
             tvi.Header = header;
-            return tvi;
+            return tvi;*/
+            return AddTreeNode(header, node);
         }
 
         void Html_To_TreeViewItem(HtmlNode node, TreeViewItem parent)
-        {
-            /*switch (node.NodeType)
-            {
-                case HtmlNodeType.Comment:
-                case HtmlNodeType.Text:
-                    HtmlText_To_TreeViewItem(node, parent);
-                    return;
-            }
-
-
-            if (node.NodeType != HtmlNodeType.Document)
-            {
-
-                // ATTRIBUTES ?
-                if (node.HasAttributes)
-                {
-                    foreach (HtmlAttribute attr in node.Attributes)
-                    {
-                        HtmlAttribute_To_TreeViewitem(attr, parent);
-                    }
-                }
-            }
-            */
-
-            /*string xpath = node.XPath;
-            string[] xpathParts = xpath.Split(new char[] { '/' });
-            string lastPart = xpathParts[xpathParts.Length - 1];
-            TreeViewItem tvi = new TreeViewItem();
-            tvi.Header = lastPart;*/
-
+        {            
             if (node.NodeType == HtmlNodeType.Element)
             {
-
                 TreeViewItem tvi = CreateElementTvi(node);
                 parent.Items.Add(tvi);
 
@@ -501,60 +450,7 @@ namespace GetFacts.Parse
             }
 
         }
-
-
-        /*
-        private TreeViewItem CreateTreeNode(HtmlNode htmlNode)
-        {
-            Span header = CreateTreeNodeHeader(htmlNode);
-            if ((header == null) || (header.Inlines.Count == 0))
-            {
-                return null;
-            }
         
-            TreeViewItem treeNode = AddTreeNode(header, htmlNode);
-
-            foreach(HtmlNode htmlChildNode in htmlNode.ChildNodes)
-            {
-                TreeViewItem childNode = CreateTreeNode(htmlChildNode);
-                if (childNode != null)
-                {
-                    treeNode.Items.Add(childNode);
-                }
-            }
-
-            return treeNode;
-        }
-
-        private Span CreateTreeNodeHeader(HtmlNode htmlNode)
-        {
-            Span header = new Span();
-
-            switch (htmlNode.NodeType)
-            {
-                case HtmlNodeType.Comment:
-                case HtmlNodeType.Text:
-                    if( string.IsNullOrEmpty(htmlNode.InnerText)==false )
-                    {
-                        header.Inlines.Add(htmlNode.InnerText);
-                    }
-                    break;
-
-                default:
-                    header.Inlines.Add(htmlNode.OriginalName);
-                    break;
-            }
-
-            foreach(HtmlAttribute attribute in htmlNode.Attributes)
-            {
-                string attr = string.Format("{0}={1}", attribute.OriginalName, attribute.Value);
-                header.Inlines.Add(attr);
-            }
-
-            return header;
-        }
-        */
-
         public override XPathNavigator CreateNavigator()
         {
             return htmlDoc.CreateNavigator();
@@ -562,10 +458,9 @@ namespace GetFacts.Parse
 
         protected override string XPathOf(object o)
         {
-            if( o is HtmlNode )
+            if( o is HtmlNode node)
             {
-                HtmlNode node = (HtmlNode)o;
-                return node.XPath;
+                return XPathOf(node);
             }
             else if( o is HtmlAttribute)
             {
@@ -573,6 +468,47 @@ namespace GetFacts.Parse
                 return attr.XPath;
             }
             return null;
+        }
+
+        private string XPathOf(HtmlNode node)
+        {
+            switch(node.NodeType)
+            {
+                case HtmlNodeType.Document:
+                    return "/";
+
+                case HtmlNodeType.Text:
+                    return node.ParentNode.XPath + "/text()";
+
+                case HtmlNodeType.Comment:
+                    return node.ParentNode.XPath + "/comment()";
+
+                default:
+                case HtmlNodeType.Element:
+                    return node.XPath;
+            }
+        }
+
+        protected override System.Collections.Generic.IList<object> Select(string xpath)
+        {
+            XPathNavigator nav = CreateNavigator();
+            XPathNodeIterator result = nav.Select(xpath);
+            System.Collections.Generic.List<object> output = new System.Collections.Generic.List<object>();
+
+            foreach(var e in result)
+            {
+                if( e is HtmlNodeNavigator nodeNav)
+                {
+                    HtmlNode concreteNode = nodeNav.CurrentNode;
+                    output.Add(concreteNode);
+                }
+                else
+                {
+
+                }
+            }
+
+            return output;
         }
     }
 }

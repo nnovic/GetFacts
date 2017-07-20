@@ -1,17 +1,13 @@
-﻿using GetFacts.Facts;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml;
 using System.Xml.XPath;
 
 namespace GetFacts.Parse
@@ -171,13 +167,13 @@ namespace GetFacts.Parse
 
         protected virtual void ClearSourceCode()
         {
-            foreach (Hyperlink hl in hyperlinksToConcreteType.TypedElements)
+            foreach (Hyperlink hl in textElements2concreteObjects.TypedElements)
             {
                 hl.Click -= Hyperlink_Click;
                 hl.MouseEnter -= Hyperlink_MouseEnter;
                 hl.MouseLeave -= Hyperlink_MouseLeave;
             }
-            hyperlinksToConcreteType.Clear();
+            textElements2concreteObjects.Clear();
 
             if (sourceCode != null)
             {
@@ -187,7 +183,7 @@ namespace GetFacts.Parse
         }
 
         private FlowDocument sourceCode = null;
-        private DoubleList<Hyperlink> hyperlinksToConcreteType = new DoubleList<Hyperlink>();
+        private DoubleList<TextElement> textElements2concreteObjects = new DoubleList<TextElement>();
 
         public FlowDocument SourceCode
         {
@@ -226,11 +222,14 @@ namespace GetFacts.Parse
             hl.Click += Hyperlink_Click;
             hl.MouseEnter += Hyperlink_MouseEnter;
             hl.MouseLeave += Hyperlink_MouseLeave;
-            hyperlinksToConcreteType.Add(hl, o);
-
+            textElements2concreteObjects.Set(hl, o);
             Stylize(hl, o);
-
             return hl;
+        }
+
+        protected void AddTextElement(TextElement te, object o)
+        {
+            textElements2concreteObjects.Set(te, o);
         }
 
         private void Hyperlink_MouseLeave(object sender, MouseEventArgs e)
@@ -248,8 +247,8 @@ namespace GetFacts.Parse
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink hl = (Hyperlink)sender;
-            object node = hyperlinksToConcreteType.GetObjectOf(hl);
-            TreeViewItem tvi = concreteTypesToTreeViewItems.GetTypedElementOf(node);
+            object node = textElements2concreteObjects.GetObjectOf(hl);
+            TreeViewItem tvi = treeViewItems2concreteObjects.GetTypedElementOf(node);
             tvi.IsSelected = true;
             tvi.BringIntoView();
             tvi.IsExpanded = true;
@@ -264,17 +263,16 @@ namespace GetFacts.Parse
 
         protected virtual void ClearSourceTree()
         {
-            foreach(TreeViewItem treeNode in concreteTypesToTreeViewItems.TypedElements)
+            foreach(TreeViewItem treeNode in treeViewItems2concreteObjects.TypedElements)
             {
-                treeNode.Selected -= TreeNode_Selected;
-                treeNode.Unselected -= TreeNode_Unselected;
+                // TODO: anything ?
             }
-            concreteTypesToTreeViewItems.Clear();
+            treeViewItems2concreteObjects.Clear();
             sourceTreeRoot = null;
         }
 
         private TreeViewItem sourceTreeRoot = null;
-        private DoubleList<TreeViewItem> concreteTypesToTreeViewItems = new DoubleList<TreeViewItem>();
+        private DoubleList<TreeViewItem> treeViewItems2concreteObjects = new DoubleList<TreeViewItem>();
 
         public TreeViewItem SourceTree
         {
@@ -292,87 +290,43 @@ namespace GetFacts.Parse
         {
             TreeViewItem treeNode = new TreeViewItem();
             treeNode.Header = header;
-            treeNode.Tag = o;
-            concreteTypesToTreeViewItems.Add(treeNode, o);
-            treeNode.Selected += TreeNode_Selected;
-            treeNode.Unselected += TreeNode_Unselected;
+            treeViewItems2concreteObjects.Set(treeNode, o);
             return treeNode;
         }
 
-        private void TreeNode_Unselected(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem selected = (TreeViewItem)e.Source;
-            object concreteObject = selected.Tag;
-            TextElement te = hyperlinksToConcreteType.GetTypedElementOf(concreteObject);
-            te.Background = null;
-        }
-
-        private void TreeNode_Selected(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem selected = (TreeViewItem)e.Source;
-            object concreteObject = selected.Tag;
-            TextElement te = hyperlinksToConcreteType.GetTypedElementOf(concreteObject);
-            te.Background = Brushes.Yellow;
-            te.BringIntoView();
-        }
-
         protected abstract TreeViewItem CreateSourceTree();
-
-
-        /*
-        protected abstract void UpdateCodeTree(object o, out TreeViewItem leaf);
-
-        public Hashtable GetAttributesOf(TreeViewItem tvi)
-        {
-            if (tvi == null)
-                return null;
-
-            object node = tvi.Tag;
-            if (node == null)
-                return null;
-
-            return GetConcreteAttributesOf(node);
-        }
-
-        public TextElement GetTextElementOf(TreeViewItem tvi)
-        {
-            if (tvi == null)
-                return null;
-
-            object node = tvi.Tag;
-            if (node == null)
-                return null;
-
-            return GetTextElementAssociatedWith(node);
-        }
-
-        public string GetXPathOf(TreeViewItem tvi)
-        {
-            if (tvi == null)
-                return string.Empty;
-
-            object node = tvi.Tag;
-            if (node == null)
-                return string.Empty;
-
-            return GetConcreteXPathOf(node);
-        }
-        */
-
+        
         #endregion
 
 
         #region xpath
-
-
+        
+        // TODO: improve suggestion
         public string SuggestXPathFor(TreeViewItem tvi)
         {
-            object o = concreteTypesToTreeViewItems.GetObjectOf(tvi);
-            return XPathOf(o);
+            TreeViewItem selected = tvi;
+            object concreteObject = treeViewItems2concreteObjects.GetObjectOf(selected);
+            return XPathOf(concreteObject);
         }
 
         protected abstract string XPathOf(object o);
 
+
+        public IList<TextElement> SelectFromXPath(string xpath)
+        {
+            IList<object> concreteSelection = Select(xpath);
+            List<TextElement> output = new List<TextElement>();
+
+            foreach(object concreteObject in concreteSelection)
+            {
+                TextElement te = textElements2concreteObjects.GetTypedElementOf(concreteObject);
+                output.Add(te);
+            }
+
+            return output;
+        }
+
+        protected abstract IList<object> Select(string xpath);
 
         #endregion
 

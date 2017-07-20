@@ -22,8 +22,11 @@ namespace GetFacts
             get { return typedList.AsReadOnly(); }
         }
 
-        public void Add(T typedElement, object o)
+        public void Set(T typedElement, object o)
         {
+            if (typedList.Contains(typedElement) || objectList.Contains(o))
+                return;
+
             typedList.Add(typedElement);
             objectList.Add(o);
         }
@@ -31,12 +34,16 @@ namespace GetFacts
         public T GetTypedElementOf(object o)
         {
             int index = objectList.IndexOf(o);
+            if (index == -1)
+                throw new ArgumentException("not in the list", "o");
             return typedList[index];
         }
 
         public object GetObjectOf(T typedElement)
         {
             int index = typedList.IndexOf(typedElement);
+            if (index == -1)
+                throw new ArgumentException("not in the list", "typedElement");
             return objectList[index];
         }
     }

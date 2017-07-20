@@ -23,23 +23,69 @@ namespace GetFacts
             }
         }
 
-        public PageTemplate GetTemplate(string path)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path">Si path n'est pas rooted, alors path est combiné avec TemplatesDirectory</param>
+        /// <returns></returns>
+        public PageTemplate GetExistingTemplate(string path)
         {
             return GetJSONTemplate(path);
         }
 
         /// <summary>
-        /// Reads the content of JSON file, whose path is provided in argument.
-        /// The path MUST BE relative to the "Templates" directory.
+        /// 
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Si path n'est pas rooted, alors path est combiné avec TemplatesDirectory</param>
+        /// <returns></returns>
+        public PageTemplate CreateNewTemplate(string path)
+        {
+            string absolutePath = path;
+            string relativePath = path;
+
+            if (Path.IsPathRooted(path) == false)
+            {
+                string dir = TemplatesDirectory;
+                absolutePath = Path.Combine(dir, path);
+            }
+            else
+            {
+                string dir = TemplatesDirectory;
+                relativePath = Toolkit.GetRelativePath(absolutePath, dir);
+            }
+
+            using (StreamWriter sw = File.CreateText(absolutePath))
+            {
+                sw.WriteLine("{");
+                sw.WriteLine("}");
+            }
+
+            return GetJSONTemplate(path);
+        }
+
+        /// <summary>
+        /// Reads the content of JSON file, whose path is provided in argument.
+        /// </summary>
+        /// <param name="path">Si path n'est pas rooted, alors path est combiné avec TemplatesDirectory</param>
         /// <returns></returns>
         private PageTemplate GetJSONTemplate(string path)
         {
+            string absolutePath = path;
+            string relativePath = path;
+
+            if (Path.IsPathRooted(path) == false)
+            {
+                string dir = TemplatesDirectory;
+                absolutePath = Path.Combine(dir, path);
+            }
+            else
+            {
+                string dir = TemplatesDirectory;
+                relativePath = Toolkit.GetRelativePath(absolutePath, dir);
+            }
+
             PageTemplate output;
-            string dir = TemplatesDirectory;
-            path = Path.Combine(dir, path);
-            string text = File.ReadAllText(path);
+            string text = File.ReadAllText(absolutePath);
             output = JsonConvert.DeserializeObject<PageTemplate>(text);
             return output;
         }

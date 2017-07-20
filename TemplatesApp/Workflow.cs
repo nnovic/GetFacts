@@ -50,7 +50,7 @@ namespace TemplatesApp
                     if (value != null)
                     {
                         templateFile = value;
-                        pageTemplate = TemplateFactory.GetInstance().GetTemplate(templateFile);
+                        pageTemplate = TemplateFactory.GetInstance().GetExistingTemplate(templateFile);
                         OnWorkflowUpdated();
                     }
                 }

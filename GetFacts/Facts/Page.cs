@@ -27,7 +27,7 @@ namespace GetFacts.Facts
         public Page(PageConfig pc):this(pc.Url)
         {
             Parser = new HtmlParser(); 
-            Template = TemplateFactory.GetInstance().GetTemplate(pc.Template);
+            Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);
             RefreshDelay = pc.Refresh * 60;
         }
 
