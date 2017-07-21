@@ -295,21 +295,32 @@ namespace GetFacts.Parse
         }
 
         protected abstract TreeViewItem CreateSourceTree();
-        
+
         #endregion
 
 
         #region xpath
-        
-        // TODO: improve suggestion
+
+
+        /// <summary>
+        /// Suggère une requête XPath qui pourrait convenir pour obtenir 
+        /// le noeud passé en paramètre.
+        /// Attention: il ne s'agit pas d'obtenir un XPath qui retourne exactement
+        /// ce seul noeud, mais bien de proposer une approximation, la plus
+        /// élégante possible, qui pourra facilement être utilisée par l'utilisateur
+        /// pour créer un Template.
+        /// Dans la mesure du possible le XPath proposé tentera d'être le plus précis
+        /// possible, mais ce n'est pas la priorité.
+        /// </summary>
+        /// <param name="tvi"></param>
         public string SuggestXPathFor(TreeViewItem tvi)
         {
             TreeViewItem selected = tvi;
             object concreteObject = treeViewItems2concreteObjects.GetObjectOf(selected);
-            return XPathOf(concreteObject);
+            return XPathFor(concreteObject);
         }
 
-        protected abstract string XPathOf(object o);
+        protected abstract string XPathFor(object o);
 
 
         public IList<TextElement> SelectFromXPath(string xpath)

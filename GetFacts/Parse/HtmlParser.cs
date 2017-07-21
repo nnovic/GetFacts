@@ -8,6 +8,8 @@ using System.Xml.XPath;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GetFacts.Parse
 {
@@ -301,6 +303,9 @@ namespace GetFacts.Parse
         }
         */
 
+
+        #region tree
+
         private readonly double nodenameFontSize = XL_FONT_SIZE;
 
 
@@ -450,42 +455,242 @@ namespace GetFacts.Parse
             }
 
         }
-        
+
+        #endregion
+
+
+        #region xpath
+
         public override XPathNavigator CreateNavigator()
         {
             return htmlDoc.CreateNavigator();
         }
 
-        protected override string XPathOf(object o)
+        /// <summary>
+        /// Suggère une requête XPath qui pourrait convenir pour obtenir 
+        /// l'objet passé en paramètre.
+        /// Attention: il ne s'agit pas d'obtenir un XPath qui retourne exactement
+        /// l'objet et lui seul, mais bien de proposer une approximation, la plus
+        /// élégante possible, qui pourra facilement être utilisée par l'utilisateur
+        /// pour créer un Template.
+        /// Dans la mesure du possible le XPath proposé tentera d'être le plus précis
+        /// possible, mais ce n'est pas la priorité.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        protected override string XPathFor(object o)
         {
             if( o is HtmlNode node)
             {
                 return XPathOf(node);
             }
-            else if( o is HtmlAttribute)
+            else if( o is HtmlAttribute attr)
             {
-                HtmlAttribute attr = (HtmlAttribute)o;
-                return attr.XPath;
+                HtmlNode parent = attr.OwnerNode;
+                return string.Format("{0}/@{1}", XPathOf(parent), attr.Name);
             }
-            return null;
+            throw new ArgumentException();
         }
 
         private string XPathOf(HtmlNode node)
-        {
-            switch(node.NodeType)
+        {            
+            switch (node.NodeType)
             {
                 case HtmlNodeType.Document:
                     return "/";
 
                 case HtmlNodeType.Text:
-                    return node.ParentNode.XPath + "/text()";
+                    // TODO: est-ce vraiment nécessaire, en fait ?
+                    return CreateXPathFor(node.ParentNode) + "/text()";
 
                 case HtmlNodeType.Comment:
-                    return node.ParentNode.XPath + "/comment()";
+                    return CreateXPathFor(node.ParentNode) + "/comment()";
 
                 default:
                 case HtmlNodeType.Element:
-                    return node.XPath;
+                    return CreateXPathFor(node);
+            }
+        }
+
+        /// <summary>
+        /// Rule #1: look for HTML nodes with an "id" attribute, from leaf to root, and
+        /// start building the XPath from the first matching node. The resulting XPath
+        /// will start with the //*[@id="the value of the id attribute"] pattern.
+        /// 
+        /// Rule #2: for each node, if there is no other sibling node with the
+        /// same tag name, do not decorate that node's name in the resulting XPath.
+        /// Example: by default, HtmlAgilityPack's XPath navigator would return "/html[1]/head[1]/title[1]"
+        /// instead of "/html/head/title ". This method, however, will return "/html/head/title" as expected.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private string CreateXPathFor(HtmlNode node)
+        {
+            List<HtmlNode> hierarchy = new List<HtmlNode>(node.AncestorsAndSelf());
+
+            // find first node with "id" attribute.
+            // "id" is supposed to be unique in the entire html page
+            int indexOfNodeWithId = -1;
+            for(int index=0; index<hierarchy.Count; index++)
+            {
+                HtmlNode n = hierarchy[index];
+                string id = n.GetAttributeValue("id", null);
+                if( string.IsNullOrEmpty(id) == false )
+                {
+                    indexOfNodeWithId = index;
+                    break;
+                }
+
+            }
+
+            if( indexOfNodeWithId!= -1)
+            {
+                int index = indexOfNodeWithId + 1;
+                int count = hierarchy.Count - (index);
+                hierarchy.RemoveRange(index, count);
+            }
+
+            hierarchy.Reverse();
+
+
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach(HtmlNode n in hierarchy)
+            {
+                switch(n.NodeType)
+                {
+                    case HtmlNodeType.Document:
+                        break;
+
+                    case HtmlNodeType.Element:
+                        sb.Append('/').Append(SuggestXPathFor(n));
+                        break;
+
+                    // les cas ci-dessous ne devraient
+                    // jamais se produire.
+                    default:
+                    case HtmlNodeType.Text:
+                    case HtmlNodeType.Comment:
+                        throw new Exception();
+                }
+            }
+
+            string result = sb.ToString();
+            return result;
+        }
+
+
+        /// <summary>
+        /// Dans l'objectif de construire un XPath complet pour un noeud HTML,
+        /// cette méthode a pour but de suggérer le XPath le plus approprié pour
+        /// qualifer le noeud passé en paramètre. Le reste de la hiérarchie est ignoré.
+        /// En faisait appel à cette méthode pour chaque noeud HTML de la hiérarchie, on
+        /// pourra construire un XPath complet.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private string SuggestXPathFor(HtmlNode node)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            string _id = node.GetAttributeValue("id", string.Empty);
+            if (string.IsNullOrEmpty(_id) == false)
+            {
+                sb.AppendFormat("/*[@id=\"{0}\"]", _id);
+            }
+            else
+            {
+                sb.Append(node.Name);
+
+                // Chercher si d'autre noeuds HTML du même niveau portent le même nom;
+                // Si c'est le cas, il va falloir trouver un moyen de différencier 
+                // le noeud en paramètres des autres noeuds similaires.
+                List<HtmlNode> siblings = new List<HtmlNode>(node.ParentNode.Elements(node.Name));
+                if (siblings.Count > 1)
+                {
+                    List<string> interestingAttributes = new List<string>();
+
+                    // Rechercher en priorité les attributs "préférés" pour le noeud en paramètre
+                    // et, s'il y a correspondance, mettre ces attributs dans la liste des
+                    // attributs qui figureront dans le xpath.
+                    foreach(string attributeName in MostSignificantAttributesFor(node))
+                    {
+                        foreach(HtmlAttribute attributeNode in node.ChildAttributes(attributeName))
+                        {
+                            string interestingAttribute = ToXPathString(attributeNode);
+
+                            // cependant, si tous les autres noeuds similaires
+                            // possèdent exactement le même attribut avec la même valeur,
+                            // ça n'a plus d'intérêt:
+                            if( AllHtmlNodesHaveTheSameAttributeValue(siblings, attributeNode) ==false )
+                                interestingAttributes.Add(interestingAttribute);
+                        }
+                    }
+
+
+                    // Rechercher ensuite quel(s) attribut(s) possède le noeud en paramètres que
+                    // les autres noeuds similaires ne possèderaient pas.
+                    List<string> uniqueAttributes = new List<string>(from attr in node.Attributes select ToXPathString(attr));
+                    siblings.ForEach(s => { if(s!=node) s.Attributes.ToList().ForEach(a=> { uniqueAttributes.Remove(ToXPathString(a)); }); });
+                    uniqueAttributes.ForEach(s =>
+                    {
+                        if (!interestingAttributes.Contains(s)) interestingAttributes.Add(s);
+                    });
+
+
+                    if( interestingAttributes.Count >0 )
+                    {
+                        sb.Append('[');
+                        for(int i=0;i<interestingAttributes.Count;i++)
+                        {
+                            if (i > 0)
+                                sb.Append(" and ");
+                            sb.Append(interestingAttributes[i]);
+                        }
+                        sb.Append(']');
+                    }
+                    /*else
+                    {
+                        int index = siblings.IndexOf(node);
+                        sb.AppendFormat("[{0}]", index+1);
+                    }*/
+                }
+
+                
+            }
+            return sb.ToString();
+        }
+
+        private bool AllHtmlNodesHaveTheSameAttributeValue(ICollection<HtmlNode> nodes, HtmlAttribute attribute)
+        {
+            foreach(HtmlNode node in nodes)
+            {
+                List<HtmlAttribute> attributesWithSameName = node.ChildAttributes(attribute.Name).ToList();
+                if (attributesWithSameName.Count == 0)
+                    return false;
+
+                var attributesWithSameValue = from attr in attributesWithSameName where attr.Value == attribute.Value select attr;
+                if (attributesWithSameValue.Count() == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        private string ToXPathString(HtmlAttribute attr)
+        {
+            return string.Format("@{0}=\"{1}\"", attr.Name, attr.Value);
+        }
+
+        private string[] MostSignificantAttributesFor(HtmlNode node)
+        {
+            switch(node.Name.ToLower())
+            {
+                case "meta":
+                    return new string[] { "name" };
+
+                default:
+                    return new string[] {"class", "title"};
             }
         }
 
@@ -510,5 +715,7 @@ namespace GetFacts.Parse
 
             return output;
         }
+
+        #endregion
     }
 }

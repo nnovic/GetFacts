@@ -288,20 +288,28 @@ namespace TemplatesApp
         private void Select(int index)
         {
             ClearSelection();
-            if ((index >= 0) && (index < HighlightedElements.Count - 1))
+
+            if ((index >= 0) && (index < HighlightedElements.Count))
             {
                 SelectedElement = HighlightedElements[index];
                 SelectedElement.Background = Brushes.Yellow;
                 SelectedElement.BringIntoView();
             }
+
+            NextSelection.IsEnabled = ((index + 1) < HighlightedElements.Count); 
+            PreviousSelection.IsEnabled = (index > 0);
         }
 
         private void NextSelection_Click(object sender, RoutedEventArgs e)
         {
+            int index = HighlightedElements.IndexOf(SelectedElement);
+            Select(++index);
         }
 
         private void PreviousSelection_Click(object sender, RoutedEventArgs e)
         {
+            int index = HighlightedElements.IndexOf(SelectedElement);
+            Select(--index);
         }
 
         #endregion
