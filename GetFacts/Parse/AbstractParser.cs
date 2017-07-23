@@ -317,10 +317,11 @@ namespace GetFacts.Parse
         {
             TreeViewItem selected = tvi;
             object concreteObject = treeViewItems2concreteObjects.GetObjectOf(selected);
-            return XPathFor(concreteObject);
+            AbstractXPathBuilder builder = XPathFor(concreteObject);
+            return builder.GetString();
         }
 
-        protected abstract string XPathFor(object o);
+        protected abstract AbstractXPathBuilder XPathFor(object o);
 
 
         public IList<TextElement> SelectFromXPath(string xpath)
