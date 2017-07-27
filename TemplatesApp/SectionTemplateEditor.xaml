@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
+             xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
@@ -37,10 +38,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock>SectionName:</TextBlock>
-                <TextBox x:Name="SectionNameInput" Grid.Column="1">(write name here)</TextBox>
+                <TextBox x:Name="SectionNameInput" Grid.Column="1" TextChanged="SectionNameInput_TextChanged" ></TextBox>
 
                 <TextBlock Grid.Row="1">XPath filter:</TextBlock>
-                <TextBox x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1">(write xpath here)</TextBox>
+                <getfacts:RegexTextBox x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1" TextChanged="XPathFilterInput_TextChanged"></getfacts:RegexTextBox>
 
                 <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <ToggleButton>...</ToggleButton>

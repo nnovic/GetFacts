@@ -73,5 +73,16 @@ namespace TemplatesApp
             PageTemplateItem pti = (PageTemplateItem)sti.Parent;
             pti.PageTemplate.Sections.Remove(SectionTemplate);
         }
+
+        private void SectionNameInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SectionTemplate.SectionName = SectionNameInput.Text;
+        }
+
+        private void XPathFilterInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (XPathFilterInput.IsValid)
+                SectionTemplate.XPathFilter = XPathFilterInput.Text;
+        }
     }
 }

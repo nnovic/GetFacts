@@ -67,15 +67,7 @@ namespace TemplatesApp
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            object o = Workflow.PageTemplate;
-            JsonSerializerSettings settings = new JsonSerializerSettings()
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
-            string output = JsonConvert.SerializeObject(o, Formatting.Indented, settings);
-            string file = Workflow.TemplateFile;
-            string path = Path.Combine(TemplateFactory.GetInstance().TemplatesDirectory, file);
-            File.WriteAllText(path, output);
+            TemplateFactory.GetInstance().SaveTemplate(Workflow.PageTemplate, Workflow.TemplateFile);
         }
     }
 }

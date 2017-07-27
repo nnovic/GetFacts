@@ -67,5 +67,11 @@ namespace TemplatesApp
             SectionTemplateItem sti = (SectionTemplateItem)ati.Parent;
             sti.SectionTemplate.Articles.Remove(ArticleTemplate);
         }
+
+        private void XPathFilterInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (XPathFilterInput.IsValid)
+                ArticleTemplate.XPathFilter = XPathFilterInput.Text;
+        }
     }
 }
