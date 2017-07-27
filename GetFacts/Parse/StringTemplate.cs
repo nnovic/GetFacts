@@ -22,6 +22,17 @@ namespace GetFacts.Parse
             get;set;
         }
 
+        /// <summary>
+        /// Indique si le template sert à quelque chose, ou pas.
+        /// </summary>
+        public bool IsNullOrEmpty
+        {
+            get
+            {
+                return string.IsNullOrEmpty(XPath) && string.IsNullOrEmpty(Regex);
+            }
+        }
+
         public static bool CompareTo(StringTemplate st1, StringTemplate st2)
         {
             if (st1 == st2)
@@ -38,13 +49,15 @@ namespace GetFacts.Parse
 
         public string Execute(XPathNavigator nav)
         {
+            if (string.IsNullOrEmpty(XPath))
+                return string.Empty;
+
             XPathNavigator node = nav.SelectSingleNode(XPath);
             if (node == null)
                 return string.Empty;
 
             string innerText = node.Value.Trim();
             innerText = HtmlEntity.DeEntitize(innerText);
-            //innerText = HttpUtility.HtmlDecode(innerText);
 
             if( string.IsNullOrEmpty(Regex) )
             {

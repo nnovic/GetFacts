@@ -326,55 +326,16 @@ namespace GetFacts.Facts
 
         protected void UpdateInfo(XPathNavigator nav, AbstractTemplate template)
         {
-            if(template.IdentifierTemplate != null )
+            if (!template.IdentifierTemplate.IsNullOrEmpty)
             {
                 Identifier = template.IdentifierTemplate.Execute(nav);
             }
 
-            if (template.TitleTemplate != null)
-            {
-                Title = template.TitleTemplate.Execute(nav);
-            }
-            else
-            {
-                Title = String.Empty;
-            }
-
-            if (template.TextTemplate != null)
-            {
-                Text = template.TextTemplate.Execute(nav);
-            }
-            else
-            {
-                Text = String.Empty;
-            }
-
-            if (template.IconUrlTemplate != null)
-            {
-                IconUrl = template.IconUrlTemplate.Execute(nav);
-            }
-            else
-            {
-                IconUrl = String.Empty;
-            }
-
-            if (template.MediaUrlTemplate != null)
-            {
-                MediaUrl = template.MediaUrlTemplate.Execute(nav);
-            }
-            else
-            {
-                MediaUrl = String.Empty;
-            }
-
-            if (template.BrowserUrlTemplate != null)
-            {
-                BrowserUrl = template.BrowserUrlTemplate.Execute(nav);
-            }
-            else
-            {
-                BrowserUrl = String.Empty;
-            }
+            Title = template.TitleTemplate.Execute(nav);
+            Text = template.TextTemplate.Execute(nav);
+            IconUrl = template.IconUrlTemplate.Execute(nav);
+            MediaUrl = template.MediaUrlTemplate.Execute(nav);
+            BrowserUrl = template.BrowserUrlTemplate.Execute(nav);
         }
         
         /// <summary>

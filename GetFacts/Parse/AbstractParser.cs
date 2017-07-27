@@ -356,6 +356,9 @@ namespace GetFacts.Parse
             return types;
         }
 
+        /// <summary>
+        /// Default parser's name is "HtmlParser"
+        /// </summary>
         public static string DefaultParser
         {
             get { return typeof(HtmlParser).Name; }

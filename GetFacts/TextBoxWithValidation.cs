@@ -58,6 +58,7 @@ namespace GetFacts
             string newInput = Text;
             if( string.IsNullOrEmpty(newInput) )
             {
+                isValid = true;
                 ApplyDefaultStyle();
                 return;
             }
