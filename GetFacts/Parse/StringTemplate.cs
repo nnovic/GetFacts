@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,41 +12,42 @@ using System.Xml.XPath;
 
 namespace GetFacts.Parse
 {
-    public class StringTemplate
+    public class StringTemplate:IEquatable<StringTemplate>
     {
+        [DefaultValue(null)]
         public string XPath
         {
             get;set;
         }
 
+        [DefaultValue(null)]
         public string Regex
         {
             get;set;
         }
 
+
+        bool IEquatable<StringTemplate>.Equals(StringTemplate other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+
+            return (string.Compare(XPath, other.XPath) == 0)
+                && (string.Compare(Regex, other.Regex) == 0);
+        }
+
         /// <summary>
         /// Indique si le template sert à quelque chose, ou pas.
         /// </summary>
+        [JsonIgnore]
         public bool IsNullOrEmpty
         {
             get
             {
                 return string.IsNullOrEmpty(XPath) && string.IsNullOrEmpty(Regex);
             }
-        }
-
-        public static bool CompareTo(StringTemplate st1, StringTemplate st2)
-        {
-            if (st1 == st2)
-                return true;
-
-            if (string.Compare(st1.XPath, st2.XPath) != 0)
-                return false;
-
-            if (string.Compare(st1.Regex, st2.Regex) != 0)
-                return false;
-
-            return true;
         }
 
         public string Execute(XPathNavigator nav)
@@ -78,5 +81,7 @@ namespace GetFacts.Parse
                 return result.ToString();
             }
         }
+
+
     }
 }

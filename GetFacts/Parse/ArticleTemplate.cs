@@ -13,16 +13,5 @@ namespace GetFacts.Parse
         {
             get; set;
         }
-
-        public bool CompareTo(ArticleTemplate st)
-        {
-            if (string.Compare(XPathFilter, st.XPathFilter) != 0)
-                return false;
-
-            if (base.CompareTo(st) == false)
-                return false;
-
-            return true;
-        }
     }
 }

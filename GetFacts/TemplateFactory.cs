@@ -23,6 +23,18 @@ namespace GetFacts
             }
         }
 
+        public void SaveTemplate(PageTemplate template, string dst)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            };
+
+            string output = JsonConvert.SerializeObject(template, Formatting.Indented, settings);
+            string path = Path.Combine(TemplatesDirectory, dst);
+            File.WriteAllText(path, output);
+        }
+
         /// <summary>
         /// 
         /// </summary>
