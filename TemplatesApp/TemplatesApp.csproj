@@ -69,15 +69,18 @@
     <Compile Include="ArticleTemplateEditor.xaml.cs">
       <DependentUpon>ArticleTemplateEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ArticleTemplateItem.cs" />
     <Compile Include="PageTemplateEditor.xaml.cs">
       <DependentUpon>PageTemplateEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PageTemplateItem.cs" />
     <Compile Include="SaveTemplate.xaml.cs">
       <DependentUpon>SaveTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="SectionTemplateEditor.xaml.cs">
       <DependentUpon>SectionTemplateEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SectionTemplateItem.cs" />
     <Compile Include="SourceExplorer.xaml.cs">
       <DependentUpon>SourceExplorer.xaml</DependentUpon>
     </Compile>

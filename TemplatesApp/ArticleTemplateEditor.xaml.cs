@@ -60,5 +60,12 @@ namespace TemplatesApp
         }
 
         #endregion
+
+        private void DeleteThisArticleButton_Click(object sender, RoutedEventArgs e)
+        {
+            ArticleTemplateItem ati = (ArticleTemplateItem)this.Parent;
+            SectionTemplateItem sti = (SectionTemplateItem)ati.Parent;
+            sti.SectionTemplate.Articles.Remove(ArticleTemplate);
+        }
     }
 }

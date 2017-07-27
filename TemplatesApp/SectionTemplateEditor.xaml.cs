@@ -63,7 +63,15 @@ namespace TemplatesApp
 
         private void AddArticleButton_Click(object sender, RoutedEventArgs e)
         {
+            ArticleTemplate newArticle = new ArticleTemplate();
+            SectionTemplate.Articles.Add(newArticle);
+        }
 
+        private void DeleteThisSectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            SectionTemplateItem sti = (SectionTemplateItem)this.Parent;
+            PageTemplateItem pti = (PageTemplateItem)sti.Parent;
+            pti.PageTemplate.Sections.Remove(SectionTemplate);
         }
     }
 }

@@ -145,5 +145,14 @@ namespace TemplatesApp
 
         #endregion
 
+
+
+        public bool IsReadyToSaveTemplate
+        {
+            get
+            {
+                return IsTemplateDataAvailable;
+            }
+        }
     }
 }

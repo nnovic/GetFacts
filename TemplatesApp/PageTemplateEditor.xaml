@@ -24,10 +24,10 @@
             </Grid.RowDefinitions>
 
             <TextBlock>PageName:</TextBlock>
-            <TextBox x:Name="PageNameInput" Grid.Column="1">(write name here)</TextBox>
+            <TextBox x:Name="PageNameInput" Grid.Column="1" TextChanged="PageNameInput_TextChanged" ></TextBox>
 
             <TextBlock Grid.Row="1">Reference:</TextBlock>
-            <TextBox x:Name="ReferenceInput" Grid.Row="1" Grid.Column="1">(write url here)</TextBox>
+            <TextBox x:Name="ReferenceInput" Grid.Row="1" Grid.Column="1" TextChanged="ReferenceInput_TextChanged"></TextBox>
 
 
             <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">

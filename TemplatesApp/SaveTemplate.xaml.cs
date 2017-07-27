@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GetFacts;
+using Newtonsoft.Json;
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TemplatesApp
 {
@@ -49,7 +41,7 @@ namespace TemplatesApp
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
-            /*if (workflow.IsReadyToSaveTemplate != isReady)
+            if (workflow.IsReadyToSaveTemplate != isReady)
             {
                 isReady = workflow.IsReadyToSaveTemplate;
                 if (isReady)
@@ -60,17 +52,30 @@ namespace TemplatesApp
                 {
                     ClearSaveTemplate();
                 }
-            }*/
+            }
         }
 
         private void InitSaveTemplate()
         {
-            //TODO
+            SaveButton.IsEnabled = true;
         }
 
         private void ClearSaveTemplate()
         {
-            // TODO
+            SaveButton.IsEnabled = false;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            object o = Workflow.PageTemplate;
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            };
+            string output = JsonConvert.SerializeObject(o, Formatting.Indented, settings);
+            string file = Workflow.TemplateFile;
+            string path = Path.Combine(TemplateFactory.GetInstance().TemplatesDirectory, file);
+            File.WriteAllText(path, output);
         }
     }
 }

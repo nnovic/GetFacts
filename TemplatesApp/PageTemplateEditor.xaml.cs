@@ -67,5 +67,17 @@ namespace TemplatesApp
             SectionTemplate newSection = new SectionTemplate();
             PageTemplate.Sections.Add(newSection);
         }
+
+        private void PageNameInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PageTemplate.PageName = PageNameInput.Text;
+        }
+
+        private void ReferenceInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PageTemplate.Reference = ReferenceInput.Text;
+        }
+
+
     }
 }

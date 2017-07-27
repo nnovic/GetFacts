@@ -18,10 +18,10 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock>XPath =</TextBlock>
-        <getfacts:XPathTextBox Grid.Column="1" x:Name="XPathInput" />
+        <getfacts:XPathTextBox Grid.Column="1" x:Name="XPathInput" TextChanged="XPathInput_TextChanged" />
         
         <TextBlock Grid.Row="1">Regex =</TextBlock>
-        <getfacts:RegexTextBox Grid.Row="1" Grid.Column="1" x:Name="RegexInput" />
+        <getfacts:RegexTextBox Grid.Row="1" Grid.Column="1" x:Name="RegexInput" TextChanged="RegexInput_TextChanged" />
 
     </Grid>
 </UserControl>

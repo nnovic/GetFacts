@@ -58,5 +58,17 @@ namespace TemplatesApp
         }
 
         #endregion
+
+        private void XPathInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(XPathInput.IsValid )
+                StringTemplate.XPath = XPathInput.Text;
+        }
+
+        private void RegexInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (RegexInput.IsValid)
+                StringTemplate.Regex = RegexInput.Text;
+        }
     }
 }

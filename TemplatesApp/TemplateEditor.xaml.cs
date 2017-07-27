@@ -80,21 +80,20 @@ namespace TemplatesApp
 
         private void InitTemplateTree()
         {
-            PageTemplateEditor pte = new PageTemplateEditor() { PageTemplate = Workflow.PageTemplate };
-            TreeViewItem pageRoot = new TreeViewItem() { Header = pte };
+            PageTemplateItem pageRoot = new PageTemplateItem(Workflow.PageTemplate);
             ConfigTree.Items.Add(pageRoot);
 
             foreach (SectionTemplate st in Workflow.PageTemplate.Sections)
             {
-                SectionTemplateEditor ste = new SectionTemplateEditor() { SectionTemplate = st };
-                TreeViewItem sectionNode = new TreeViewItem() { Header = ste };
-                pageRoot.Items.Add(sectionNode);
+                SectionTemplateItem sectionFolder = new SectionTemplateItem(st);
+                pageRoot.Items.Add(sectionFolder);
 
                 foreach (ArticleTemplate at in st.Articles)
                 {
-                    ArticleTemplateEditor ate = new ArticleTemplateEditor() { ArticleTemplate = at };
-                    TreeViewItem articleLeaf = new TreeViewItem() { Header = ate };
-                    sectionNode.Items.Add(articleLeaf);
+                    /*ArticleTemplateEditor ate = new ArticleTemplateEditor() { ArticleTemplate = at };
+                    TreeViewItem articleLeaf = new TreeViewItem() { Header = ate };*/
+                    ArticleTemplateItem articleLeaf = new ArticleTemplateItem(at);
+                    sectionFolder.Items.Add(articleLeaf);
                 }
             }
 

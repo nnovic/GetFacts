@@ -7,44 +7,60 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
+
         <Grid Margin="5">
+
             <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
             </Grid.ColumnDefinitions>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <TextBlock>XPath filter:</TextBlock>
-            <TextBox x:Name="XPathFilterInput" Grid.Column="1">(write xpath here)</TextBox>
+            <Button x:Name="DeleteThisArticleButton" Grid.Column="1" Click="DeleteThisArticleButton_Click" >X</Button>
+            
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <ToggleButton>...</ToggleButton>
-            </StackPanel>
+                <TextBlock>XPath filter:</TextBlock>
+                <TextBox x:Name="XPathFilterInput" Grid.Column="1">(write xpath here)</TextBox>
 
-            <TextBlock Grid.Row="2">Title template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="2" Grid.Column="1"></local:StringTemplateEditor>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ToggleButton>...</ToggleButton>
+                </StackPanel>
 
-            <TextBlock Grid.Row="3">Text template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="3" Grid.Column="1"></local:StringTemplateEditor>
+                <TextBlock Grid.Row="2">Title template:</TextBlock>
+                <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="2" Grid.Column="1"></local:StringTemplateEditor>
 
-            <TextBlock Grid.Row="4">Icon URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
+                <TextBlock Grid.Row="3">Text template:</TextBlock>
+                <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="3" Grid.Column="1"></local:StringTemplateEditor>
 
-            <TextBlock Grid.Row="5">Media URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
+                <TextBlock Grid.Row="4">Icon URL template:</TextBlock>
+                <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
+
+                <TextBlock Grid.Row="5">Media URL template:</TextBlock>
+                <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
 
 
-            <TextBlock Grid.Row="6">Browser URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="BrowserUrlTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
+                <TextBlock Grid.Row="6">Browser URL template:</TextBlock>
+                <local:StringTemplateEditor x:Name="BrowserUrlTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
 
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
