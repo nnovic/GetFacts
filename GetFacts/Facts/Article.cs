@@ -21,7 +21,9 @@ namespace GetFacts.Facts
         {
             UpdateInfo(nav, template);
         }
-        
+
+        #region évaluer la ressemblance avec un autre article 
+
         private static double CalculateResemblance(string s1, string s2, double cutoff)
         {
             double output;
@@ -89,16 +91,51 @@ namespace GetFacts.Facts
             return CalculateResemblance(this, a);
         }
 
+        
         /// <summary>
-        /// 
+        /// Indique si les conditions sont réunies pour permettre
+        /// d'appeler la méthode Matches.
         /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        internal bool HasMatchingIdentifiers(Article a)
+        /// <param name="a">L'article avec lequel on veut pouvoir utiliser la fonction Matches</param>
+        /// <returns>true si le résultat de Matches aura du sens avec l'Article passé en paramètre. Sinon, retourne false,
+        /// et alors Matches ne retournera pas de résultat fiable/exploitable.</returns>
+        /// <see cref="Matches(Article)"/>
+        internal bool CanMatch(Article a)
         {
             if ((string.IsNullOrEmpty(Identifier) == false) && (string.IsNullOrEmpty(a.Identifier) == false))
             {
-                if( string.CompareOrdinal(Identifier,a.Identifier)==0 )
+                return true;
+            }
+
+            if ((string.IsNullOrEmpty(BrowserUrl) == false) && (string.IsNullOrEmpty(a.BrowserUrl) == false))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Indique si l'Article passé en paramètre possède le même contenu
+        /// que l'article en cours. Sont évalués (dans cet ordre):
+        /// Identifier puis BrowserUrl.
+        /// </summary>
+        /// <param name="a">Article à comparer avec l'objet courant.</param>
+        /// <returns>
+        /// Retourne true, s'il y a bien une correspondance exacte entre
+        /// l'Article en paramètre et l'objet courant. 
+        /// Attention, par contre, si Matches renvoie false. Cela peut indiquer
+        /// la non correspondance entre les deux objets, mais cela peut aussi indiquer
+        /// que l'un ou l'autre des deux objets n'a pas les propriétés nécessaires
+        /// pour effectuer la comparaison. Il convient de faire la distinction en utilisant
+        /// la méthode CanMatch.
+        /// </returns>
+        /// <see cref="CanMatch(Article)"/>
+        internal bool Matches(Article a)
+        {
+            if ((string.IsNullOrEmpty(Identifier) == false) && (string.IsNullOrEmpty(a.Identifier) == false))
+            {
+                if (string.CompareOrdinal(Identifier, a.Identifier) == 0)
                 {
                     return true;
                 }
@@ -111,8 +148,11 @@ namespace GetFacts.Facts
                     return true;
                 }
             }
+
             return false;
         }
+
+        #endregion
     }
 
 }

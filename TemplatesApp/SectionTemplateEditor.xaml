@@ -41,7 +41,7 @@
                 <TextBox x:Name="SectionNameInput" Grid.Column="1" TextChanged="SectionNameInput_TextChanged" ></TextBox>
 
                 <TextBlock Grid.Row="1">XPath filter:</TextBlock>
-                <getfacts:RegexTextBox x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1" TextChanged="XPathFilterInput_TextChanged"></getfacts:RegexTextBox>
+                <getfacts:XPathTextBox x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1" TextChanged="XPathFilterInput_TextChanged"></getfacts:XPathTextBox>
 
                 <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <ToggleButton>...</ToggleButton>

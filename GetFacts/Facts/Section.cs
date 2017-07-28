@@ -52,9 +52,16 @@ namespace GetFacts.Facts
 
             foreach (Article a in Children)
             {
-                if( tmp.HasMatchingIdentifiers(a) )
+                if (tmp.CanMatch(a))
                 {
-                    a.Update(tmp);
+                    if (tmp.Matches(a))
+                    {
+                        a.Update(tmp);
+                    }
+                    else
+                    {
+                        Children.Add(tmp);
+                    }
                     return;
                 }
 
