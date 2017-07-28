@@ -25,7 +25,6 @@ namespace TemplatesApp
             TemplateSelection.Workflow = workflow;
             SourceExplorer.Workflow = workflow;
             TemplateEditor.Workflow = workflow;
-            SaveTemplate.Workflow = workflow;
             workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
 
             // Force early initialization of the download manager
@@ -40,7 +39,6 @@ namespace TemplatesApp
                 SelectTab.IsEnabled = true;
                 ExploreTab.IsEnabled = workflow.IsTemplateDataAvailable;
                 EditTab.IsEnabled = workflow.IsPageDataAvailable;
-                SaveTab.IsEnabled = workflow.IsTemplateDataAvailable && workflow.IsPageDataAvailable;
             });
             
         }

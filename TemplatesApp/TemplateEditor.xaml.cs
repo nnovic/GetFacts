@@ -1,4 +1,5 @@
-﻿using GetFacts.Parse;
+﻿using GetFacts;
+using GetFacts.Parse;
 using GetFacts.Render;
 using System;
 using System.Windows.Controls;
@@ -224,8 +225,12 @@ namespace TemplatesApp
             PreviewTree.Items.Clear();
         }
 
+
         #endregion
 
-
+        private void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            TemplateFactory.GetInstance().SaveTemplate(Workflow.PageTemplate, Workflow.TemplateFile);
+        }
     }
 }

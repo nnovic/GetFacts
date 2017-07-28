@@ -18,13 +18,10 @@
                     <local:SourceExplorer x:Name="SourceExplorer" ></local:SourceExplorer>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="EditTab" Header="edit template, ...">
+            <TabItem x:Name="EditTab" Header="edit template.">
                 <Grid>
                     <local:TemplateEditor x:Name="TemplateEditor"/>
                 </Grid>
-            </TabItem>
-            <TabItem x:Name="SaveTab" Header="and save.">
-                <local:SaveTemplate x:Name="SaveTemplate" ></local:SaveTemplate>
             </TabItem>
         </TabControl>
     </Grid>

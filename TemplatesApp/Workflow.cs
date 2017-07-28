@@ -147,12 +147,12 @@ namespace TemplatesApp
 
 
 
-        public bool IsReadyToSaveTemplate
+        /*public bool IsReadyToSaveTemplate
         {
             get
             {
                 return IsTemplateDataAvailable;
             }
-        }
+        }*/
     }
 }
