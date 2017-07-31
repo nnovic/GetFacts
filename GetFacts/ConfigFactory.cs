@@ -26,12 +26,35 @@ namespace GetFacts
             }
         }
 
-        public List<PageConfig> CreateConfig(string path)
+        public static List<PageConfig> Load()
+        {
+            string path = GetInstance().ConfigFile;
+            return GetInstance().LoadConfig(path);
+        }
+
+        public static void Save(List<PageConfig> config)
+        {
+            string path = GetInstance().ConfigFile;
+            GetInstance().SaveConfig(path, config);
+        }
+
+        public List<PageConfig> LoadConfig(string path)
         {
             List<PageConfig> output = new List<PageConfig>();
             string text = File.ReadAllText(path);
             output = JsonConvert.DeserializeObject<List<PageConfig>>(text);
             return output;
+        }
+
+        public void SaveConfig(string path, List<PageConfig> config)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            };
+
+            string text = JsonConvert.SerializeObject(config, Formatting.Indented, settings);
+            File.WriteAllText(path, text);
         }
 
         private string AppDir

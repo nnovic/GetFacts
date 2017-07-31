@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="GetFacts.PageConfigItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GetFacts"
+             mc:Ignorable="d" 
+             d:DesignHeight="199.19" d:DesignWidth="518.623" Initialized="UserControl_Initialized">
+    <Grid>
+        <Border Margin="5" CornerRadius="10" Background="#FF3DAE24">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click">X</Button>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Name:</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Url:</TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Template:</TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Download period:</TextBlock>
+                    <TextBox x:Name="ConfigNameInput" Grid.Row="0" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigNameInput_TextChanged"></TextBox>
+                    <TextBox x:Name="ConfigUrlInput" Grid.Row="1" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigUrlInput_TextChanged"></TextBox>
+                    <ComboBox x:Name="ConfigTemplateInput" Grid.Row="2" Grid.Column="1" Margin="5,3,5,3" SelectionChanged="ConfigTemplateInput_SelectionChanged"></ComboBox>
+                    <Slider Grid.Row="3" Grid.Column="1" Margin="5,3,5,3" IsEnabled="False"></Slider>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -37,7 +37,7 @@ namespace GetFacts.Facts
 
         private void LoadConfiguration(string path)
         {
-            List<PageConfig> listConfigs = ConfigFactory.GetInstance().CreateConfig(path);
+            List<PageConfig> listConfigs = ConfigFactory.GetInstance().LoadConfig(path);
             IEnumerable<PageConfig> orderedList = listConfigs;
 
             if(ShufflePages)

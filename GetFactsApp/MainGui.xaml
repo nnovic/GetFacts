@@ -17,10 +17,26 @@
                     <TextBlock Margin="5" Foreground="white">Refreshing</TextBlock>
                 </Border>
                 <Border Margin="5" Background="Black">
-                    <Button Padding="5">Menu</Button>
+                    <Button  x:Name="MenuButton" Padding="5" Content="Menu">
+                        <!-- cliquer sur le bouton affiche le panneau de configuration -->
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.Target="{x:Reference ConfigurationPanel}"
+                                                   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
+                                                Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
                 </Border>
             </StackPanel>
         </StackPanel>
+        <local:ConfigurationPanel x:Name="ConfigurationPanel" Visibility="Hidden" Background="Black"/>
     </Grid>
 
 </Window>

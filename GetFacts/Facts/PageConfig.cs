@@ -8,7 +8,7 @@ namespace GetFacts.Facts
 {
     public class PageConfig
     {
-        PageConfig()
+        public PageConfig()
         {
             Refresh = 60;
         }

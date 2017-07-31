@@ -47,6 +47,7 @@ namespace GetFacts
                 long remainingTime = maxDuration * 1000;
                 long elapsedTime = 0;
                 bool timedOut; 
+
                 chrono.Restart();
                 RemoveTrash();
                 chrono.Stop();
@@ -264,5 +265,6 @@ namespace GetFacts
             StopRotationThread();
             DownloadManager.GetInstance().Stop();
         }
+
     }
 }
