@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Documents;
 using System.Reflection;
+using System.Collections.ObjectModel;
 
 namespace TemplatesApp
 {
@@ -17,6 +18,7 @@ namespace TemplatesApp
     {
 
         private Workflow workflow;
+        public readonly ObservableCollection<string> MRU = new ObservableCollection<string>();
 
         public TemplateExplorer()
         {
@@ -35,7 +37,8 @@ namespace TemplatesApp
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             string path = TemplateFactory.GetInstance().TemplatesDirectory;
-            TemplatesDirSelection.Items.Add(path);
+            //TemplatesDirSelection.Items.Add(path);
+            UpdateMRU(path);
             TemplatesDirSelection.SelectedItem = path;
         }
 
@@ -151,13 +154,27 @@ namespace TemplatesApp
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     string folder = dlg.FileName;
-                    if (TemplatesDirSelection.Items.Contains(folder) == false)
-                    {
-                        TemplatesDirSelection.Items.Add(folder);
-                    }
+                    UpdateMRU(folder);
                     TemplatesDirSelection.SelectedItem = folder;
                 }
             }
+        }        
+
+        private void UpdateMRU(string folder)
+        {
+            if( MRU.Contains(folder) )
+            {
+                MRU.Remove(folder);
+            }
+            else
+            {
+                while(MRU.Count>4)
+                {
+                    MRU.RemoveAt(4);
+                }
+            }
+            MRU.Insert(0, folder);
+            ConfigFactory.GetInstance().SaveMruTemplatesDirectories(MRU);
         }
 
         private void NewTemplateButton_Click(object sender, RoutedEventArgs e)
@@ -183,6 +200,15 @@ namespace TemplatesApp
                     SelectedTemplate = path;
                     FilesList.Focus();
                 }
+            }
+        }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+            TemplatesDirSelection.ItemsSource = MRU;
+            foreach(string dir in ConfigFactory.GetInstance().GetMruTemplatesDictories())
+            {
+                MRU.Add(dir);
             }
         }
     }

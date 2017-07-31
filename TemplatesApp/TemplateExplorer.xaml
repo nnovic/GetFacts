@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded">
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded" Initialized="UserControl_Initialized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="0,0,3,0"  Grid.Column="0">Directory:</TextBlock>
-                <ComboBox Margin="0,0,3,0" Grid.Column="1" x:Name="TemplatesDirSelection" SelectionChanged="TemplatesDirSelection_SelectionChanged"/>
+                <ComboBox Margin="0,0,3,0" Grid.Column="1" x:Name="TemplatesDirSelection" SelectionChanged="TemplatesDirSelection_SelectionChanged" />
                 <Button Grid.Column="2" Padding="3,1" x:Name="ChangeDirectoryButton" Click="ChangeDirectoryButton_Click">Change</Button>
             </Grid>
 

@@ -1,4 +1,5 @@
 ﻿using GetFacts.Facts;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -125,6 +126,8 @@ namespace GetFacts
         }
 
 
+        #region
+
         public string TemplatesDirectory
         {
             get
@@ -143,6 +146,59 @@ namespace GetFacts
                 return path;
             }
         }
+        
+        public List<string> GetMruTemplatesDictories()
+        {
+            return GetListOfStringsFromRegistry("Templates", "MRU");
+        }
+
+        public void SaveMruTemplatesDirectories(ICollection<string> list)
+        {
+            SetListOfStringsToRegistry("Templates", "MRU", list);
+        }
+
+        #endregion
+
+
+        #region registry
+
+        RegistryKey GetRegistryKey(string key, bool forWriting)
+        {
+            string path = string.Format(@"SOFTWARE\{0}\{1}", AppDir, key);
+            if (forWriting)
+                return Registry.CurrentUser.CreateSubKey(path);
+            return Registry.CurrentUser.OpenSubKey(path);
+        }
+
+        void SetListOfStringsToRegistry(string keyPath, string valueName, ICollection<string> list)
+        {
+            string[] array = list.ToArray();
+            using (RegistryKey key = GetRegistryKey(keyPath, true))
+            {
+                key.SetValue(valueName, array, RegistryValueKind.MultiString);
+            }
+        }
+
+        List<string> GetListOfStringsFromRegistry(string keyPath, string valueName)
+        {
+            List<string> output = new List<string>();
+
+            using (RegistryKey key = GetRegistryKey(keyPath, false))
+            {
+                string[] array = key.GetValue(valueName) as string[];
+                if (array != null)
+                {
+                    foreach (string item in array)
+                    {
+                        output.Add(item);
+                    }
+                }
+            }
+
+            return output;
+        }
+                
+        #endregion
 
     }
 }
