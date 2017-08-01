@@ -29,7 +29,7 @@ namespace GetFacts
         {
             set
             {
-                SourceName.Text = value.Source.ToString();
+                DateAndTime.Text = value.Timestamp.ToString();
                 Title.Text = value.Title;
                 Description.Text = value.Description;
             }

@@ -19,7 +19,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="SourceName">(Source)</TextBlock>
+                <TextBlock x:Name="DateAndTime">(jj/mm/aaaa hh:mm)</TextBlock>
                 <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="Title">(Title)</TextBlock>
                 <TextBlock Grid.Row="2" Grid.ColumnSpan="2" x:Name="Description">(Description)</TextBlock>
             </Grid>

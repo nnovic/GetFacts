@@ -46,6 +46,7 @@ namespace GetFacts
             {
                 Source = source;
                 Key = key;
+                Timestamp = DateTime.Now;
             }
 
             public object Source
@@ -91,6 +92,12 @@ namespace GetFacts
                     return false;
 
                 return true;
+            }
+
+            public DateTime Timestamp
+            {
+                get;
+                private set;
             }
         }
 
