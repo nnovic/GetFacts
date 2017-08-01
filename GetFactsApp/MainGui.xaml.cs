@@ -210,7 +210,13 @@ namespace GetFacts
             }
         }
 
-        private void StartpRotationThread()
+        /// <summary>
+        /// Lance le thread qui gère l'affichage des 
+        /// différentes pages contenant les infos collectées.
+        /// </summary>
+        /// <see cref="RotationTask"/>
+        /// <seealso cref="StopRotationThread"/>
+        private void StartRotationThread()
         {
             if(rotationThread==null)
             {
@@ -248,23 +254,45 @@ namespace GetFacts
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             GetFacts.Facts.Facts.GetInstance().PageRefreshEvent += MainGui_PageRefreshEvent;
-            refreshIndication.Visibility = Visibility.Hidden;
-            StartpRotationThread();
+            refreshIndication.Visibility = Visibility.Collapsed;
+            NotificationIndication.Visibility = Visibility.Collapsed;
+            StartRotationThread();
         }
 
         private void MainGui_PageRefreshEvent(object sender, Facts.Facts.PageRefreshEventArgs e)
         {
             Dispatcher.Invoke(() => {
-                refreshIndication.Visibility = e.Begins ? Visibility.Visible : Visibility.Hidden;
-            });
-            
+                refreshIndication.Visibility = e.Begins ? Visibility.Visible : Visibility.Collapsed;
+            });            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            NotificationSystem.GetInstance().Notifications.CollectionChanged -= Notifications_CollectionChanged;
             StopRotationThread();
             DownloadManager.GetInstance().Stop();
         }
 
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
+        }
+
+        /// <summary>
+        /// Montrer/Masquer le bouton "Messages"
+        /// suivant le nombre de notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <seealso cref="NotificationSystem"/>
+        private void Notifications_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            int count = NotificationSystem.GetInstance().Notifications.Count;
+            Visibility v = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            Dispatcher.Invoke(() => {
+                NotificationIndication.Visibility = v;
+            });
+        }
     }
 }

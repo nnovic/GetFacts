@@ -1,4 +1,5 @@
 ﻿using GetFacts.Facts;
+using GetFacts.Parse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,11 +138,27 @@ namespace GetFacts
             }
         }
 
+
+        /// <summary>
+        /// Sur modif de la sélection dans la combobox
+        /// "ConfigTemplateInput" (et à condition que
+        /// IsTemplateValid retourne true) :
+        /// - mettre à jour le PageConfig sous-jacent
+        /// - mettre à jour l'URL courant avec l'URL de référence du nouveau template (si IsUrlValid retourne false, uniquement).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConfigTemplateInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsTemplateValid)
             {
-                PageConfig.Template = (string)ConfigTemplateInput.SelectedItem;
+                string path = (string)ConfigTemplateInput.SelectedItem;
+                PageConfig.Template = path;
+                PageTemplate pt = TemplateFactory.GetInstance().GetExistingTemplate(path);
+                if(!IsUrlValid)
+                {
+                    ConfigUrlInput.Text = pt.Reference;
+                }
             }
         }
     }

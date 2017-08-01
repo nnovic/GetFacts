@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GetFacts"
         mc:Ignorable="d"
-        Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing" Initialized="Window_Initialized">
 
 
     <Grid>
@@ -16,8 +16,26 @@
                 <Border x:Name="refreshIndication" Margin="5,5,0,5" Background="Black">
                     <TextBlock Margin="5" Foreground="white">Refreshing</TextBlock>
                 </Border>
+                <Border x:Name="NotificationIndication" Margin="5,5,0,5">
+                    <Button x:Name="ShowMessagesButton" Content="Messages" Padding="5">
+                        <!-- cliquer sur le bouton affiche la liste des notifications -->
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.Target="{x:Reference NotificationsPanel}"
+                                                   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
+                                                Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Border>
                 <Border Margin="5" Background="Black">
-                    <Button  x:Name="MenuButton" Padding="5" Content="Menu">
+                    <Button  x:Name="ConfigMenuButton" Padding="5" Content="Config">
                         <!-- cliquer sur le bouton affiche le panneau de configuration -->
                         <Button.Triggers>
                             <EventTrigger RoutedEvent="Button.Click">
@@ -36,7 +54,11 @@
                 </Border>
             </StackPanel>
         </StackPanel>
-        <local:ConfigurationPanel x:Name="ConfigurationPanel" Visibility="Hidden" Background="Black"/>
+        
+        <local:ConfigurationPanel x:Name="ConfigurationPanel" Visibility="Hidden" />
+
+        <local:NotificationsPanel x:Name="NotificationsPanel" Visibility="Hidden" />
+
     </Grid>
 
 </Window>
