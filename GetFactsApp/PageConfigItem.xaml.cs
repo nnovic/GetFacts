@@ -104,7 +104,7 @@ namespace GetFacts
                 {
                     if (templates == null)
                     {
-                        string dir = ConfigFactory.GetInstance().TemplatesDirectory;
+                        string dir = TemplateFactory.GetInstance().TemplatesDirectory;
                         templates = TemplateFactory.CreateTemplatesList(dir);
                     }
                     return templates;

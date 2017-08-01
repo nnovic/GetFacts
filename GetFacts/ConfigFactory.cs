@@ -128,6 +128,13 @@ namespace GetFacts
 
         #region
 
+        /// <summary>
+        /// Chemin dans lequel on cherche les fichiers templates.
+        /// Retourne la valeur qui est sauvegardée sur le profil de l'utilisateur.
+        /// </summary>
+        /// <remarks>Par défaut, TemplatesDirectory vaut DefaultTemplatesDirectory</remarks>
+        /// <see cref="DefaultTemplatesDirectory"/>
+        /// <seealso cref="TemplateFactory.TemplatesDirectory"/>
         public string TemplatesDirectory
         {
             get
@@ -185,12 +192,15 @@ namespace GetFacts
 
             using (RegistryKey key = GetRegistryKey(keyPath, false))
             {
-                string[] array = key.GetValue(valueName) as string[];
-                if (array != null)
+                if (key != null)
                 {
-                    foreach (string item in array)
+                    string[] array = key.GetValue(valueName) as string[];
+                    if (array != null)
                     {
-                        output.Add(item);
+                        foreach (string item in array)
+                        {
+                            output.Add(item);
+                        }
                     }
                 }
             }

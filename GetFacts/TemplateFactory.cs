@@ -17,11 +17,15 @@ namespace GetFacts
             {
                 if(uniqueInstance==null)
                 {
-                    uniqueInstance = new TemplateFactory();
+                    uniqueInstance = new TemplateFactory()
+                    {
+                        TemplatesDirectory = ConfigFactory.GetInstance().TemplatesDirectory }
+                    ;
                 }
                 return uniqueInstance;
             }
         }
+
 
         public void SaveTemplate(PageTemplate template, string dst)
         {
@@ -103,11 +107,15 @@ namespace GetFacts
         }
 
         /// <summary>
-        /// returns ConfigFactory.GetInstance().TemplatesDirectory
+        /// Chemin dans lequel on cherche les fichiers templates.
+        /// Initialisé avec la valeur de ConfigFactory.GetInstance().TemplatesDirectory.
+        /// Toute modification ultérieure de cette propriété n'est pas répercutée sur le contenu
+        /// de ConfigFactory.GetInstance().TemplatesDirectory.
         /// </summary>
+        /// <see cref="ConfigFactory.TemplatesDirectory"/>
         public string TemplatesDirectory
         {
-            get { return ConfigFactory.GetInstance().TemplatesDirectory; }
+            get;set;
         }
 
         public List<string> CreateTemplatesList()

@@ -37,13 +37,14 @@ namespace TemplatesApp
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             string path = TemplateFactory.GetInstance().TemplatesDirectory;
-            //TemplatesDirSelection.Items.Add(path);
             UpdateMRU(path);
             TemplatesDirSelection.SelectedItem = path;
         }
 
         private void TemplatesDirSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string path = TemplatesDirSelection.SelectedItem as string;
+            TemplateFactory.GetInstance().TemplatesDirectory = path;
             RefreshFilesList();
         }
 
