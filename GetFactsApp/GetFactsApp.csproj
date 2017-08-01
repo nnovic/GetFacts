@@ -76,6 +76,10 @@
     <Compile Include="MainGui.xaml.cs">
       <DependentUpon>MainGui.xaml</DependentUpon>
     </Compile>
+    <Page Include="NotificationItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="NotificationsPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -86,6 +90,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NotificationItem.xaml.cs">
+      <DependentUpon>NotificationItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NotificationsPanel.xaml.cs">
       <DependentUpon>NotificationsPanel.xaml</DependentUpon>
     </Compile>

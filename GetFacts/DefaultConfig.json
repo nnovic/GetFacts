@@ -1,20 +1,26 @@
-﻿[
-	{
-		"Name":"sokrostream",
-		"Url":"http://sokrostream.cc/",
-		"Template":"fr\\sokrostream_cc.json",
-		"Refresh":"60"
-	},
-	{
-		"Name":"leboncoin",
-		"Url":"https://www.leboncoin.fr/annonces/offres/rhone_alpes/",
-		"Template":"fr\\www_leboncoin_fr.json",
-		"Refresh":"10"
-	},
-	{
-		"Name":"slate",
-		"Url":"http://www.slate.fr/",
-		"Template":"fr\\www_slate_fr.json",
-		"Refresh":"60"
-	}
+[
+  {
+    "Name": "sokrostream",
+    "Url": "http://sokrostream.cc/",
+    "Template": "fr\\sokrostream_cc.json",
+    "Refresh": 60
+  },
+  {
+    "Name": "leboncoin",
+    "Url": "https://www.leboncoin.fr/annonces/offres/rhone_alpes/",
+    "Template": "fr\\www_leboncoin_fr.json",
+    "Refresh": 10
+  },
+  {
+    "Name": "slate",
+    "Url": "http://www.slate.fr/",
+    "Template": "fr\\www_slate_fr.json",
+    "Refresh": 60
+  },
+  {
+    "Name": "Mairie SPDC",
+    "Url": "http://mairie-stpierredechandieu.com/index.php/fr/",
+    "Template": "fr\\mairie-stpierredechandieu_com.json",
+    "Refresh": 60
+  }
 ]
