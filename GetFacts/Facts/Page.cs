@@ -2,6 +2,7 @@
 using GetFacts.Parse;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,6 +11,7 @@ using System.Xml.XPath;
 
 namespace GetFacts.Facts
 {
+    [DebuggerDisplay("Page = {PageName}")]
     public class Page:AbstractInfo
     {
         private readonly string pageUrl;
@@ -27,8 +29,33 @@ namespace GetFacts.Facts
         public Page(PageConfig pc):this(pc.Url)
         {
             Parser = new HtmlParser(); 
-            Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);
+            Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);            
             RefreshDelay = pc.Refresh * 60;
+
+            if ( string.IsNullOrEmpty(pc.Name)==false )
+            {
+                PageName = pc.Name;
+            }
+            else
+            {
+                PageName = Template.PageName;
+            }
+        }
+
+        /// <summary>
+        /// Retourne l'appellation qui a été
+        /// donnée à cette page par l'utilisateur.
+        /// </summary>
+        /// <remarks>
+        /// Il s'agit de la valeur de PageConfig.Name, ou
+        /// par défaut de Template.PageName.
+        /// </remarks>
+        /// <seealso cref="PageConfig.Name"/>
+        /// <seealso cref="PageTemplate.PageName"/>
+        public string PageName
+        {
+            get;
+            private set;
         }
 
         internal bool TimerEnabled
@@ -105,6 +132,22 @@ namespace GetFacts.Facts
 
         #region mise à jour 
 
+        /// <summary>
+        /// Liste des clés pour créer/supprimer des
+        /// notifications dans NotificationSystem.
+        /// </summary>
+        /// <seealso cref="NotificationSystem"/>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Une notification sera ajoutée si, à l'issue
+            /// de la mise à jour de la page, aucun article
+            /// a été trouvé.
+            /// </summary>
+            /// <seealso cref="HasAnyArticle"/>
+            NoArticleInTheEntirePage
+        }
+
         public void Update(string sourceFile)
         {            
             Parser.Load(sourceFile, Template.Encoding);
@@ -126,7 +169,23 @@ namespace GetFacts.Facts
             }
 
             EndUpdate();
-        }
+
+            var notification = new NotificationSystem.Notification(this, 
+                (int)NotificationKeys.NoArticleInTheEntirePage)
+            {
+                Title = PageName,
+                Description = "No article have been found"
+            };
+
+            if( HasAnyArticle )
+            {
+                NotificationSystem.GetInstance().Remove(notification);
+            }
+            else
+            {
+                NotificationSystem.GetInstance().Add(notification);
+            }
+        }        
 
         #endregion
 
@@ -209,29 +268,5 @@ namespace GetFacts.Facts
         }
 
         #endregion
-
-        #region "comparaison"
-        /*
-        public static bool Compare(Page p1, Page p2)
-        {
-            return p1.CompareTo(p2);
-        }
-
-        public bool CompareTo(Page p)
-        {
-            if (string.Compare(pageUrl, p.pageUrl) != 0)
-                return false;
-
-            if( base.CompareTo(p)==false )
-            {
-                return false;
-            }
-
-            return true;
-        }
-        */
-        #endregion
-
-
     }
 }

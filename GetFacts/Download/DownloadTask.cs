@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Download
 {
+    [DebuggerDisplay("Uri = {Uri}")]
     public class DownloadTask: INotifyPropertyChanged
     {
         public const string TmpFileExtension = ".part";

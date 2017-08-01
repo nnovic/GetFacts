@@ -99,7 +99,6 @@ namespace GetFacts.Facts
             Task.Run(async delegate
             {
                 await Task.Delay(delay);
-                Console.WriteLine("The timer callback executes.");
                 task.Reload();
             });
         }
@@ -391,7 +390,6 @@ namespace GetFacts.Facts
                 }
                 pageRefreshEventCount++;
             }
-
         }
 
         private void DecrementPageRefreshCount()

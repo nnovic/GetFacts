@@ -90,6 +90,7 @@
     <Compile Include="Facts\GetFactsHeader.cs" />
     <Compile Include="Facts\PageConfig.cs" />
     <Compile Include="JaroWinkler.cs" />
+    <Compile Include="NotificationSystem.cs" />
     <Compile Include="Parse\AbstractXPathBuilder.cs" />
     <Compile Include="Parse\HtmlXPathBuilder.cs" />
     <Compile Include="RegexTextBox.cs" />
