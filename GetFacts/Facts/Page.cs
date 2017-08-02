@@ -174,7 +174,7 @@ namespace GetFacts.Facts
                 (int)NotificationKeys.NoArticleInTheEntirePage)
             {
                 Title = PageName,
-                Description = "No article have been found"
+                Description = "No article has been found."
             };
 
             if( HasAnyArticle )

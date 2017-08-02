@@ -1,2 +1,36 @@
 {
+  "PageName": "Mairie de St Pierre de Chandieu",
+  "Reference": "http://mairie-stpierredechandieu.com/index.php/fr/",
+  "TitleTemplate": {
+    "XPath": "/html/head/title"
+  },
+  "TextTemplate": {
+    "XPath": "/html/head/meta[@name=\"description\"]/@content"
+  },
+  "IconUrlTemplate": {
+    "XPath": "/html/head/link[@rel=\"shortcut icon\"]/@href"
+  },
+  "Sections": [
+    {
+      "SectionName": "Actualités",
+      "XPathFilter": "//div[starts-with(@id,\"wk-grid\")]",
+      "TitleTemplate": {
+        "XPath": "//h1[@class=\"uk-article-title\"]"
+      },
+      "Articles": [
+        {
+          "XPathFilter": ".//div[contains(@class,\"uk-panel \")]",
+          "TitleTemplate": {
+            "XPath": "./h3"
+          },
+          "IconUrlTemplate": {
+            "XPath": ".//img/@src"
+          },
+          "BrowserUrlTemplate": {
+            "XPath": "./a/@href"
+          }
+        }
+      ]
+    }
+  ]
 }

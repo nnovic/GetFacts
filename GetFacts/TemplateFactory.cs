@@ -44,9 +44,29 @@ namespace GetFacts
         /// </summary>
         /// <param name="path">Si path n'est pas rooted, alors path est combiné avec TemplatesDirectory</param>
         /// <returns></returns>
+        /// <remarks>Ajoute une notification dans NotificationSystem 
+        /// si problème d'accès au fichier, mais ne bloque pas les exceptions.</remarks>
+        /// <seealso cref="NotificationKeys.TemplateFileError"/>
         public PageTemplate GetExistingTemplate(string path)
         {
-            return GetJSONTemplate(path);
+            var notification = new NotificationSystem.Notification(this,
+                (int)NotificationKeys.TemplateFileError)
+            {
+                Title = path,
+                Description = "Template file error."
+            };
+
+            try
+            {
+                PageTemplate output = GetJSONTemplate(path);
+                NotificationSystem.GetInstance().Remove(notification);
+                return output;
+            }
+            catch
+            {
+                NotificationSystem.GetInstance().Add(notification);
+                throw;
+            }
         }
 
         /// <summary>
@@ -133,6 +153,22 @@ namespace GetFacts
                 output.Add(file);
             }
             return output;
+        }
+
+
+        /// <summary>
+        /// Enumération des clés que cette classe utilise
+        /// pour insérer/supprimer des notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Erreur durant l'accès au fichier template.
+            /// Fichier manquant ? Mauvais formattage ?
+            /// </summary>
+            /// <see cref="GetExistingTemplate(string)"/>
+            TemplateFileError
         }
     }
 }

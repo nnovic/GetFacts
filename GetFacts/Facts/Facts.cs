@@ -48,8 +48,16 @@ namespace GetFacts.Facts
 
             foreach (PageConfig config in orderedList)
             {
-                Page p = new Page(config);
-                AddPage(p);
+                try
+                {
+                    Page p = new Page(config);
+                    AddPage(p);
+                }
+                catch
+                {
+                    // ne pas planter le système si une page
+                    // n'a pas pu être ajoutée.
+                }
             }
         }
 

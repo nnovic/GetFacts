@@ -161,21 +161,37 @@ namespace TemplatesApp
             }
         }        
 
+        /// <summary>
+        /// Place le répertoire passé en argument en
+        /// tête de la liste des répertoires les plus
+        /// utilisés (il s'agit des répertoires dans
+        /// lesquels ce composant va rechercher les
+        /// fichiers templates).
+        /// </summary>
+        /// <param name="folder"></param>
         private void UpdateMRU(string folder)
         {
-            if( MRU.Contains(folder) )
+            TemplatesDirSelection.BeginInit();
+            try
             {
-                MRU.Remove(folder);
-            }
-            else
-            {
-                while(MRU.Count>4)
+                if (MRU.Contains(folder))
                 {
-                    MRU.RemoveAt(4);
+                    MRU.Remove(folder);
                 }
+                else
+                {
+                    while (MRU.Count > 4)
+                    {
+                        MRU.RemoveAt(4);
+                    }
+                }
+                MRU.Insert(0, folder);
+                ConfigFactory.GetInstance().SaveMruTemplatesDirectories(MRU);
             }
-            MRU.Insert(0, folder);
-            ConfigFactory.GetInstance().SaveMruTemplatesDirectories(MRU);
+            finally
+            {
+                TemplatesDirSelection.EndInit();
+            }
         }
 
         private void NewTemplateButton_Click(object sender, RoutedEventArgs e)

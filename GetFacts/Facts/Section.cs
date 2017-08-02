@@ -16,24 +16,52 @@ namespace GetFacts.Facts
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nav"></param>
+        /// <param name="sectionTemplate"></param>
+        /// <remarks>Ajoute une notification dans NotificationSystem si erreur durant
+        /// la mise à jour de la section. Ne bloque pas les exceptions.</remarks>
+        /// <seealso cref="NotificationKeys.SectionUpdateError"/>
         internal void Update(XPathNavigator nav, SectionTemplate sectionTemplate)
         {
-            UpdateInfo(nav, sectionTemplate);
-
-            foreach (ArticleTemplate articleTemplate in sectionTemplate.Articles)
+            var notification = new NotificationSystem.Notification(this,
+                (int)NotificationKeys.SectionUpdateError)
             {
-                XPathNodeIterator iter = nav.Select(articleTemplate.XPathFilter);
-                while(iter.MoveNext())
+                Title = Identifier,
+                Description = "Update error."
+            };
+
+            try
+            {
+                UpdateInfo(nav, sectionTemplate);
+
+                foreach (ArticleTemplate articleTemplate in sectionTemplate.Articles)
                 {
-                    XPathNavigator subTree = iter.Current;
-                    Article tmp = new Article()
+                    XPathNodeIterator iter;
+                    if (string.IsNullOrEmpty(articleTemplate.XPathFilter)) { iter = nav.SelectChildren(XPathNodeType.Element); }
+                    else { iter = nav.Select(articleTemplate.XPathFilter); }
+
+                    while (iter.MoveNext())
                     {
-                        BaseUri = BaseUri
-                    };
-                    tmp.Update(subTree, articleTemplate);
-                    AddOrUpdateArticle(tmp);
+                        XPathNavigator subTree = iter.Current;
+                        Article tmp = new Article()
+                        {
+                            BaseUri = BaseUri
+                        };
+                        tmp.Update(subTree, articleTemplate);
+                        AddOrUpdateArticle(tmp);
+                    }
+
                 }
-                
+
+                NotificationSystem.GetInstance().Remove(notification);
+            }
+            catch
+            {
+                NotificationSystem.GetInstance().Add(notification);
+                throw;
             }
         }
 
@@ -101,5 +129,21 @@ namespace GetFacts.Facts
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Enumération des clés que cette classe utilise
+        /// pour insérer/supprimer des notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Une erreur est survenue durant la mise à jour de
+            /// la section. Mauvaise page web ? Erreur de template ?
+            /// </summary>
+            /// <see cref="Update(XPathNavigator, SectionTemplate)"/>
+            SectionUpdateError
+        }
     }
 }

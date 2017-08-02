@@ -17,9 +17,33 @@ namespace GetFacts.Facts
             UpdateInfo(source);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nav"></param>
+        /// <param name="template"></param>
+        /// <remarks>Bloque toutes les exceptions qui pourraient survenir durant
+        /// l'exécution de cette méthode.</remarks>
+        /// <seealso cref="NotificationKeys.ArticleUpdateError"/>
         internal void Update(XPathNavigator nav, ArticleTemplate template)
         {
-            UpdateInfo(nav, template);
+
+            var notification = new NotificationSystem.Notification(this,
+                (int)NotificationKeys.ArticleUpdateError)
+            {
+                Title = Identifier,
+                Description = "Update error."
+            };
+
+            try
+            {
+                UpdateInfo(nav, template);
+                NotificationSystem.GetInstance().Remove(notification);
+            }
+            catch
+            {
+                NotificationSystem.GetInstance().Add(notification);
+            }
         }
 
         #region évaluer la ressemblance avec un autre article 
@@ -153,6 +177,22 @@ namespace GetFacts.Facts
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Enumération des clés que cette classe utilise
+        /// pour insérer/supprimer des notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Une erreur est survenue durant la mise à jour de
+            /// l'article. Mauvaise page web ? Erreur de template ?
+            /// </summary>
+            /// <see cref="Update(XPathNavigator, ArticleTemplate)"/>
+            ArticleUpdateError
+        }
     }
 
 }

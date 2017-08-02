@@ -268,17 +268,34 @@ namespace GetFacts.Download
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <remarks>Ajoute une notification dans NotificationSystem en cas
+        /// d'erreur durant l'obtention du flux d'entrée.</remarks>
+        /// <seealso cref="NotificationKeys.CannotOpenConnection"/>
         private void WebClient_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
         {
             lock(_lock_)
             {
+                var notification = new NotificationSystem.Notification(this,
+                                (int)NotificationKeys.CannotOpenConnection)
+                {
+                    Title = Uri.ToString(),
+                    Description = "Connection cannot be established."
+                };
+
                 try
                 {
                     readStream = e.Result;
+                    NotificationSystem.GetInstance().Remove(notification);
                 }
                 catch
                 {
                     readStream = null;
+                    NotificationSystem.GetInstance().Add(notification);
                 }
                 finally
                 {
@@ -405,5 +422,19 @@ namespace GetFacts.Download
         }
 
         #endregion
+
+        /// <summary>
+        /// Enumération des clés que cette classe utilise
+        /// pour insérer/supprimer des notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Indique que la connexion vers le site internet
+            /// n'a pu être établie. Mauvais URL ? Site en panne ?
+            /// </summary>
+            CannotOpenConnection
+        }
     }
 }
