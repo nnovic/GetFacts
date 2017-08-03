@@ -96,15 +96,33 @@ namespace GetFacts.Parse
             MeaninglessJunk     // -
         }
 
+        /// <summary>
+        /// Evalue le contenu de l'objet en paramètre et renvoie une information
+        /// qui indique l'importance et/ou la pertinence de ce contenu. Permet
+        /// notamment de choisir quel style sera utilisé pour affiche l'information
+        /// à l'écran.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         protected abstract InformationType EvaluateInformationType(object o);
 
-        protected void Stylize(Inline te, object o)
+        /// <summary>
+        /// Fonction qui applique un style au TextElement passé en paramètre
+        /// en fonction du contenu de l'objet qui l'accompagne.
+        /// La classe concrète doit implémenter EvaluateInformationType(object)
+        /// en conséquence.
+        /// </summary>
+        /// <param name="te"></param>
+        /// <param name="o"></param>
+        /// <see cref="EvaluateInformationType(object)"/>
+        /// <seealso cref="ApplyStyle(TextElement, InformationType)"/>
+        protected void Stylize(TextElement te, object o)
         {
             InformationType it = EvaluateInformationType(o);
-            Stylize(te, it);
+            ApplyStyle(te, it);
         }
 
-        private void Stylize(Inline te, InformationType it)
+        private void ApplyStyle(TextElement te, InformationType it)
         {
             ApplyDefaultStyle(te);
             switch (it)
@@ -132,12 +150,15 @@ namespace GetFacts.Parse
             }
         }
 
-        protected virtual void ApplyDefaultStyle(Inline te)
+        protected virtual void ApplyDefaultStyle(TextElement te)
         {
             te.FontFamily = sans_serif;
             te.FontSize = M_FONT_SIZE;
             te.Foreground = Brushes.DimGray;
-            te.TextDecorations = null;
+            if (te is Inline il)
+            {
+                il.TextDecorations = null;
+            }
         }
 
         protected virtual void ApplyValuableClueStyle(TextElement te)
@@ -259,7 +280,7 @@ namespace GetFacts.Parse
 
         #endregion
 
-        #region [optionel] tree view pour un élément précis du code source
+        #region [optionel] tree view avec le code source de la page
 
         protected virtual void ClearSourceTree()
         {
@@ -274,6 +295,14 @@ namespace GetFacts.Parse
         private TreeViewItem sourceTreeRoot = null;
         private DoubleList<TreeViewItem> treeViewItems2concreteObjects = new DoubleList<TreeViewItem>();
 
+        /// <summary>
+        /// Retourne une structure en arbre contenant
+        /// une représentation du document qui a été
+        /// chargé et parsé. Le travail de création de l'arbre
+        /// est délégué à CreateSourceTree(), qui doit être implémenté
+        /// dans la classe concrète.
+        /// </summary>
+        /// <see cref="CreateSourceTree"/>
         public TreeViewItem SourceTree
         {
             get
@@ -286,15 +315,26 @@ namespace GetFacts.Parse
             }
         }
 
-        protected TreeViewItem AddTreeNode(object header, object o)
+        /// <summary>
+        /// A partir du document chargé, créer une arborsence de
+        /// TreeViewItems qui représente la structure dudit document.
+        /// </summary>
+        /// <returns>Le TreeViewItem racine de l'arborescence créee.</returns>
+        /// <remarks>Durant le process de création, la classe concrètre doit
+        /// faire appel à AddTreeNode(object, object) pour que la 'magie'
+        /// de la classe AbstractParser puisse opérer.</remarks>
+        /// <see cref="AddTreeNode(object, object)"/>
+        protected abstract TreeViewItem CreateSourceTree();
+
+        protected TreeViewItem AddTreeNode(TextElement header, object o)
         {
             TreeViewItem treeNode = new TreeViewItem();
             treeNode.Header = header;
             treeViewItems2concreteObjects.Set(treeNode, o);
+            Stylize(header, o);
             return treeNode;
         }
 
-        protected abstract TreeViewItem CreateSourceTree();
 
         #endregion
 

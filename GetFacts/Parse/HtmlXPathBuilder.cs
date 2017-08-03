@@ -119,7 +119,13 @@ namespace GetFacts.Parse
 
             public override ICollection<string> ImportantAttributeNames => throw new NotImplementedException();
 
-            protected override string ElementName => throw new NotImplementedException();
+            protected override string ElementName
+            {
+                get
+                {
+                    return "@"+HtmlAttribute.Name;
+                }
+            }
 
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {

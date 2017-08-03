@@ -58,6 +58,14 @@ namespace GetFacts.Parse
 
         #region styling
 
+        /// <summary>
+        /// Implémentation concrète de AbstractParser.EvaluateInformationType.
+        /// Si o est de type HtmlNode, renvoie la valeur de EvaluateInformationype(HtmlNode).
+        /// Si o est de type HtmlAttribute, renvoie la valeur de EvaluateInformationType(HtmlAttribute)
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        /// <see cref="AbstractParser.EvaluateInformationType(object)"/>
         protected override InformationType EvaluateInformationType(object o)
         {
             if( o is HtmlNode)
@@ -150,11 +158,17 @@ namespace GetFacts.Parse
         protected override void FillSourceCode(Span rootSpan)
         {
             HtmlNode mainNode = htmlDoc.DocumentNode;
-            Html_To_Flow(mainNode, rootSpan);
+            HtmlNode_To_Flow(mainNode, rootSpan);
         }
-
         
-        private void Html_To_Flow(HtmlNode node, Span parent)
+        /// <summary>
+        /// Opération récursive qui parcourt l'arbre démarrant à 'node',
+        /// et crée dans 'parent' un dérivé de TextElement approprié.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
+        /// <seealso cref=" HtmlNode_To_TreeView(HtmlNode, TreeViewItem)"/>
+        private void HtmlNode_To_Flow(HtmlNode node, Span parent)
         {
             switch (node.NodeType)
             {
@@ -201,7 +215,7 @@ namespace GetFacts.Parse
             // PROCESS CHILDREN
             foreach (HtmlNode child in node.ChildNodes)
             {
-                Html_To_Flow(child, parent);
+                HtmlNode_To_Flow(child, parent);
             }
 
 
@@ -212,9 +226,7 @@ namespace GetFacts.Parse
                 parent.Inlines.Add(closingTag);
             }
         }
-
         
-
         void HtmlAttribute_To_Runs(HtmlAttribute attr, Span parent)
         {
             Run r1 = new Run(string.Format(" {0}=\"", attr.OriginalName));
@@ -276,49 +288,20 @@ namespace GetFacts.Parse
 
         #endregion
 
-
-        /*
-        protected override Hashtable GetConcreteAttributesOf(object o)
-        {
-            Hashtable output = new Hashtable();
-
-            if (o is HtmlAttribute)
-            {
-                HtmlAttribute attr = (HtmlAttribute)o;
-            }
-            else if (o is HtmlNode)
-            {
-                HtmlNode node = (HtmlNode)o;
-                foreach(HtmlAttribute attr in node.Attributes)
-                {
-                    output.Add(attr.OriginalName, attr.Value);
-                }
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
-
-            return output;
-        }
-        */
-
-
+        
         #region tree
 
         private readonly double nodenameFontSize = XL_FONT_SIZE;
-
-
 
         protected override TreeViewItem CreateSourceTree()
         {
             HtmlNode rootHtmlNode = htmlDoc.DocumentNode;
             rootHtmlNode = rootHtmlNode.SelectSingleNode("/html");
-            TreeViewItem root = CreateElementTvi(rootHtmlNode);
+            TreeViewItem root = HtmlElement_To_TreeViewItem(rootHtmlNode);
 
             foreach (HtmlNode child in rootHtmlNode.ChildNodes)
             {
-                Html_To_TreeViewItem(child, root);
+                HtmlNode_To_TreeView(child, root);
             }
 
             root.ExpandSubtree();
@@ -327,7 +310,7 @@ namespace GetFacts.Parse
         }
 
 
-        private void AppendAttributesToSpan(HtmlNode node, Span parent, bool providingCluesFiltering)
+        /*private void AppendAttributesToSpan(HtmlNode node, Span parent, bool providingCluesFiltering)
         {
             foreach (HtmlAttribute attr in node.Attributes)
             {
@@ -350,9 +333,9 @@ namespace GetFacts.Parse
                     }
                 }
             }
-        }
+        }*/
 
-        private TreeViewItem CreateTextTvi(HtmlNode node)
+        private TreeViewItem HtmlText_To_TreeViewItem(HtmlNode node)
         {
             string originalText = node.InnerText;
             if (originalText == null)
@@ -401,11 +384,11 @@ namespace GetFacts.Parse
         /// Crée un TreeViewItem qui permet de rendre le contenu
         /// du HtmlNode passé en argument.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="htmlNode"></param>
         /// <returns></returns>
-        private TreeViewItem CreateElementTvi(HtmlNode node)
+        private TreeViewItem HtmlElement_To_TreeViewItem(HtmlNode htmlNode)
         {
-            Span header = new Span()
+            /*Span header = new Span()
             {
                 //FontFamily = defaultFontFamily,
                 //FontSize = defaultFontSize,
@@ -418,36 +401,61 @@ namespace GetFacts.Parse
                 FontSize = nodenameFontSize,
                 //Foreground = IsNodeMeaningless(node) ? defaultColor : Brushes.Blue
             };
-            header.Inlines.Add(nodeName);
+            header.Inlines.Add(nodeName);*/
+
+            Run header = new Run(htmlNode.Name);
+            TreeViewItem nodeItem = AddTreeNode(header, htmlNode);
+
 
             // Attributs du noeud:
+            foreach (HtmlAttribute attributeNode in htmlNode.Attributes)
+            {
+                Run attribute = new Run(
+                    string.Format("@{0} = \"{1}\"",
+                        attributeNode.Name,
+                        attributeNode.Value));
+                TreeViewItem attributeItem = AddTreeNode(attribute, attributeNode);
+                nodeItem.Items.Add(attributeItem);
+            }
+
+
+
             // mettre en priorité les attributs intéressants:
-            AppendAttributesToSpan(node, header, true);
+            //AppendAttributesToSpan(htmlNode, nodeItem, header, true);
             //AppendAttributesToSpan(node, header, false);          
 
             /*TreeViewItem tvi = new TreeViewItem();
             tvi.Header = header;
             return tvi;*/
-            return AddTreeNode(header, node);
+            //return AddTreeNode(header, node);
+
+            return nodeItem;
         }
 
-        void Html_To_TreeViewItem(HtmlNode node, TreeViewItem parent)
+        /// <summary>
+        /// Opération récursive qui parcourt l'arbre démarrant à 'node',
+        /// et crée dans 'parent' un TreeViewItem approprié.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
+        /// <seealso cref="HtmlNode_To_Flow(HtmlNode, Span)"/>
+        void HtmlNode_To_TreeView(HtmlNode node, TreeViewItem parent)
         {            
             if (node.NodeType == HtmlNodeType.Element)
             {
-                TreeViewItem tvi = CreateElementTvi(node);
+                TreeViewItem tvi = HtmlElement_To_TreeViewItem(node);
                 parent.Items.Add(tvi);
 
                 // PROCESS CHILDREN
                 foreach (HtmlNode child in node.ChildNodes)
                 {
-                    Html_To_TreeViewItem(child, tvi);
+                    HtmlNode_To_TreeView(child, tvi);
                 }
             }
 
             else if(node.NodeType==HtmlNodeType.Text)
             {
-                TreeViewItem tvi = CreateTextTvi(node);
+                TreeViewItem tvi = HtmlText_To_TreeViewItem(node);
                 if (tvi != null)
                 {
                     parent.Items.Add(tvi);
