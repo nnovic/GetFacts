@@ -40,6 +40,16 @@ namespace GetFacts.Download
             }
         }
 
+        /// <summary>
+        /// Destruction de cet objet:
+        /// - s'assurer que toutes les notifications poussées dans
+        ///   NotificationSystem par cet objet soient supprimées.
+        /// </summary>
+        ~DownloadTask()
+        {
+            NotificationSystem.GetInstance().RemoveAll(this);
+        }
+
         public Uri Uri { get { return this.uri; } }
         public Guid Guid { get { return this.id; } }
         public string DefaultFileExtension { get { return this.defaultFileExtension; } }

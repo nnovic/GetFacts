@@ -43,6 +43,16 @@ namespace GetFacts.Facts
         }
 
         /// <summary>
+        /// Destruction de cet objet:
+        /// - s'assurer que toutes les notifications poussées dans
+        ///   NotificationSystem par cet objet soient supprimées.
+        /// </summary>
+        ~Page()
+        {
+            NotificationSystem.GetInstance().RemoveAll(this);
+        }
+
+        /// <summary>
         /// Retourne l'appellation qui a été
         /// donnée à cette page par l'utilisateur.
         /// </summary>
@@ -162,10 +172,18 @@ namespace GetFacts.Facts
 
             foreach (SectionTemplate sectionTemplate in Template.Sections)
             {
-                XPathNavigator subTree = nav.SelectSingleNode(sectionTemplate.XPathFilter);
-                string name = sectionTemplate.SectionName;
-                Section s = GetSection(name);
-                s.Update(subTree, sectionTemplate); 
+                try
+                {
+                    XPathNavigator subTree = nav.SelectSingleNode(sectionTemplate.XPathFilter);
+                    string name = sectionTemplate.SectionName;
+                    Section s = GetSection(name);
+                    s.Update(subTree, sectionTemplate);
+                }
+                catch
+                {
+                    // ne pas bloquer la mise à jour des sections
+                    // suivantes si une erreur s'est produite.
+                }
             }
 
             EndUpdate();

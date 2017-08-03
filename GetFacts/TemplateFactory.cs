@@ -26,6 +26,15 @@ namespace GetFacts
             }
         }
 
+        /// <summary>
+        /// Destruction de cet objet:
+        /// - s'assurer que toutes les notifications poussées dans
+        ///   NotificationSystem par cet objet soient supprimées.
+        /// </summary>
+        ~TemplateFactory()
+        {
+            NotificationSystem.GetInstance().RemoveAll(this);
+        }
 
         public void SaveTemplate(PageTemplate template, string dst)
         {

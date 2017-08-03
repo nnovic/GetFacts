@@ -10,8 +10,10 @@ namespace GetFacts
     /// <summary>
     /// Fournit un service de gestion de notifications,
     /// principalement destinées à prévenir l'utilisateur
-    /// de problèmes durant l'utilisation de GetFactsApp
+    /// de problèmes durant l'utilisation de GetFactsApp.
     /// </summary>
+    /// <remarks>Une classe qui ajoute des notifications devrait veiller à appeler 
+    /// NotificationSystem.GetInstance().RemoveAll() dans son destructeur.</remarks>
     public class NotificationSystem
     {
 
@@ -121,6 +123,26 @@ namespace GetFacts
             lock(_lock_)
             {
                 if(Notifications.Contains(n)==true)
+                {
+                    Notifications.Remove(n);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Supprimer toutes les notifications
+        /// dont la propriété Source est la même référence que
+        /// l'objet "source" passé en paramètre.
+        /// </summary>
+        /// <param name="source"></param>
+        public void RemoveAll(object source)
+        {
+            lock(_lock_)
+            {
+                var notificationsFromThatSource = from n in Notifications where n.Source == source select n;
+                List<Notification> notificationsToBeRemoved = notificationsFromThatSource.ToList();
+                foreach(Notification n in notificationsToBeRemoved)
                 {
                     Notifications.Remove(n);
                 }

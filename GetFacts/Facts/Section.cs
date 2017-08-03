@@ -17,6 +17,16 @@ namespace GetFacts.Facts
         }
 
         /// <summary>
+        /// Destruction de cet objet:
+        /// - s'assurer que toutes les notifications poussées dans
+        ///   NotificationSystem par cet objet soient supprimées.
+        /// </summary>
+        ~Section()
+        {
+            NotificationSystem.GetInstance().RemoveAll(this);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="nav"></param>

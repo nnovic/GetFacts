@@ -9,9 +9,19 @@ using System.Threading.Tasks;
 using System.Xml.XPath;
 
 namespace GetFacts.Facts
-{
+{   
     public class Article:AbstractInfo
     {
+        /// <summary>
+        /// Destruction de cet objet:
+        /// - s'assurer que toutes les notifications poussées dans
+        ///   NotificationSystem par cet objet soient supprimées.
+        /// </summary>
+        ~Article()
+        {
+            NotificationSystem.GetInstance().RemoveAll(this);
+        }
+
         internal void Update(Article source)
         {
             UpdateInfo(source);
