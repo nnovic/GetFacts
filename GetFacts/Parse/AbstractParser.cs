@@ -324,9 +324,17 @@ namespace GetFacts.Parse
         protected abstract AbstractXPathBuilder XPathFor(object o);
 
 
-        public IList<TextElement> SelectFromXPath(string xpath)
+        /// <summary>
+        /// Retourne tous les objets de type TextElement qui correspondent
+        /// à la requête XPath passée en argument. Cet requête peut être formée
+        /// d'une seule string ou de de plusieurs, qui seront concaténées.
+        /// </summary>
+        /// <param name="xpathElements"></param>
+        /// <returns></returns>
+        /// <see cref="Select(string[])">Cette fait appel à Select(string[])</see>
+        public IList<TextElement> SelectFromXPath(params string[] xpathElements)
         {
-            IList<object> concreteSelection = Select(xpath);
+            IList<object> concreteSelection = Select(xpathElements);
             List<TextElement> output = new List<TextElement>();
 
             foreach(object concreteObject in concreteSelection)
@@ -338,7 +346,12 @@ namespace GetFacts.Parse
             return output;
         }
 
-        protected abstract IList<object> Select(string xpath);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xpathElements"></param>
+        /// <returns>A non-null IList object. Might be empty, though.</returns>
+        protected abstract IList<object> Select(params string[] xpathElements);
 
         #endregion
 

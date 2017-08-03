@@ -475,27 +475,65 @@ namespace GetFacts.Parse
         }
 
         
-        protected override System.Collections.Generic.IList<object> Select(string xpath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="navigators"></param>
+        /// <param name="xpath"></param>
+        /// <returns>Une liste non-nulle des XPathNavigator correspondants aux noeuds sélectionnées.
+        /// Jamais null, mais peut être vide.</returns>
+        private IList<XPathNavigator> SubSelect(IList<XPathNavigator> navigators, string xpath)
         {
-            XPathNavigator nav = CreateNavigator();
-            XPathNodeIterator result = nav.Select(xpath);
-            System.Collections.Generic.List<object> output = new System.Collections.Generic.List<object>();
+            List<XPathNavigator> output = new List<XPathNavigator>();
 
-            foreach(var e in result)
+            foreach(XPathNavigator navigator in navigators)
             {
-                if( e is HtmlNodeNavigator nodeNav)
+                XPathNodeIterator selection = navigator.Select(xpath);
+                foreach(XPathNavigator selected in selection)
                 {
-                    HtmlNode concreteNode = nodeNav.CurrentNode;
-                    output.Add(concreteNode);
-                }
-                else
-                {
-
+                    output.Add(selected);
                 }
             }
 
             return output;
         }
+
+
+        protected override System.Collections.Generic.IList<object> Select(params string[] xpathElements)
+        {
+            System.Collections.Generic.List<object> output = new System.Collections.Generic.List<object>();
+
+            if ((xpathElements != null) && (xpathElements.Length > 1))
+            {
+                IList<XPathNavigator> navigators = new List<XPathNavigator>();
+                navigators.Add(CreateNavigator());
+             
+                foreach(string xpath in xpathElements)
+                {
+                    if (!string.IsNullOrEmpty(xpath))
+                    {
+                        navigators = SubSelect(navigators, xpath);
+                    }
+                }
+
+                foreach(XPathNavigator selected in navigators)
+                {
+                    if (selected is HtmlNodeNavigator nodeNav)
+                    {
+                        HtmlNode concreteNode = nodeNav.CurrentNode;
+                        output.Add(concreteNode);
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
 
         #endregion
     }

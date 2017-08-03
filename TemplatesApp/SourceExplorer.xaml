@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:local="clr-namespace:TemplatesApp"
+             xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" >
     <Grid>
@@ -48,19 +49,35 @@
             </TreeView>
         </Grid>
         
-        <!-- bread crumbs -->
+        <!-- XPath filtering -->
         <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
+            <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
             
-            <TextBox x:Name="XPathInput" TextChanged="XPathInput_TextChanged"  >BLABLA!</TextBox>
+            <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
+            <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
+
+            <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">Selected: 1</TextBlock>
+            <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">of 10 elements</TextBlock>
+            
+            <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="3" Click="PreviousSelection_Click">Prev.</Button>
+            <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="3" Click="NextSelection_Click">Next</Button>
+            
+            <!--            
             <TextBlock Grid.Column="1" x:Name="SelectionCount">0 element selected</TextBlock>
-            <Button Grid.Column="2" x:Name="PreviousSelection" Click="PreviousSelection_Click">Prev.</Button>
-            <Button Grid.Column="3" x:Name="NextSelection" Click="NextSelection_Click">Next</Button>
+            
+            -->
         </Grid>
         
     </Grid>

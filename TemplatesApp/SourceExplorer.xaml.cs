@@ -58,6 +58,8 @@ namespace TemplatesApp
 
             PreviousSelection.IsEnabled = false;
             NextSelection.IsEnabled = false;
+            ElementsCount = 0;
+            SelectedIndex = -1;
         }
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
@@ -76,16 +78,7 @@ namespace TemplatesApp
             }
         }
 
-
-
-
-
-
-
-
-
-
-
+        
         #region configuration
 
 
@@ -122,7 +115,6 @@ namespace TemplatesApp
                 InitSourceExplorer();
             }
         }
-
 
         private void PageTypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -196,31 +188,28 @@ namespace TemplatesApp
             selected.Focus();
 
             string xpath = Parser.SuggestXPathFor(selected);
-            XPathInput.Text = xpath;
+
+            XPathInput2.Text = string.Empty;
+            XPathInput1.Text = xpath;            
         }
 
         private void XPathInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             ClearHighlights();
 
+            // Faire un test sur le xpath #1 uniquement,
+            // juste pour vérifier s'il est co
             try
             {
-                string xpath = XPathInput.Text;
-                IList<TextElement> selection = Parser?.SelectFromXPath(xpath);                
+                IList<TextElement> selection = Parser?.SelectFromXPath(XPathInput1.Text, XPathInput2.Text);
                 if( (selection != null) && (selection.Count>0) )
                 {
                     Highlights(selection);
-                    XPathInput.Foreground = Brushes.Green;
-                }
-                else
-                {
-                    XPathInput.Foreground = Brushes.Black;
                 }
             }
             catch
             {
-                XPathInput.Foreground = Brushes.Red;
-            }
+            }            
         }
 
         #endregion
@@ -241,6 +230,8 @@ namespace TemplatesApp
                 te.Background = null;
             }
             HighlightedElements.Clear();
+            ElementsCount = 0;
+            SelectedIndex = -1;
         }
 
         private void Highlights(IList<TextElement> list)
@@ -256,16 +247,48 @@ namespace TemplatesApp
                 te.Background = Brushes.Orange;
             }
 
-            SelectionCount.Text = string.Format("{0} element{1} selected",
-                HighlightedElements.Count,
-                HighlightedElements.Count > 1 ? "s" : String.Empty);
+            ElementsCount = HighlightedElements.Count;
 
             TextElement first = list[0];
             int index = HighlightedElements.IndexOf(first);
             Select(index);
         }
 
+        private int ElementsCount
+        {
+            set
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("of ");
+                sb.Append(value);
+                sb.Append(" element");
+                if (value > 1) sb.Append('s');
+                sb.Append('.');
+                SelectionCount.Text = sb.ToString();
+            }
+        }
+
+        #endregion
+
         #region selection among highlighted elements 
+
+        private int SelectedIndex
+        {
+            set
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Selected: ");
+                if(value<0)
+                {
+                    sb.Append("none");
+                }
+                else
+                {
+                    sb.AppendFormat("#{0}", value+1);
+                }
+                SelectionIndex.Text = sb.ToString();
+            }
+        }
 
         private TextElement SelectedElement = null;
 
@@ -298,6 +321,7 @@ namespace TemplatesApp
 
             NextSelection.IsEnabled = ((index + 1) < HighlightedElements.Count); 
             PreviousSelection.IsEnabled = (index > 0);
+            SelectedIndex = index;
         }
 
         private void NextSelection_Click(object sender, RoutedEventArgs e)
@@ -313,82 +337,7 @@ namespace TemplatesApp
         }
 
         #endregion
-
-        /*
-        private void AddToSelection(IList<TextElement> list)
-        {
-            if( (list==null) || (list.Count<1))
-            {
-                return;
-            }
-
-            selectedTextElements.AddRange(list);
-            foreach(TextElement te in list)
-            {                
-                Select(te);
-            }
-
-            TextElement first = list[0];
-            selectedIndex = selectedTextElements.IndexOf(first);
-            GoToSelectedIndex();
-
-            SelectionCount.Text = string.Format("{0} element{1} selected",
-                selectedTextElements.Count,
-                selectedTextElements.Count>1?"s":String.Empty);
-        }
-
-        private void Unselect(TextElement te)
-        {
-            te.Background = null;
-        }
-
-        private void Select(TextElement te)
-        {
-            te.Background = Brushes.Yellow;
-        }
-
-        private void NextSelection_Click(object sender, RoutedEventArgs e)
-        {
-            selectedIndex++;
-            if(selectedIndex >= selectedTextElements.Count)
-                selectedIndex = selectedTextElements.Count - 1;
-            GoToSelectedIndex();
-        }
-
-        private void PreviousSelection_Click(object sender, RoutedEventArgs e)
-        {
-            selectedIndex--;
-            if( selectedIndex<0 )
-                selectedIndex = 0;
-            GoToSelectedIndex();
-        }
-
-        private void GoToSelectedIndex()
-        {
-            NextSelection.IsEnabled = HasNextSelectedIndex;
-            PreviousSelection.IsEnabled = HasPreviousSelectedIndex;
-            selectedTextElements[selectedIndex].BringIntoView();
-        }
-
-        private bool HasNextSelectedIndex
-        {
-            get
-            {
-                return (selectedIndex + 1) < selectedTextElements.Count;
-            }
-        }
-
-        private bool HasPreviousSelectedIndex
-        {
-            get
-            {
-                return selectedIndex > 0;
-            }
-        }
-        */
-
-        #endregion
-
+        
 
 
     }
