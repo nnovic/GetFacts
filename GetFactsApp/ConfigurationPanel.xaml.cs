@@ -49,16 +49,6 @@ namespace GetFacts
             Application.Current.Shutdown();
         }
 
-        private void Root_Initialized(object sender, EventArgs e)
-        {
-            List <PageConfig> configuration = ConfigFactory.Load();
-            foreach(PageConfig config in configuration)
-            {
-                PageConfigItem pci = new PageConfigItem() { PageConfig = config };
-                ListOfConfigItems.Items.Add(pci);
-            }
-        }
-
         private void AddPageButton_Click(object sender, RoutedEventArgs e)
         {
             PageConfig pc = new PageConfig();
@@ -66,6 +56,19 @@ namespace GetFacts
             ListOfConfigItems.Items.Add(pci);
             pci.BringIntoView();
             pci.Focus();
+        }
+
+        private void Root_Loaded(object sender, RoutedEventArgs e)
+        {
+            /*if (ListOfConfigItems.Items.Count == 0)
+            {
+                List<PageConfig> configuration = ConfigFactory.Load();
+                foreach (PageConfig config in configuration)
+                {
+                    PageConfigItem pci = new PageConfigItem() { PageConfig = config };
+                    ListOfConfigItems.Items.Add(pci);
+                }
+            }*/
         }
     }
 }

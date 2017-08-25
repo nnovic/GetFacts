@@ -177,7 +177,11 @@ namespace GetFacts.Facts
                     XPathNavigator subTree = nav.SelectSingleNode(sectionTemplate.XPathFilter);
                     string name = sectionTemplate.SectionName;
                     Section s = GetSection(name);
-                    s.Update(subTree, sectionTemplate);
+
+                    if ((subTree != null) && (s != null))
+                    {
+                        s.Update(subTree, sectionTemplate);
+                    }
                 }
                 catch
                 {

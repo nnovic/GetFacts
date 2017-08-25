@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace GetFacts
 {
@@ -254,7 +255,7 @@ namespace GetFacts
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             GetFacts.Facts.Facts.GetInstance().PageRefreshEvent += MainGui_PageRefreshEvent;
-            refreshIndication.Visibility = Visibility.Collapsed;
+            RefreshIndication.Visibility = Visibility.Collapsed;
             NotificationIndication.Visibility = Visibility.Collapsed;
             StartRotationThread();
         }
@@ -262,7 +263,7 @@ namespace GetFacts
         private void MainGui_PageRefreshEvent(object sender, Facts.Facts.PageRefreshEventArgs e)
         {
             Dispatcher.Invoke(() => {
-                refreshIndication.Visibility = e.Begins ? Visibility.Visible : Visibility.Collapsed;
+                RefreshIndication.Visibility = e.Begins ? Visibility.Visible : Visibility.Collapsed;
             });            
         }
 
@@ -294,5 +295,40 @@ namespace GetFacts
                 NotificationIndication.Visibility = v;
             });
         }
+
+        private void ToggleMenuButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ButtonsPanel.Visibility = Visibility.Visible;
+        }
+
+        private void ToggleMenuButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            HideEverythingBut(ToggleMenuButton);
+        }
+
+        private void HideEverythingBut(params UIElement[] doNotHide)
+        {
+            foreach(UIElement control in UserInputsGrid.Children)
+            {
+                if( doNotHide.Contains(control)==false )
+                {
+                    control.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+
+        private void ShowMessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            HideEverythingBut(ToggleMenuButton, ButtonsPanel);
+            NotificationsPanel.Visibility = Visibility.Visible;
+        }
+
+        private void ConfigMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            HideEverythingBut(ToggleMenuButton, ButtonsPanel);
+            ConfigurationPanel.Visibility = Visibility.Visible;
+        }
+
+
     }
 }

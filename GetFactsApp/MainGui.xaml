@@ -10,55 +10,67 @@
 
     <Grid>
         <Image Source="GF_background.jpg" Stretch="UniformToFill" />
+
         <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
-        <StackPanel VerticalAlignment="Bottom">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Border x:Name="refreshIndication" Margin="5,5,0,5" Background="Black">
-                    <TextBlock Margin="5" Foreground="white">Refreshing</TextBlock>
-                </Border>
-                <Border x:Name="NotificationIndication" Margin="5,5,0,5">
-                    <Button x:Name="ShowMessagesButton" Content="Messages" Padding="5">
-                        <!-- cliquer sur le bouton affiche la liste des notifications -->
-                        <Button.Triggers>
-                            <EventTrigger RoutedEvent="Button.Click">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.Target="{x:Reference NotificationsPanel}"
-                                                   Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
-                                                Value="{x:Static Visibility.Visible}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Button.Triggers>
-                    </Button>
-                </Border>
-                <Border Margin="5" Background="Black">
-                    <Button  x:Name="ConfigMenuButton" Padding="5" Content="Config">
-                        <!-- cliquer sur le bouton affiche le panneau de configuration -->
-                        <Button.Triggers>
-                            <EventTrigger RoutedEvent="Button.Click">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.Target="{x:Reference ConfigurationPanel}"
-                                                   Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0"
-                                                Value="{x:Static Visibility.Visible}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Button.Triggers>
-                    </Button>
-                </Border>
-            </StackPanel>
-        </StackPanel>
-        
-        <local:ConfigurationPanel x:Name="ConfigurationPanel" Visibility="Hidden" />
 
-        <local:NotificationsPanel x:Name="NotificationsPanel" Visibility="Hidden" />
+        <Grid x:Name="UserInputsGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
+            <!-- Bouton pour afficher/masquer le menu. Ce bouton contient des indicateurs pour
+                 les notifications et pour le rafraichissement des pages. -->
+            <ToggleButton Padding="10"  x:Name="ToggleMenuButton" Grid.Row="1" Grid.Column="1" Checked="ToggleMenuButton_Checked" Unchecked="ToggleMenuButton_Unchecked" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" BorderBrush="{x:Null}">
+                <ToggleButton.Background>
+                    <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,1">
+                        <GradientStop Color="White"/>
+                        <GradientStop Offset="1"/>
+                        <GradientStop Color="White" Offset="0.3"/>
+                    </LinearGradientBrush>
+                </ToggleButton.Background>
+                <Grid x:Name="ToggleMenuButtonContent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="RefreshIndication" HorizontalAlignment="Center" FontSize="16">[r]</TextBlock>
+                    <TextBlock x:Name="NotificationIndication" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="16">[m]</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="MENU" FontSize="16"/>
+                </Grid>
+            </ToggleButton>
+
+            <!-- bandeau vertical pour les boutons -->
+            <Grid x:Name="ButtonsPanel" Background="Black" Grid.Row="0" Grid.Column="1" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!-- bouton qui permet de passer à la page suivante -->
+                <Button Margin="10">SKIP</Button>
+
+                <!-- bouton qui permet d'afficher le panneau des notifications. -->
+                <Button Margin="10" x:Name="ShowMessagesButton" Grid.Row="1" Content="Messages" Click="ShowMessagesButton_Click"/>
+
+                <!-- bouton qui permet d'afficher la configuration de l'app -->
+                <Button Margin="10" x:Name="ConfigMenuButton" Grid.Row="2" Content="Config" Click="ConfigMenuButton_Click" />
+            </Grid>
+
+            <local:NotificationsPanel Grid.RowSpan="2" x:Name="NotificationsPanel" Visibility="Hidden" />
+
+            <local:ConfigurationPanel Grid.RowSpan="2" x:Name="ConfigurationPanel" Visibility="Hidden" />
+
+        </Grid>
     </Grid>
 
 </Window>
