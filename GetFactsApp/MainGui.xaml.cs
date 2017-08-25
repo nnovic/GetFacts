@@ -27,18 +27,22 @@ namespace GetFacts
 
         #region rotation of pages
 
-        const int TimeoutInterval = 1;
+        const int PauseGranularity_seconds = 1;
         const int DefaultPauseDuration = 10; // secondes
         private Thread rotationThread = null;
         private bool isRotating = false;
         private readonly object pauseLock = new object();
         private uint pauseForZoom_counter = 0;
         private uint pauseForRead_counter = 0;
+        private bool skipOrder = false;
         private Stopwatch chrono = new Stopwatch();
 
         /// <summary>
-        /// 
+        /// Bloque le thread si nécessaire, en fonction des durées min et max
+        /// spécifiées en argument.
         /// </summary>
+        /// <remarks>La durée effective de la pause est mesurée dans la variable 'totalPauseDuration_msec'. le thread appelant restera bloqué tant
+        /// que 'totalPauseDuration_msec' est inférieur à l'équivalent en millisecondes de 'minDuration'.</remarks>
         /// <param name="minDuration">(en secondes)</param>
         /// <param name="maxDuration">(en secondes)</param>
         private void PauseIfRequired(int minDuration, int maxDuration)
@@ -46,7 +50,7 @@ namespace GetFacts
             lock (pauseLock)
             {
                 long remainingTime = maxDuration * 1000;
-                long elapsedTime = 0;
+                long totalPauseDuration_msec = 0; // mesure la durée effective totale de la pause.
                 bool timedOut; 
 
                 chrono.Restart();
@@ -59,12 +63,17 @@ namespace GetFacts
 
                 // ajouter la durée du nettoyage au temps
                 // effectif d'affichage.
-                elapsedTime += chrono.ElapsedMilliseconds;
+                totalPauseDuration_msec += chrono.ElapsedMilliseconds;
 
                 do
                 {                    
-                    chrono.Restart();                    
-                    timedOut = !Monitor.Wait(pauseLock, remainingTime>(TimeoutInterval *1000)? (int)remainingTime:(TimeoutInterval*1000));
+                    chrono.Restart();
+                    timedOut = !Monitor.Wait(pauseLock, remainingTime>(PauseGranularity_seconds *1000)? (int)remainingTime:(PauseGranularity_seconds*1000));
+                    if(skipOrder==true)
+                    {
+                        skipOrder = false;
+                        return;
+                    }
                     chrono.Stop();
 
                     // décompter la durée du blocage du
@@ -77,7 +86,7 @@ namespace GetFacts
                     // si la pause n'est pas provoquée 
                     // par un zoom d'un média
                     if(pauseForZoom_counter==0)
-                        elapsedTime += chrono.ElapsedMilliseconds;
+                        totalPauseDuration_msec += chrono.ElapsedMilliseconds;
 
                     //Console.WriteLine("Pause: RT={0}/{1}, ET={2}/{3}",
                     //    remainingTime, MaxPageDisplayDuration*1000,
@@ -87,7 +96,7 @@ namespace GetFacts
                 || ( (pauseForRead_counter>0) 
                     || (pauseForZoom_counter > 0) 
                     || (remainingTime>0) 
-                    || (elapsedTime<1000*minDuration)) );
+                    || (totalPauseDuration_msec<1000*minDuration)) );
             }
         }
 
@@ -113,6 +122,17 @@ namespace GetFacts
                     case CauseOfFreezing.CursorOnArticle: if(pauseForRead_counter>0) pauseForRead_counter--; break;
                     case CauseOfFreezing.ZoomOnMedia: if(pauseForZoom_counter>0) pauseForZoom_counter--; break;
                 }
+                Monitor.Pulse(pauseLock);
+            }
+        }
+
+        private void Skip()
+        {
+            lock (pauseLock)
+            {
+                pauseForRead_counter = 0;
+                pauseForZoom_counter = 0;
+                skipOrder = true;
                 Monitor.Pulse(pauseLock);
             }
         }
@@ -329,6 +349,9 @@ namespace GetFacts
             ConfigurationPanel.Visibility = Visibility.Visible;
         }
 
-
+        private void SkipButton_Click(object sender, RoutedEventArgs e)
+        {
+            Skip();
+        }
     }
 }

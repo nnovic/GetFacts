@@ -57,7 +57,11 @@
                 </Grid.RowDefinitions>
 
                 <!-- bouton qui permet de passer à la page suivante -->
-                <Button Margin="10">SKIP</Button>
+                <Button x:Name="SkipButton" Margin="10" Click="SkipButton_Click">
+                    <Viewbox>
+                        <Label>SKIP</Label>
+                    </Viewbox>
+                </Button>
 
                 <!-- bouton qui permet d'afficher le panneau des notifications. -->
                 <Button Margin="10" x:Name="ShowMessagesButton" Grid.Row="1" Content="Messages" Click="ShowMessagesButton_Click"/>
