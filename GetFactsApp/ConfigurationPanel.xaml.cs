@@ -60,7 +60,7 @@ namespace GetFacts
 
         private void Root_Loaded(object sender, RoutedEventArgs e)
         {
-            /*if (ListOfConfigItems.Items.Count == 0)
+            if (ListOfConfigItems.Items.Count == 0)
             {
                 List<PageConfig> configuration = ConfigFactory.Load();
                 foreach (PageConfig config in configuration)
@@ -68,7 +68,19 @@ namespace GetFacts
                     PageConfigItem pci = new PageConfigItem() { PageConfig = config };
                     ListOfConfigItems.Items.Add(pci);
                 }
-            }*/
+
+                CacheDirectoryInput.Caption = "Data cache location:";
+                CacheDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultCacheDirectory;
+                CacheDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().CacheDirectory;
+
+                TemplatesDirectoryInput.Caption = "Page templates location:";
+                TemplatesDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultTemplatesDirectory;
+                TemplatesDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().TemplatesDirectory;
+
+                UserDirectoryInput.Caption = "Personal info location:";
+                UserDirectoryInput.DefaultDirectory = "";
+                TemplatesDirectoryInput.CurrentDirectory = "";
+            }
         }
     }
 }

@@ -9,20 +9,24 @@
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="ListOfConfigItems"></ListView>
+        <StackPanel Grid.Row="0" x:Name="PanelFordirectories">
+            <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
+            <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
+            <local:DirectoryInputPanel x:Name="UserDirectoryInput" />
+        </StackPanel>
+        
+        <ListView Grid.Row="1" x:Name="ListOfConfigItems"></ListView>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button x:Name="SaveAndRestartButton" Click="SaveAndRestartButton_Click">Save and restart</Button>
             <Button x:Name="AddPageButton" Click="AddPageButton_Click" >Add</Button>
         </StackPanel>
-        
-        <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-            
-        </StackPanel>
+       
 
     </Grid>
 </UserControl>

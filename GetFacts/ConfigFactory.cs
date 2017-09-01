@@ -84,12 +84,19 @@ namespace GetFacts
             }
         }
 
-        private string DefaultCacheDirectory
+        /// <summary>
+        /// Par défaut, le cache de l'application sera
+        /// stocké dans le sous-répertoire "GetFacts/Cache" 
+        /// du répertoire système "LocalApplicationData"
+        /// de l'utilisateur courant.
+        /// </summary>
+        public string DefaultCacheDirectory
         {
             get
             {
                 string root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 string path = Path.Combine(root, AppDir);
+                path = Path.Combine(path, "Cache");
                 return path;
             }
         }
@@ -139,17 +146,66 @@ namespace GetFacts
         {
             get
             {
-                return DefaultTemplatesDirectory;
+                // essaye de charger la valeur depuis la base de registre:
+                string dir = GetStringFromRegistry("Templates", "Location");
+
+                // sinon, utiliser la valeur par défaut
+                if(string.IsNullOrEmpty(dir))
+                {
+                    dir = DefaultTemplatesDirectory;
+                }
+
+                // créer le répertoire si nécessaire
+                if (Directory.Exists(dir) == false)
+                {
+                    CopyTemplatesTo(dir);
+                }
+
+                return dir;
             }
         }
 
-        private string DefaultTemplatesDirectory
+        private void CopyTemplatesTo(string dst)
+        {
+            string src = InternalTemplatesDirectory;
+            IEnumerable<string> files = Directory.EnumerateFiles(src, "*.json", SearchOption.AllDirectories);
+            foreach(string absoluteSourcePath in files)
+            {
+                string relativeSourcePath = Toolkit.GetRelativePath(absoluteSourcePath, src);
+                string absoluteDestPath = Path.Combine(dst, relativeSourcePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(absoluteDestPath));
+                File.Copy(absoluteSourcePath, absoluteDestPath);
+            }
+        }
+
+        /// <summary>
+        /// Localisation des Templates livrés avec l'application,
+        /// dans le répertoire d'installation de l'application.
+        /// </summary>
+        private string InternalTemplatesDirectory
         {
             get
             {
                 string location = this.GetType().Assembly.Location;
                 string dir = Path.GetDirectoryName(location);
                 string path = Path.Combine(dir, "Templates");
+                return path;
+            }
+        }
+
+        /// <summary>
+        /// Par défault, les templates seront stockés
+        /// dans le sous-répertoire "GetFacts/Templates"
+        /// du répertoire système "LocalApplicationData"
+        /// de l'utilisateur courant.
+        /// </summary>
+        public string DefaultTemplatesDirectory
+        {
+            get
+            {
+                string root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string path = Path.Combine(root, AppDir);
+                path = Path.Combine(path, "Templates");
                 return path;
             }
         }
@@ -184,6 +240,28 @@ namespace GetFacts
             {
                 key.SetValue(valueName, array, RegistryValueKind.MultiString);
             }
+        }
+
+        /// <summary>
+        /// Obtient une string depuis la base de registre
+        /// de l'utilisateur pour cette application.
+        /// </summary>
+        /// <param name="keyPath"></param>
+        /// <param name="valueName"></param>
+        /// <returns></returns>
+        string GetStringFromRegistry(string keyPath, string valueName)
+        {
+            string output = null;
+
+            using (RegistryKey key = GetRegistryKey(keyPath, false))
+            {
+                if (key != null)
+                {
+                    output = key.GetValue(valueName) as string;
+                }
+            }
+
+            return output;
         }
 
         List<string> GetListOfStringsFromRegistry(string keyPath, string valueName)
