@@ -42,6 +42,11 @@
                     <local1:JsonNET />
                 </Viewbox>
             </Border>
+            <Border Grid.Column="1" x:Name="winapi_ad" Margin="10" CornerRadius="10" Background="#FFC7A81E">
+                <Viewbox Margin="10">
+                    <local1:WindowsAPICodePack_Ad/>
+                </Viewbox>
+            </Border>
         </Grid>
     </Grid>
 </Page>
