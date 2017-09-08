@@ -249,7 +249,7 @@ namespace GetFacts
 
         #endregion
 
-        #region removal of unsued files
+        #region removal of unused files
         
         private void RemoveTrash()
         {
