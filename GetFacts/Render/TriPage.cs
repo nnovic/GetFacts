@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GetFacts.Render
 {
@@ -18,6 +19,14 @@ namespace GetFacts.Render
                 //Margin = new System.Windows.Thickness(5)
             };
             base.Embedded = articlesGrid;
+
+            // Note: the follwing is for debugging purpose only,
+            // as no content from a disabled page should
+            // ever be displayed !
+            if(!p.Enabled)
+            {
+                Background = Brushes.Gray;
+            }
         }
 
         #region ICustomPause

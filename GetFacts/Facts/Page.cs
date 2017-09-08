@@ -16,7 +16,6 @@ namespace GetFacts.Facts
     {
         private readonly string pageUrl;
         private readonly Section defaultSection;
-        private bool timerEnabled = false;
 
         public Page(string url)
         {
@@ -31,6 +30,7 @@ namespace GetFacts.Facts
             Parser = new HtmlParser(); 
             Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);            
             RefreshDelay = pc.Refresh * 60;
+            Enabled = pc.Enabled;
 
             if ( string.IsNullOrEmpty(pc.Name)==false )
             {
@@ -68,12 +68,6 @@ namespace GetFacts.Facts
             private set;
         }
 
-        internal bool TimerEnabled
-        {
-            get { return timerEnabled; }
-            set { timerEnabled = value; }
-        }
-
         /// <summary>
         /// delai (en secondes) entre le moment
         /// où le téléchargement du document est terminé
@@ -81,6 +75,12 @@ namespace GetFacts.Facts
         /// et le moment où il va recommencer.
         /// </summary>
         internal int RefreshDelay
+        {
+            get;
+            set;
+        }
+
+        internal bool Enabled
         {
             get;
             set;

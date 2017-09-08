@@ -72,9 +72,16 @@ namespace GetFacts.Facts
                 {                    
                     DownloadTask task = DownloadManager.GetInstance().FindOrQueue(p.BaseUri, p.DefaultFileExtension);
                     downloadTasks.Add(task, p);
-                    task.TaskStarted += Task_TaskStarted;
-                    task.TaskFinished += DownloadTask_TaskFinished;
-                    task.TriggerIfTaskFinished();
+
+                    // Ne pas activer le téléchargement
+                    // périodique de la page si
+                    // elle n'est pas activée:
+                    if (p.Enabled == true)
+                    {
+                        task.TaskStarted += Task_TaskStarted;
+                        task.TaskFinished += DownloadTask_TaskFinished;
+                        task.TriggerIfTaskFinished();
+                    }
                 }
             }
             finally
@@ -370,7 +377,6 @@ namespace GetFacts.Facts
                 }
 
                 pages.Add(p);
-                p.TimerEnabled = true;
             }
         }
 
