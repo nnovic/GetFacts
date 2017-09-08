@@ -100,7 +100,16 @@ namespace GetFacts.Download
         {
             get
             {
-                DownloadTypes.Categories cat = DownloadTypes.Guess(uri.AbsoluteUri);
+                // remove parameters at the end of the Uri
+                // (anything beyond the '?' mark)
+                string strippedAbsoluteUri = uri.AbsoluteUri;
+                int markIndex = uri.AbsoluteUri.LastIndexOf('?');
+                if (markIndex != -1)
+                {
+                    strippedAbsoluteUri = uri.AbsoluteUri.Remove(markIndex);
+                }
+
+                DownloadTypes.Categories cat = DownloadTypes.Guess(strippedAbsoluteUri);
                 switch(cat)
                 {
                     case DownloadTypes.Categories.Text:
@@ -236,7 +245,16 @@ namespace GetFacts.Download
                 string fileName = id.ToString();              
                 string path = Path.Combine(dirName, fileName);
 
-                string extension = Path.GetExtension(uri.AbsoluteUri);
+                // remove parameters at the end of the Uri
+                // (anything beyond the '?' mark)
+                string strippedAbsoluteUri = uri.AbsoluteUri;
+                int markIndex = uri.AbsoluteUri.LastIndexOf('?');
+                if (markIndex != -1)
+                {
+                    strippedAbsoluteUri = uri.AbsoluteUri.Remove(markIndex);
+                }
+
+                string extension = Path.GetExtension(strippedAbsoluteUri);
                 if (string.IsNullOrEmpty(extension))
                     extension = DefaultFileExtension;
                 if (string.IsNullOrEmpty(extension) == false)
