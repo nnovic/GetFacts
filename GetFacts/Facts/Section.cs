@@ -84,9 +84,9 @@ namespace GetFacts.Facts
 
         private void AddOrUpdateArticle(Article tmp)
         {
-            double highestScore = 0;
-            Article bestCandidate = null;
+            double highestScore = 0;            
             const double minimumScore = 0.7;
+            List<Article> articlesThatCannotMatch = new List<Article>();
 
             foreach (Article a in Children)
             {
@@ -95,34 +95,46 @@ namespace GetFacts.Facts
                     if (tmp.Matches(a))
                     {
                         a.Update(tmp);
+                        return;
                     }
-                    else
-                    {
-                        Children.Add(tmp);
-                    }
-                    return;
                 }
-
-                double articleScore = tmp.CalculateResemblance(a);
-                if (articleScore >= minimumScore)
+                else
                 {
-                    if (articleScore > highestScore)
-                    {
-                        highestScore = articleScore;
-                        bestCandidate = a;
-                    }
+                    articlesThatCannotMatch.Add(a);
                 }
             }
 
-            if (bestCandidate == null)
+            if (articlesThatCannotMatch.Any() == false)
             {
                 Children.Add(tmp);
             }
+
             else
             {
-                bestCandidate.Update(tmp);
-            }
+                Article bestCandidate = null;
 
+                foreach (Article a in articlesThatCannotMatch)
+                {
+                    double articleScore = tmp.CalculateResemblance(a);
+                    if (articleScore >= minimumScore)
+                    {
+                        if (articleScore > highestScore)
+                        {
+                            highestScore = articleScore;
+                            bestCandidate = a;
+                        }
+                    }
+                }
+
+                if (bestCandidate == null)
+                {
+                    Children.Add(tmp);
+                }
+                else
+                {
+                    bestCandidate.Update(tmp);
+                }
+            }
         }
 
 
