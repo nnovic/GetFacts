@@ -28,6 +28,7 @@ namespace GetFacts.Render
         private readonly int orderOfAppearance;
         private string browserUrl = null;
         const double textWidthRatio = 0.5;
+        private readonly Brush normalBrush = new SolidColorBrush(Color.FromArgb(0x7F, 0xFF, 0xFF, 0xFF));
 
         public ArticleDisplay(): this(false, 0)
         {
@@ -313,7 +314,7 @@ namespace GetFacts.Render
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            bgBorder.Background = Brushes.Gray;
+            bgBorder.Background = normalBrush;
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
