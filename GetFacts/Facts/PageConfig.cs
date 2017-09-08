@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace GetFacts.Facts
         public PageConfig()
         {
             Refresh = 60;
+            Enabled = true;
         }
 
         public string Name
@@ -31,7 +33,14 @@ namespace GetFacts.Facts
         /// <summary>
         /// (en minutes)
         /// </summary>
+        [DefaultValue(60)]
         public int Refresh
+        {
+            get; set;
+        }
+
+        [DefaultValue(true)]
+        public bool Enabled
         {
             get; set;
         }

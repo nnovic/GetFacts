@@ -2,18 +2,8 @@
 using GetFacts.Parse;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GetFacts
 {
@@ -41,6 +31,7 @@ namespace GetFacts
                 ConfigNameInput.Text = pageConfig.Name;
                 ConfigUrlInput.Text = pageConfig.Url;
                 ConfigTemplateInput.SelectedItem = pageConfig.Template;
+                EnabledCheckBox.IsChecked = pageConfig.Enabled;
             }
         }
 
@@ -160,6 +151,16 @@ namespace GetFacts
                     ConfigUrlInput.Text = pt.Reference;
                 }
             }
+        }
+
+        private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PageConfig.Enabled = true;
+        }
+
+        private void EnabledCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PageConfig.Enabled = false;
         }
     }
 }

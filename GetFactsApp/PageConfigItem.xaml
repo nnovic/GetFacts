@@ -17,7 +17,11 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+
+                <CheckBox x:Name="EnabledCheckBox" Content="Enabled" Checked="EnabledCheckBox_Checked" Unchecked="EnabledCheckBox_Unchecked" />
+
                 <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click">X</Button>
+                
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
