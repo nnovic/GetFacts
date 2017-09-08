@@ -83,6 +83,9 @@
     <Compile Include="Ads\JsonNET_Ad.xaml.cs">
       <DependentUpon>JsonNET_Ad.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ads\WindowsAPICodePack_Ad.xaml.cs">
+      <DependentUpon>WindowsAPICodePack_Ad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigFactory.cs" />
     <Compile Include="DoubleList.cs" />
     <Compile Include="Facts\Article.cs" />
@@ -130,6 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ads\JsonNET_Ad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ads\WindowsAPICodePack_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

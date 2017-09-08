@@ -66,7 +66,26 @@ namespace GetFacts
             }
         }
 
-        private string DefaultConfigFile
+        /// <summary>
+        /// Par défault, les fichiers de configuration seront stockés
+        /// dans le sous-répertoire "GetFacts"
+        /// du répertoire système "LocalApplicationData"
+        /// de l'utilisateur courant.
+        /// </summary>
+        public string DefaultConfigFile
+        {
+            get
+            {
+                //string location = this.GetType().Assembly.Location;
+                // string dir = Path.GetDirectoryName(location);
+                string root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string file = Path.Combine(root, AppDir);
+                file = Path.Combine(file, "DefaultConfig.json");
+                return file;
+            }
+        }
+
+        private string InternalConfigFile
         {
             get
             {
@@ -76,11 +95,32 @@ namespace GetFacts
             }
         }
 
+        private void CopyDefaultConfig(string dst)
+        {
+            string src = InternalConfigFile;
+            File.Copy(src, dst, true);
+        }
+
         public string ConfigFile
         {
             get
             {
-                return DefaultConfigFile;
+                // essaye de charger la valeur depuis la base de registre:
+                string file = GetStringFromRegistry("Configuration", "Location");
+
+                // sinon, utiliser la valeur par défaut
+                if (string.IsNullOrEmpty(file))
+                {
+                    file = DefaultConfigFile;
+                }
+
+                // créer le fichier si nécessaire
+                if (File.Exists(file) == false)
+                {
+                    CopyDefaultConfig(file);
+                }
+
+                return file;
             }
         }
 
