@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Loaded="Root_Loaded">
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="Root_Loaded" Background="White">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -15,12 +15,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" x:Name="PanelFordirectories">
-            <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
-            <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
-            <local:DirectoryInputPanel x:Name="UserDirectoryInput" />
+            <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
+                <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
+            </Border>
+            <Border Background="Cyan"  Margin="3" Padding="3" CornerRadius="3">
+                <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
+            </Border>
+            <Border Background="Cyan"  Margin="3" Padding="3" CornerRadius="3">
+                <local:DirectoryInputPanel x:Name="UserDirectoryInput" />
+            </Border>
+            <Separator/>
         </StackPanel>
-        
-        <ListView Grid.Row="1" x:Name="ListOfConfigItems"></ListView>
+
+        <ListView Grid.Row="1" x:Name="ListOfConfigItems" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"></ListView>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button x:Name="SaveAndRestartButton" Click="SaveAndRestartButton_Click">Save and restart</Button>

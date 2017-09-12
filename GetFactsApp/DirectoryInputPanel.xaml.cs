@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,12 @@ namespace GetFacts
         {
             get { return FullPath.Text; }
             set { FullPath.Text = value; }
+        }
+
+        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            string path = FullPath.Text;
+            Process.Start(path);
         }
     }
 }

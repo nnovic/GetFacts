@@ -78,8 +78,8 @@ namespace GetFacts
                 TemplatesDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().TemplatesDirectory;
 
                 UserDirectoryInput.Caption = "Personal info location:";
-                UserDirectoryInput.DefaultDirectory = "";
-                TemplatesDirectoryInput.CurrentDirectory = "";
+                UserDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultConfigFile;
+                UserDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().ConfigFile;
             }
         }
     }
