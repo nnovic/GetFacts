@@ -9,8 +9,9 @@
 
 
     <Grid>
-        <Image Source="GF_background.jpg" Stretch="UniformToFill" />
 
+        <local:BackgroundControl/>
+        
         <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
 
         <Grid x:Name="UserInputsGrid">
@@ -44,7 +45,9 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" x:Name="RefreshIndication" HorizontalAlignment="Center" FontSize="16">[r]</TextBlock>
                     <TextBlock x:Name="NotificationIndication" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="16">[m]</TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="MENU" FontSize="16"/>
+                    <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" StretchDirection="DownOnly">
+                        <TextBlock HorizontalAlignment="Center" Text="MENU" FontSize="16"/>
+                    </Viewbox>
                 </Grid>
             </ToggleButton>
 
@@ -64,10 +67,18 @@
                 </Button>
 
                 <!-- bouton qui permet d'afficher le panneau des notifications. -->
-                <Button Margin="10" x:Name="ShowMessagesButton" Grid.Row="1" Content="Messages" Click="ShowMessagesButton_Click"/>
+                <Button Margin="10" x:Name="ShowMessagesButton" Grid.Row="1" Click="ShowMessagesButton_Click">
+                    <Viewbox>
+                        <Label>Messages</Label>
+                    </Viewbox>
+                </Button>
 
                 <!-- bouton qui permet d'afficher la configuration de l'app -->
-                <Button Margin="10" x:Name="ConfigMenuButton" Grid.Row="2" Content="Config" Click="ConfigMenuButton_Click" />
+                <Button Margin="10" x:Name="ConfigMenuButton" Grid.Row="2" Click="ConfigMenuButton_Click" >
+                    <Viewbox>
+                        <Label>Config</Label>
+                    </Viewbox>
+                </Button>
             </Grid>
 
             <local:NotificationsPanel Grid.RowSpan="2" x:Name="NotificationsPanel" Visibility="Hidden" />
