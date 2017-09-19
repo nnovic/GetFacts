@@ -26,7 +26,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Root: HKCU; Subkey: "Software\GetFacts\Templates\"; ValueName: "Location"; ValueType: "string";
 
 [Files]
-Source: "C:\Users\alexandre\Documents\GetFacts\Templates\Templates\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "C:\Users\alexandre\Documents\GetFacts\Templates\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Code]
