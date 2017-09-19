@@ -210,12 +210,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Templates\Templates.csproj">
-      <Project>{ddc76b87-e1e6-46d0-85f3-9e81ecddbf28}</Project>
-      <Name>Templates</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Render\GF_logo.png" />
   </ItemGroup>
   <ItemGroup>
