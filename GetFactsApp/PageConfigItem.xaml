@@ -41,7 +41,7 @@
                     <TextBox x:Name="ConfigNameInput" Grid.Row="0" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigNameInput_TextChanged"/>
                     <TextBox x:Name="ConfigUrlInput" Grid.Row="1" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigUrlInput_TextChanged"></TextBox>
                     <ComboBox x:Name="ConfigTemplateInput" Grid.Row="2" Grid.Column="1" Margin="5,3,5,3" SelectionChanged="ConfigTemplateInput_SelectionChanged"></ComboBox>
-                    <Slider Grid.Row="3" Grid.Column="1" Margin="5,3,5,3" IsEnabled="False"></Slider>
+                    <Slider x:Name="DownloadPeriodInput" Grid.Row="3" Grid.Column="1" Margin="5,3,5,3" ></Slider>
                 </Grid>
             </Grid>
         </Border>

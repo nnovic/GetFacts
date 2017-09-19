@@ -29,15 +29,22 @@ namespace GetFacts
 
         public BackgroundControl()
         {
-            bottomBgColor = Colors.DarkGray;
+            bottomBgColor = RandomColor(); 
             bottomFgColor = Lighter(bottomBgColor);
 
-            topBgColor = Colors.LightGray;
+            topBgColor = RandomColor(); 
             topFgColor = Darker(topBgColor);
 
             InitializeComponent();
         }
 
+        private Color RandomColor()
+        {
+            double r = random.NextDouble() * 200.0 + 55.0;
+            double g = random.NextDouble() * 200.0 + 55.0;
+            double b = random.NextDouble() * 200.0 + 55.0;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
