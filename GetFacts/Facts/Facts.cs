@@ -100,14 +100,14 @@ namespace GetFacts.Facts
             DecrementPageRefreshCount();
             DownloadTask task = (DownloadTask)sender;
             Page p = downloadTasks[task] as Page;
-            int delay = p.RecoverDelay * 1000;
+            int delay = p.RecoverDelay * 1000; // valeur en millisecondes
 
             if (task.Status == DownloadTask.DownloadStatus.Completed)
             {
                 p.Update(task.LocalFile);
                 if(task.StartCounter>0)
                 {
-                    delay = p.RefreshDelay * 1000;
+                    delay = p.RefreshDelay * 1000; // valeur en millisecondes
                 }
             }
 

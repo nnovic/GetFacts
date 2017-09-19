@@ -29,7 +29,7 @@ namespace GetFacts.Facts
         {
             Parser = new HtmlParser(); 
             Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);            
-            RefreshDelay = pc.Refresh * 60;
+            RefreshDelay = pc.Refresh * 60; // convertir les minutes en secondes
             Enabled = pc.Enabled;
 
             if ( string.IsNullOrEmpty(pc.Name)==false )
