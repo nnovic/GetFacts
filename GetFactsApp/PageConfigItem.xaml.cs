@@ -17,6 +17,8 @@ namespace GetFacts
         public PageConfigItem()
         {
             InitializeComponent();
+            DownloadPeriodInput.Minimum = PageConfig.MinRefresh;
+            DownloadPeriodInput.Maximum = PageConfig.MaxRefresh;
         }
 
         public PageConfig PageConfig
@@ -28,10 +30,12 @@ namespace GetFacts
             set
             {
                 pageConfig = value;
+
                 ConfigNameInput.Text = pageConfig.Name;
                 ConfigUrlInput.Text = pageConfig.Url;
                 ConfigTemplateInput.SelectedItem = pageConfig.Template;
                 EnabledCheckBox.IsChecked = pageConfig.Enabled;
+                DownloadPeriodInput.Value = pageConfig.Refresh;
             }
         }
 
