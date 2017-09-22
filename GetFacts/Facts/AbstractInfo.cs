@@ -14,9 +14,10 @@ namespace GetFacts.Facts
 
         protected AbstractInfo()
         {
+            IsNewBehavior = IsNewPropertyGets.OldImmediately;
         }
 
-        protected AbstractInfo(string identifier)
+        protected AbstractInfo(string identifier) : this()
         {
             internalIdentifier = identifier;
         }
@@ -86,20 +87,85 @@ namespace GetFacts.Facts
 
         #region Outdated/New
 
+        public enum IsNewPropertyGets
+        {
+            /// <summary>
+            /// IsNew passe immédiatement à false après avoir été lu. C'est le comportement par défaut.
+            /// </summary>
+            OldImmediately,
+
+            /// <summary>
+            /// IsNew ne devrait être forcé à false que lorsque le curseur de la souris
+            /// a survolé le contrôle affichant les données de cet objet.
+            /// </summary>
+            OldOnMouseHover,
+
+            /// <summary>
+            /// IsNew ne devrait être forcé à false que lorsque l'utilisateur clique
+            /// sur le contrôle qui affiche les données de cet objet.
+            /// </summary>
+            OldOnMouseClick,
+
+            /// <summary>
+            /// Is New est passé à false 
+            /// </summary>
+            OldOnRefresh
+        }
+
         public static bool NewStatusForNewInstance = true;
         private bool newContent = NewStatusForNewInstance;
         private bool upToDate = false;
 
+        /// <summary>
+        /// Détermine sous quelle(s) condition(s) les données
+        /// contenues dans cet objet passent de l'état "nouvelles" à
+        /// "vieilles".
+        /// </summary>
+        /// <remarks>Par défaut, IsNewBehavior est initialisé à IsNewPropertyGets.OldImmediately dans
+        /// le constructeur de la classe.</remarks>
+        /// <see cref="IsNewPropertyGets"/>
+        /// <seealso cref="IsNew"/>
+        public IsNewPropertyGets IsNewBehavior
+        {
+            get;
+            set;
+        }
+
+
+        /// <summary>
+        /// Définit si les informations contenues dans cet objet
+        /// sont nouvelles ou pas. Lorsqu'un objet de la classe AbstractInfo est 
+        /// instancié, la valeur initiale de IsNew est la valeur de NewStatusForNewInstance
+        /// (soit "true" par défaut).
+        /// La valeur de IsNewBehavior est utilisée en association avec IsNew
+        /// pour déterminer quand est-ce que les informations cessent d'être "nouvelles".
+        /// </summary>
+        /// <remarks>
+        /// Le "setter" de cette propriété n'accepete que la valeur "false". Il est impossible
+        /// de réaliser "IsNew=true;"
+        /// </remarks>
+        /// <seealso cref="IsNewBehavior"/>
+        /// <see cref="NewStatusForNewInstance"/>
         public bool IsNew
         {
             get
             {
                 if(newContent==true)
                 {
-                    newContent = false;
-                    return true;
+                    switch(IsNewBehavior)
+                    {
+                        default:
+                        case IsNewPropertyGets.OldImmediately:
+                            newContent = false;
+                            return true;
+                    }
                 }
                 return false;
+            }
+            set
+            {
+                if (value == true) throw new ArgumentException();
+                newContent = false;
             }
         }
 
@@ -322,6 +388,11 @@ namespace GetFacts.Facts
             IconUrl = source.IconUrl;
             MediaUrl = source.MediaUrl;
             BrowserUrl = source.BrowserUrl;
+
+            if( (IsNew==true) && (IsNewBehavior== IsNewPropertyGets.OldOnRefresh))
+            {
+                IsNew = false;
+            }
         }
 
         protected void UpdateInfo(XPathNavigator nav, AbstractTemplate template)
@@ -336,6 +407,11 @@ namespace GetFacts.Facts
             IconUrl = template.IconUrlTemplate.Execute(nav);
             MediaUrl = template.MediaUrlTemplate.Execute(nav);
             BrowserUrl = template.BrowserUrlTemplate.Execute(nav);
+
+            if ((IsNew == true) && (IsNewBehavior == IsNewPropertyGets.OldOnRefresh))
+            {
+                IsNew = false;
+            }
         }
         
         /// <summary>

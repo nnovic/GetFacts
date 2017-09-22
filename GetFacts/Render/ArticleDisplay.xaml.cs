@@ -30,6 +30,14 @@ namespace GetFacts.Render
         const double textWidthRatio = 0.5;
         private readonly Brush normalBrush = new SolidColorBrush(Color.FromArgb(0x7F, 0xFF, 0xFF, 0xFF));
 
+        /// <summary>
+        /// Mémorise la référence de l'objet qui contient les
+        /// données à afficher. Cette référence n'est indispensable
+        /// que pour gérer le changement d'état de AbstractInfo.IsNew
+        /// en fonction des actions de l'utilisateur.
+        /// </summary>
+        private Facts.AbstractInfo info = null;
+
         public ArticleDisplay(): this(false, 0)
         {
 
@@ -53,6 +61,12 @@ namespace GetFacts.Render
 
         public void Update(Facts.AbstractInfo info)
         {
+            // Mémorise la référence de l'objet qui contient les
+            // données à afficher. Cette référence n'est indispensable
+            // que pour gérer le changement d'état de AbstractInfo.IsNew
+            // en fonction des actions de l'utilisateur.
+            this.info = info;
+
             if(info.HasContent==false)
             {
                 articleTitle.Text = "(no content to display)";
@@ -265,6 +279,15 @@ namespace GetFacts.Render
 
         private void TextContainer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+
+            // Lorsque l'utilisateur clique sur ce contrôle, alors les données qu'il affiche
+            // deviennent "vieille" (si c'est le comportement choisi par l'utilisateur!).
+            if ((this.info != null)
+                && (this.info.IsNewBehavior == Facts.AbstractInfo.IsNewPropertyGets.OldOnMouseClick))
+            {
+                this.info.IsNew = false;
+            }
+
             if (string.IsNullOrEmpty(browserUrl) == false)
             {
                 Process.Start(browserUrl);
@@ -321,6 +344,14 @@ namespace GetFacts.Render
         {
             bgBorder.Background = Brushes.Yellow;
             this.BeginAnimation(FrameworkElement.MarginProperty, null);
+
+            // Lorsque le curseur de la souris survole ce contrôle, alors les données qu'il affiche
+            // deviennent "vieille" (si c'est le comportement choisi par l'utilisateur!).
+            if((this.info!=null) 
+                && (this.info.IsNewBehavior== Facts.AbstractInfo.IsNewPropertyGets.OldOnMouseHover) )
+            {
+                this.info.IsNew = false;
+            }
         }
     }
 
