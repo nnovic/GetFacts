@@ -22,13 +22,22 @@ namespace GetFacts.Facts
             NotificationSystem.GetInstance().RemoveAll(this);
         }
 
+        /// <summary>
+        /// Permet de transférer le contenu de l'article en paramètre
+        /// dans cette instance. Ce mécanisme est utilisé par 
+        /// Section#AddOrUpdateArticle pour mettre à jour
+        /// un article existant.
+        /// </summary>
+        /// <param name="source"></param>
         internal void Update(Article source)
         {
-            UpdateInfo(source);
+            UpdateInfo(source);            
         }
 
         /// <summary>
-        /// 
+        /// Initialise le contenu de cet article avec les
+        /// infos provenant d'un XPathNavigator, en suivant
+        /// les instructions d'un ArticleTemplate.
         /// </summary>
         /// <param name="nav"></param>
         /// <param name="template"></param>
