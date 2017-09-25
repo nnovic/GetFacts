@@ -58,7 +58,8 @@ namespace GetFacts.Facts
                         XPathNavigator subTree = iter.Current;
                         Article tmp = new Article()
                         {
-                            BaseUri = BaseUri
+                            BaseUri = this.BaseUri,
+                            IsNewBehavior = this.IsNewBehavior
                         };
                         tmp.Update(subTree, articleTemplate);
                         AddOrUpdateArticle(tmp);

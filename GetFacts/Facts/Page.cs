@@ -31,6 +31,7 @@ namespace GetFacts.Facts
             Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);            
             RefreshDelay = pc.Refresh * 60; // convertir les minutes en secondes
             Enabled = pc.Enabled;
+            IsNewBehavior = pc.IsNewBehavior;
 
             if ( string.IsNullOrEmpty(pc.Name)==false )
             {
@@ -237,6 +238,13 @@ namespace GetFacts.Facts
 
         }
 
+        /// <summary>
+        /// Retourne l'instance de Section qui est stocké dans la liste
+        /// à l'index donné en argument.
+        /// </summary>
+        /// <param name="index">Index (à partir de zéro) de l'objet recherché.</param>
+        /// <returns>Instance de Section stocké à l'index spécifié.</returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public Section GetSection(int index)
         {
             if (Children.Count == 0)
@@ -252,6 +260,15 @@ namespace GetFacts.Facts
             }
         }
 
+        /// <summary>
+        /// Permet d'obtenir l'objet Section portant le nom spécifié en paramètre.
+        /// Si aucun nom n'est spécifié (chaine nulle ou vide), une instance par défaut est retournée.
+        /// Si aucune section n'existe avec le nom spécifié, une nouvelle section est créée implicitement avec ce nom.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <remarks>Lors de la création implicite d'une nouvelle section portant le nom passé en argument, les
+        /// champs BaseUri et IsNewBehavior de la section sont initialisés avec les valeurs des propriétés
+        /// homonymes de la Page en cours.</remarks>
         public Section GetSection(string name)
         {
             if( string.IsNullOrEmpty(name) )
@@ -277,7 +294,8 @@ namespace GetFacts.Facts
             {
                 output = new Section(name)
                 {
-                    BaseUri = BaseUri
+                    BaseUri = this.BaseUri,
+                    IsNewBehavior = this.IsNewBehavior
                 };
                 Children.Add(output);
             }

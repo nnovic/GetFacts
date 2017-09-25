@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace GetFacts.Facts
         public PageConfig()
         {
             Enabled = true;
+            IsNewBehavior = AbstractInfo.IsNewPropertyGets.OldImmediately;
         }
 
         public string Name
@@ -92,5 +95,22 @@ namespace GetFacts.Facts
         {
             get; set;
         }
+
+        /// <summary>
+        /// Détermine sous quelle(s) condition(s) les données
+        /// contenues dans cet objet passent de l'état "nouvelles" à
+        /// "vieilles".
+        /// </summary>
+        /// <remarks>Cette propriété initialise la valeur
+        /// de Page.IsNewBehavior dans le constructeur de Page</remarks>
+        /// <see cref="GetFacts.Facts.Page"/>
+        [DefaultValue(AbstractInfo.IsNewPropertyGets.OldImmediately)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AbstractInfo.IsNewPropertyGets IsNewBehavior
+        {
+            get;
+            set;
+        }
+
     }
 }

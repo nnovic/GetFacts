@@ -36,6 +36,7 @@ namespace GetFacts
                 ConfigTemplateInput.SelectedItem = pageConfig.Template;
                 EnabledCheckBox.IsChecked = pageConfig.Enabled;
                 DownloadPeriodInput.Value = pageConfig.Refresh;
+                IsNewBehaviorInput.SelectedValue = pageConfig.IsNewBehavior;
             }
         }
 
@@ -45,6 +46,8 @@ namespace GetFacts
             {
                 ConfigTemplateInput.Items.Add(t);
             }
+
+            IsNewBehaviorInput.ItemsSource = Enum.GetValues(typeof(AbstractInfo.IsNewPropertyGets));
         }
 
 
@@ -165,6 +168,11 @@ namespace GetFacts
         private void EnabledCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             PageConfig.Enabled = false;
+        }
+
+        private void IsNewBehaviorInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            pageConfig.IsNewBehavior = (AbstractInfo.IsNewPropertyGets)IsNewBehaviorInput.SelectedItem;
         }
     }
 }
