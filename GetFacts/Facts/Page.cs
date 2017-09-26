@@ -168,8 +168,15 @@ namespace GetFacts.Facts
         private void Update(XPathNavigator nav)
         {            
             BeginUpdate();
-
+            
             UpdateInfo(nav, Template);
+
+            // Si jamais la page n'a pas de titre à l'issu
+            // de l'analyse, on propose le nom 
+            if( string.IsNullOrEmpty(this.Title) )
+            {
+                this.Title = PageName;
+            }
 
             foreach (SectionTemplate sectionTemplate in Template.Sections)
             {

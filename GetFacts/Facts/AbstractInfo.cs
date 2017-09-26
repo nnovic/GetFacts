@@ -90,6 +90,11 @@ namespace GetFacts.Facts
         public enum IsNewPropertyGets
         {
             /// <summary>
+            /// IsNew retourne systématiquement false.
+            /// </summary>
+            NeverNew,
+
+            /// <summary>
             /// IsNew passe immédiatement à false après avoir été lu. C'est le comportement par défaut.
             /// </summary>
             OldImmediately,
@@ -158,6 +163,10 @@ namespace GetFacts.Facts
                         case IsNewPropertyGets.OldImmediately:
                             newContent = false;
                             return true;
+
+                        case IsNewPropertyGets.NeverNew:
+                            newContent = false;
+                            return false;
                     }
                 }
                 return false;
