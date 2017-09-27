@@ -43,6 +43,21 @@ namespace GetFacts.Render
             }));
         }
 
+        public void ShowMedia(string file)
+        {
+            try
+            {
+                articleMedia.Visibility = Visibility.Visible;
+                articleMedia.IsMuted = true;
+                articleMedia.Source = new Uri(file, UriKind.Absolute);
+                progressContainer.Visibility = Visibility.Hidden;
+            }
+            // Since the action is executed asynchronously, the Dispatcher
+            // might execute the above code at a time when mediaTask has
+            // already become invalid. Just ignore all errors.
+            catch { }
+        }
+
         public void ShowImage(string file)
         {
             try

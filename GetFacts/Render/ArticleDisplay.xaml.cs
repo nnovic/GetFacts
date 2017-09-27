@@ -80,13 +80,7 @@ namespace GetFacts.Render
 
             browserUrl = info.BrowserUri?.AbsoluteUri;
 
-            if (string.IsNullOrEmpty(info.IconUrl) == false)
-            {
-                iconTask = DownloadManager.GetInstance().FindOrQueue(info.IconUri,null);
-                iconTask.TaskFinished += IconTask_TaskFinished;
-                iconTask.PropertyChanged += IconTask_PropertyChanged;
-                iconTask.TriggerIfTaskFinished();
-            }
+            StartIconTask();
 
             if( string.IsNullOrEmpty(browserUrl)==false)
             {
@@ -108,19 +102,36 @@ namespace GetFacts.Render
             }
         }
 
-        private void IconTask_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        #region downloads
+
+        #region icon 
+
+        private DownloadTask iconTask;
+
+        private void StartIconTask()
         {
-            if( e.PropertyName=="Progress")
+            if (string.IsNullOrEmpty(info.IconUrl) == false)
             {
-                int progress = iconTask.Progress;
-                mediaDisplay.ShowProgress(progress);
+                iconTask = DownloadManager.GetInstance().FindOrQueue(info.IconUri,null);
+                iconTask.TaskFinished += IconTask_TaskFinished;
+                iconTask.PropertyChanged += IconTask_PropertyChanged;
+                iconTask.TriggerIfTaskFinished();
+            }  
+            else
+            {
+                StartMediaTask();
             }
         }
 
-
-        #region downloads
-
-        private DownloadTask iconTask;
+        private void CleanIconTask()
+        {
+            if(iconTask != null)
+            {
+                iconTask.TaskFinished -= IconTask_TaskFinished;
+                iconTask.PropertyChanged -= IconTask_PropertyChanged;
+                iconTask = null;
+            }
+        }
 
         private void IconTask_TaskFinished(object sender, EventArgs e)
         {
@@ -134,8 +145,70 @@ namespace GetFacts.Render
                 {
                 }
             }), null);
-            
+
+            StartMediaTask();
         }
+
+        private void IconTask_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Progress")
+            {
+                int progress = iconTask.Progress;
+                mediaDisplay.ShowProgress(progress);
+            }
+        }
+
+        #endregion
+
+        #region media 
+
+        private DownloadTask mediaTask;
+
+        private void StartMediaTask()
+        {
+            if (string.IsNullOrEmpty(info.MediaUrl) == false)
+            {
+                mediaTask = DownloadManager.GetInstance().FindOrQueue(info.MediaUri, null);
+                mediaTask.TaskFinished += MediaTask_TaskFinished;
+                mediaTask.PropertyChanged += MediaTask_PropertyChanged;
+                mediaTask.TriggerIfTaskFinished();
+            }
+        }
+
+        private void CleanMediaTask()
+        {
+            if (mediaTask != null)
+            {
+                mediaTask.TaskFinished -= MediaTask_TaskFinished;
+                mediaTask.PropertyChanged -= MediaTask_PropertyChanged;
+                mediaTask = null;
+            }
+        }
+
+        private void MediaTask_TaskFinished(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                try
+                {
+                    mediaDisplay.ShowMedia(mediaTask.LocalFile);
+                }
+                catch
+                {
+                }
+            }), null);
+        }
+
+        private void MediaTask_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Progress")
+            {
+                int progress = mediaTask.Progress;
+                mediaDisplay.ShowProgress(progress);
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -234,12 +307,8 @@ namespace GetFacts.Render
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            if(iconTask!=null)
-            {
-                iconTask.TaskFinished -= IconTask_TaskFinished;
-                iconTask.PropertyChanged -= IconTask_PropertyChanged;
-                iconTask = null;
-            }
+            CleanIconTask();
+            CleanMediaTask();
         }
 
         private void UserControl_Initialized(object sender, EventArgs e)

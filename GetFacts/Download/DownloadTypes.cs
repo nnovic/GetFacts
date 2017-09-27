@@ -33,6 +33,10 @@ namespace GetFacts.Download
                 case ".png":               
                     return Categories.Image;
 
+                case ".avi":
+                case ".mp4":
+                    return Categories.Video;
+
                 default:
                     return Categories.Undefined;
             }
