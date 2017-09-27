@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 using System.Xml.XPath;
 
 namespace GetFacts.Parse
@@ -55,7 +56,7 @@ namespace GetFacts.Parse
             if (string.IsNullOrEmpty(XPath))
                 return string.Empty;
 
-            XPathNavigator node = nav.SelectSingleNode(XPath);
+            XPathNavigator node = nav.SelectSingleNode(XPath, (IXmlNamespaceResolver)nav );
             if (node == null)
                 return string.Empty;
 
