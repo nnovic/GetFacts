@@ -227,12 +227,44 @@ namespace GetFacts.Parse
         }
 
         /// <summary>
+        /// Opération récursive qui parcourt l'arbre démarrant à 'node',
+        /// et crée dans 'parent' un TreeViewItem approprié.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
+        /// <seealso cref="XmlNode_To_Flow"/>
+        void XmlNode_To_TreeView(XmlNode node, TreeViewItem parent)
+        {
+            if (node.NodeType == XmlNodeType.Element)
+            {
+                TreeViewItem tvi = XmlNode_To_TreeViewItem(node);
+                parent.Items.Add(tvi);
+
+                // PROCESS CHILDREN
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    XmlNode_To_TreeView(child, tvi);
+                }
+            }
+
+            else if (node.NodeType == XmlNodeType.Text)
+            {
+                TreeViewItem tvi = Text_To_TreeViewItem(node.OuterXml, node);
+                if (tvi != null)
+                {
+                    parent.Items.Add(tvi);
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Crée un TreeViewItem qui permet de rendre le contenu
-        /// du XmlElement passé en argument.
+        /// du XmlNode passé en argument.
         /// </summary>
         /// <param name="xmlNode"></param>
         /// <returns></returns>
-        private TreeViewItem XmlElement_To_TreeViewItem(XmlElement xmlNode)
+        private TreeViewItem XmlNode_To_TreeViewItem(XmlNode xmlNode)
         {
             Run header = new Run(xmlNode.Name);
             TreeViewItem nodeItem = AddTreeNode(header, xmlNode);

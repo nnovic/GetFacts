@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -370,6 +371,49 @@ namespace GetFacts.Parse
             return treeNode;
         }
 
+        protected TreeViewItem Text_To_TreeViewItem(string originalText, object o)
+        {
+            if (originalText == null)
+                return null;
+
+            string trimmedText = originalText.Trim();
+
+            string compressedText = Regex.Replace(trimmedText, @"\s+", @" ");
+
+            if (string.IsNullOrEmpty(compressedText))
+                return null;
+
+            Span header = new Span()
+            {
+                //FontFamily = textFontFamily,
+                //Foreground = defaultColor
+            };
+
+            // Nom du noeud html: "#text"
+            // Nom du noeud xpath : "text()"
+            Run nodeName = new Run("text()")
+            {
+                //FontSize = nodenameFontSize,
+                //Foreground = IsNodeMeaningless(node) ? defaultColor : textColor
+            };
+            header.Inlines.Add(nodeName);
+
+            header.Inlines.Add(new LineBreak());
+            header.Inlines.Add(new Run("| "));
+
+            Run textRun = new Run(compressedText)
+            {
+                //Foreground = textColor,
+                //FontSize = textFontSize,
+                FontStyle = FontStyles.Italic
+            };
+            header.Inlines.Add(textRun);
+
+            /*TreeViewItem tvi = new TreeViewItem();
+            tvi.Header = header;
+            return tvi;*/
+            return AddTreeNode(header, o);
+        }
 
         #endregion
 

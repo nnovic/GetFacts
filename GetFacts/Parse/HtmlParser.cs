@@ -265,50 +265,6 @@ namespace GetFacts.Parse
             return root;
         }
         
-        private TreeViewItem HtmlText_To_TreeViewItem(HtmlNode node)
-        {
-            string originalText = node.InnerText;
-            if (originalText == null)
-                return null;
-
-            string trimmedText = originalText.Trim();
-
-            string compressedText = Regex.Replace(trimmedText, @"\s+", @" ");
-
-            if (string.IsNullOrEmpty(compressedText))
-                return null;
-
-            Span header = new Span()
-            {
-                //FontFamily = textFontFamily,
-                //Foreground = defaultColor
-            };
-
-            // Nom du noeud html: "#text"
-            // Nom du noeud xpath : "text()"
-            Run nodeName = new Run("text()")
-            {
-                //FontSize = nodenameFontSize,
-                //Foreground = IsNodeMeaningless(node) ? defaultColor : textColor
-            };
-            header.Inlines.Add(nodeName);
-
-            header.Inlines.Add(new LineBreak());
-            header.Inlines.Add(new Run("| "));
-
-            Run textRun = new Run(compressedText)
-            {
-                //Foreground = textColor,
-                //FontSize = textFontSize,
-                FontStyle = FontStyles.Italic
-            };
-            header.Inlines.Add(textRun);
-
-            /*TreeViewItem tvi = new TreeViewItem();
-            tvi.Header = header;
-            return tvi;*/
-            return AddTreeNode(header, node);
-        }
 
         /// <summary>
         /// Crée un TreeViewItem qui permet de rendre le contenu
@@ -358,7 +314,7 @@ namespace GetFacts.Parse
 
             else if(node.NodeType==HtmlNodeType.Text)
             {
-                TreeViewItem tvi = HtmlText_To_TreeViewItem(node);
+                TreeViewItem tvi = Text_To_TreeViewItem(node.InnerText, node);
                 if (tvi != null)
                 {
                     parent.Items.Add(tvi);
