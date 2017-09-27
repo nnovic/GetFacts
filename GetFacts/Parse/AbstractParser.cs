@@ -25,9 +25,17 @@ namespace GetFacts.Parse
     public abstract class AbstractParser : IXPathNavigable
     {
         /// <summary>
-        /// 
+        /// Lit et charge en mémoire les données contenues dans le fichier spécifié
+        /// par le paramètre "path". Ces données seront stockées dans une structure
+        /// arborescente appropriée, comme par exemple un XmlDocument pour les fichiers
+        /// XML. Cette structure arborescente sera ensuite parcourue à la recherche
+        /// des informations pertinentes pour l'utilisateur.
+        /// Le fichier source sera généralement un fichier texte, donc il faut gérer
+        /// l'Encoding. Par défaut, l'auto-détection de l'encoding sera utilisée, mais
+        /// on doit pouvoir forcer un autre encoding si le résultat de l'auto-détection
+        /// n'est pas satisfaisant.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Le chemin absolu du fichier contenant les données à analyser</param>
         /// <param name="encoding">Si null, l'encoding sera déterminé
         /// automatiquement</param>
         public abstract void Load(string path, Encoding encoding);
@@ -36,9 +44,11 @@ namespace GetFacts.Parse
         /// Retourne une liste des extensions de fichier
         /// qui sont le plus couramment associées au
         /// type de resource qui est analysée par
-        /// ce Parser.
+        /// ce Parser. Cette liste doit être triée de l'extension 
+        /// la plus courante à la moins courante.
+        /// Les extensions doivent commencer par le '.' de séparation.
         /// </summary>
-        /// <remarks>Should be ordering from most common to less common file extension.</remarks>
+        /// <remarks>En pratique, c'est la toute première extension de cette liste qui sera utilisée.</remarks>
         /// <example>HtmlParser retournera {".html", ".htm"}</example>
         public abstract string[] UsualFileExtensions
         {
@@ -233,8 +243,32 @@ namespace GetFacts.Parse
             return flowDoc;
         }
 
+        /// <summary>
+        /// Cette méthode doit être implémentée par la classe fille.
+        /// Son rôle est de remplir un FlowDocument dont le contenu reflête 
+        /// le plus fidèlement possible les données structurées actuellement
+        /// chargée, afin de les présenter sous forme de texte avec mise en forme
+        /// et coloration syntaxique intelligente. 
+        /// Cette méthode parcourera de façon systématique tous les noeuds de
+        /// l'arborescence de données et produira des TextElement qui seront
+        /// insérés dans le FlowDocument en utilisant "rootSpan" comme racine.
+        /// </summary>
+        /// <param name="rootSpan">racine pour insérer les TextElement qui
+        /// constituent le flow document résultant de l'opération.</param>
+        /// <seealso cref="AddHyperlink"/>
+        /// <seealso cref="AddTextElement"/>
         protected abstract void FillSourceCode(Span rootSpan);
 
+        protected void InsertText(Span parent, string text, object o)
+        {
+            text = text.Trim();
+
+            if (string.IsNullOrEmpty(text) == false)
+            {
+                Hyperlink hlink = AddHyperlink(text, o);
+                parent.Inlines.Add(hlink);
+            }
+        }
 
         protected Hyperlink AddHyperlink(string text, object o)
         {
@@ -310,6 +344,7 @@ namespace GetFacts.Parse
                 if (sourceTreeRoot == null)
                 {
                     sourceTreeRoot = CreateSourceTree();
+                    sourceTreeRoot.ExpandSubtree();
                 }
                 return sourceTreeRoot;
             }
@@ -429,7 +464,8 @@ namespace GetFacts.Parse
                         where t.IsSubclassOf(typeof(AbstractParser)) && t.IsAbstract == false
                         select t;
 
-            Type parserType = types.ElementAt(0);
+            var type = from t in types where t.Name.Equals(name) select t;
+            Type parserType = type.First<Type>();
 
             ConstructorInfo ci = parserType.GetConstructor(Type.EmptyTypes);
             object parser = ci.Invoke(null);

@@ -22,6 +22,13 @@ namespace GetFacts.Parse
             htmlDoc = new HtmlDocument();
         }
 
+        /// <summary>
+        /// Lit et charge dans un HtmlDocument les données contenues dans le fichier
+        /// HTML spécifié par le paramètre "path".
+        /// </summary>
+        /// <param name="path">Le chemin absolu du fichier contenant les données à analyser</param>
+        /// <param name="encoding">Si null, l'encoding sera déterminé
+        /// automatiquement</param>
         public override void Load(string path, Encoding encoding)
         {
             Clear();
@@ -36,25 +43,15 @@ namespace GetFacts.Parse
         }
 
         /// <summary>
-        /// 
+        /// Retourne une liste des extensions de fichier
+        /// qui sont le plus couramment associées au
+        /// format HTML.
         /// </summary>
-        /// <remarks>Should be ordering from most common to less common file extension.</remarks>
+        /// <remarks>Cette instace retournera {".html", ".htm"}</remarks>
         public override string[] UsualFileExtensions
         {
             get { return new string[] { ".html", ".htm" }; }
         }
-
-
-        public override void Clear()
-        {
-            base.Clear();
-            /*if( htmlDoc!=null)
-            {
-                htmlDoc = null;
-            }*/
-        }
-
-
 
         #region styling
 
@@ -174,7 +171,7 @@ namespace GetFacts.Parse
             {
                 case HtmlNodeType.Comment:
                 case HtmlNodeType.Text:
-                    HtmlText_To_Run(node, parent);
+                    InsertText(parent, node.InnerText, node);
                     return;
             }
 
@@ -247,51 +244,12 @@ namespace GetFacts.Parse
 
             Run r3 = new Run("\"");
             parent.Inlines.Add(r3);
-        }
-
-        void HtmlText_To_Run(HtmlNode node, Span parent)
-        {
-            string text = node.InnerText;
-
-            text = text.Trim();
-
-            if (string.IsNullOrEmpty(text) == false)
-            {
-                Hyperlink hlink = AddHyperlink(text, node);
-                //hlink.Foreground = defaultColor;
-
-                /*if (string.Compare(node.ParentNode.Name, "script", true) == 0)
-                {
-                    hlink.FontFamily = scriptFontFamily;
-                    hlink.Foreground = scriptColor;
-                }
-                else if (string.Compare(node.ParentNode.Name, "style", true) == 0)
-                {
-                    hlink.Foreground = styleColor;
-                }
-                else
-                {
-                    if (node.NodeType == HtmlNodeType.Text)
-                    {
-                        hlink.Foreground = textColor;
-                        hlink.FontFamily = textFontFamily;
-                        hlink.FontSize = textFontSize;
-                    }
-                    else if (node.NodeType == HtmlNodeType.Comment)
-                    {
-                        hlink.Foreground = commentColor;
-                    }
-                }*/
-                parent.Inlines.Add(hlink);
-            }
-        }
+        }       
 
         #endregion
 
         
         #region tree
-
-        private readonly double nodenameFontSize = XL_FONT_SIZE;
 
         protected override TreeViewItem CreateSourceTree()
         {
@@ -304,37 +262,9 @@ namespace GetFacts.Parse
                 HtmlNode_To_TreeView(child, root);
             }
 
-            root.ExpandSubtree();
-
             return root;
         }
-
-
-        /*private void AppendAttributesToSpan(HtmlNode node, Span parent, bool providingCluesFiltering)
-        {
-            foreach (HtmlAttribute attr in node.Attributes)
-            {
-                //if (IsAttributeProvidingClues(attr) == providingCluesFiltering)
-                {
-                    parent.Inlines.Add(new LineBreak());
-                    parent.Inlines.Add(new Run("| ") { });
-
-                    Span span = new Span();
-                    span.Inlines.Add(new Run(string.Format("@{0}", attr.Name)) { });
-                    span.Inlines.Add(new Run(" = ") { });
-                    span.Inlines.Add(new Run("\"") { });
-                    span.Inlines.Add(new Run(attr.Value) { });
-                    span.Inlines.Add(new Run("\"") { });
-                    parent.Inlines.Add(span);
-
-                    if( providingCluesFiltering==true )
-                    {
-                        span.Foreground = Brushes.Orange;
-                    }
-                }
-            }
-        }*/
-
+        
         private TreeViewItem HtmlText_To_TreeViewItem(HtmlNode node)
         {
             string originalText = node.InnerText;
@@ -388,24 +318,8 @@ namespace GetFacts.Parse
         /// <returns></returns>
         private TreeViewItem HtmlElement_To_TreeViewItem(HtmlNode htmlNode)
         {
-            /*Span header = new Span()
-            {
-                //FontFamily = defaultFontFamily,
-                //FontSize = defaultFontSize,
-                //Foreground = defaultColor
-            };
-      
-            // Nom du noeud. Ex: "DIV"
-            Run nodeName = new Run(node.Name)
-            {
-                FontSize = nodenameFontSize,
-                //Foreground = IsNodeMeaningless(node) ? defaultColor : Brushes.Blue
-            };
-            header.Inlines.Add(nodeName);*/
-
             Run header = new Run(htmlNode.Name);
             TreeViewItem nodeItem = AddTreeNode(header, htmlNode);
-
 
             // Attributs du noeud:
             foreach (HtmlAttribute attributeNode in htmlNode.Attributes)
@@ -417,17 +331,6 @@ namespace GetFacts.Parse
                 TreeViewItem attributeItem = AddTreeNode(attribute, attributeNode);
                 nodeItem.Items.Add(attributeItem);
             }
-
-
-
-            // mettre en priorité les attributs intéressants:
-            //AppendAttributesToSpan(htmlNode, nodeItem, header, true);
-            //AppendAttributesToSpan(node, header, false);          
-
-            /*TreeViewItem tvi = new TreeViewItem();
-            tvi.Header = header;
-            return tvi;*/
-            //return AddTreeNode(header, node);
 
             return nodeItem;
         }
