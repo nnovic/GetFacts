@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace GetFacts.Render
 {
@@ -20,6 +21,8 @@ namespace GetFacts.Render
     /// </summary>
     public partial class MediaDisplay : UserControl
     {
+        private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
+
         public MediaDisplay()
         {
             InitializeComponent();
@@ -38,8 +41,8 @@ namespace GetFacts.Render
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                progressContainer.Visibility = Visibility.Visible;
-                progressValue.Text = string.Format("{0} %", progress);
+                downloadProgressContainer.Visibility = Visibility.Visible;
+                downloadProgressValue.Text = string.Format("{0} %", progress);
             }));
         }
 
@@ -49,7 +52,7 @@ namespace GetFacts.Render
             {
                 articleMedia.Visibility = Visibility.Visible;
                 articleMedia.Source = new Uri(file, UriKind.Absolute);
-                progressContainer.Visibility = Visibility.Hidden;
+                downloadProgressContainer.Visibility = Visibility.Hidden;
             }
             // Since the action is executed asynchronously, the Dispatcher
             // might execute the above code at a time when mediaTask has
@@ -66,7 +69,7 @@ namespace GetFacts.Render
                 bmpI.UriSource = new Uri(file, UriKind.RelativeOrAbsolute);
                 bmpI.EndInit();
                 articleIcon.Source = bmpI;
-                progressContainer.Visibility = Visibility.Hidden;
+                downloadProgressContainer.Visibility = Visibility.Hidden;
             }
             // Since the action is executed asynchronously, the Dispatcher
             // might execute the above code at a time when iconTask has
@@ -76,7 +79,9 @@ namespace GetFacts.Render
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
-            progressContainer.Visibility = Visibility.Hidden;
+            downloadProgressContainer.Visibility = Visibility.Hidden;
+            mediaProgressContainer.Visibility = Visibility.Hidden;
+            dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
@@ -88,5 +93,39 @@ namespace GetFacts.Render
         {
             articleMedia.IsMuted = true;
         }
+
+        #region timer management
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            TimeSpan ts = articleMedia.Position;
+            double secondes = ts.TotalSeconds;
+            mediaProgressValue.Value = secondes;
+            mediaProgressContainer.Visibility = Visibility.Visible;
+        }
+
+        private void ArticleMedia_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            Duration d = articleMedia.NaturalDuration;
+            TimeSpan ts = d.TimeSpan;
+            double secondes = ts.TotalSeconds;
+            mediaProgressValue.Maximum = secondes;
+            mediaProgressValue.Value = 0;
+            dispatcherTimer.Start();
+        }
+
+        private void ArticleMedia_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            dispatcherTimer.Stop();
+        }
+
+        private void ArticleMedia_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            dispatcherTimer.Stop();
+            mediaProgressContainer.Visibility = Visibility.Hidden;
+        }
+        #endregion
+
+
     }
 }
