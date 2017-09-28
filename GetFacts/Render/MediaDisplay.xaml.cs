@@ -48,7 +48,6 @@ namespace GetFacts.Render
             try
             {
                 articleMedia.Visibility = Visibility.Visible;
-                articleMedia.IsMuted = true;
                 articleMedia.Source = new Uri(file, UriKind.Absolute);
                 progressContainer.Visibility = Visibility.Hidden;
             }
@@ -78,6 +77,16 @@ namespace GetFacts.Render
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             progressContainer.Visibility = Visibility.Hidden;
+        }
+
+        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            articleMedia.IsMuted = false;
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            articleMedia.IsMuted = true;
         }
     }
 }
