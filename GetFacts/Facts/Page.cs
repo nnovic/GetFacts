@@ -26,9 +26,9 @@ namespace GetFacts.Facts
         }
 
         public Page(PageConfig pc):this(pc.Url)
-        {
-            Parser = new HtmlParser(); 
-            Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);            
+        {            
+            Template = TemplateFactory.GetInstance().GetExistingTemplate(pc.Template);
+            Parser = AbstractParser.NewInstance(Template.PageType);
             RefreshDelay = pc.Refresh * 60; // convertir les minutes en secondes
             Enabled = pc.Enabled;
             IsNewBehavior = pc.IsNewBehavior;

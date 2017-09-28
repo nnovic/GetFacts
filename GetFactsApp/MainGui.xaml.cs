@@ -309,11 +309,18 @@ namespace GetFacts
         /// <seealso cref="NotificationSystem"/>
         private void Notifications_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            int count = NotificationSystem.GetInstance().Notifications.Count;
-            Visibility v = count > 0 ? Visibility.Visible : Visibility.Collapsed;
-            Dispatcher.Invoke(() => {
-                NotificationIndication.Visibility = v;
-            });
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                try
+                {
+                    int count = NotificationSystem.GetInstance().Notifications.Count;
+                    Visibility v = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                    NotificationIndication.Visibility = v;
+                }
+                catch
+                {
+                }
+            }), null);
         }
 
         private void ToggleMenuButton_Checked(object sender, RoutedEventArgs e)

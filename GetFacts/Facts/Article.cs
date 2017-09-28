@@ -51,7 +51,7 @@ namespace GetFacts.Facts
                 (int)NotificationKeys.ArticleUpdateError)
             {
                 Title = Identifier,
-                Description = "Update error."
+                Description = "Article update error."
             };
 
             try
@@ -59,8 +59,14 @@ namespace GetFacts.Facts
                 UpdateInfo(nav, template);
                 NotificationSystem.GetInstance().Remove(notification);
             }
-            catch
+            catch(Exception e)
             {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(notification.Description);
+                sb.AppendFormat("{0} occured while parsing data from {1}.",
+                    e.GetType().Name, this.BaseUri.ToString()).AppendLine();
+                sb.AppendFormat("The original error message is: \"{0}\"", e.Message);
+                notification.Description = sb.ToString();
                 NotificationSystem.GetInstance().Add(notification);
             }
         }
