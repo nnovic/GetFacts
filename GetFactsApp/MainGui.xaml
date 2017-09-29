@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing" Initialized="Window_Initialized">
 
-
     <Grid>
 
         <local:BackgroundControl/>
@@ -86,6 +85,11 @@
             <local:ConfigurationPanel Grid.RowSpan="2" x:Name="ConfigurationPanel" Visibility="Hidden" />
 
         </Grid>
+
+        <StackPanel Margin="3" VerticalAlignment="Bottom">
+            <ProgressBar x:Name="timerProgressValue"/>
+        </StackPanel>
+        
     </Grid>
 
 </Window>

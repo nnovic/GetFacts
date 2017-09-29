@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace GetFacts
 {
@@ -19,10 +20,24 @@ namespace GetFacts
     public partial class MainGui : Window
     {
 
+        private readonly DispatcherTimer progressBarTimer;
+        private const double progressBarResolution = 0.25;
+
         public MainGui()
         {
             InitializeComponent();
             navigator.Navigate(new WelcomePage());
+
+            progressBarTimer = new DispatcherTimer();
+            progressBarTimer.Tick += ProgressBarTimer_Tick;
+            progressBarTimer.Interval = TimeSpan.FromSeconds(progressBarResolution);
+        }
+
+        private void ProgressBarTimer_Tick(object sender, EventArgs e)
+        {
+            double value = timerProgressValue.Value;
+            value = Math.Min(value + progressBarResolution, timerProgressValue.Maximum);
+            timerProgressValue.Value = value;
         }
 
         #region rotation of pages
@@ -88,10 +103,6 @@ namespace GetFacts
                     if(pauseForZoom_counter==0)
                         totalPauseDuration_msec += chrono.ElapsedMilliseconds;
 
-                    //Console.WriteLine("Pause: RT={0}/{1}, ET={2}/{3}",
-                    //    remainingTime, MaxPageDisplayDuration*1000,
-                    //    elapsedTime,MinPageDisplayDuration*1000);
-
                 } while( (timedOut==false) 
                 || ( (pauseForRead_counter>0) 
                     || (pauseForZoom_counter > 0) 
@@ -149,7 +160,23 @@ namespace GetFacts
             {
                 try
                 {
+                    Dispatcher.Invoke(()=> 
+                    {
+                        timerProgressValue.Minimum = 0;
+                        timerProgressValue.Maximum = maxPauseDuration;
+                        timerProgressValue.Value = 0;
+                        progressBarTimer.Start();
+                    });
+                    
                     PauseIfRequired(minPauseDuration, maxPauseDuration);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        progressBarTimer.Stop();
+                        timerProgressValue.Minimum = 0;
+                        timerProgressValue.Maximum = maxPauseDuration;
+                        timerProgressValue.Value = 0;                        
+                    });
 
                     Dispatcher.Invoke(() => 
                     {
