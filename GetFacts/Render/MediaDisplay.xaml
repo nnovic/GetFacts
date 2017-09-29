@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts.Render"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" >
+             d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" Unloaded="UserControl_Unloaded" >
     <Grid>
         <Image Margin="5" x:Name="articleIcon" Source="GF_logo.png" />
-        <MediaElement Margin="5" x:Name="articleMedia" Visibility="Hidden" IsMuted="True" MediaOpened="ArticleMedia_MediaOpened" MediaFailed="ArticleMedia_MediaFailed" MediaEnded="ArticleMedia_MediaEnded" />
+        <MediaElement Margin="5" x:Name="articleMedia" Visibility="Hidden" IsMuted="True" MediaOpened="ArticleMedia_MediaOpened" MediaFailed="ArticleMedia_MediaFailed" MediaEnded="ArticleMedia_MediaEnded" LoadedBehavior="Manual" Loaded="ArticleMedia_Loaded" ScrubbingEnabled="True" UnloadedBehavior="Manual" />
         <StackPanel x:Name="downloadProgressContainer" VerticalAlignment="Bottom" Margin="5,5,5,5" HorizontalAlignment="Center">
             <Border  Background="White" Opacity="0.5" CornerRadius="5">
                 <Border.Effect>

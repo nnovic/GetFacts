@@ -12,6 +12,12 @@ namespace GetFacts.Render
     {
         private Grid articlesGrid;
 
+        ~TriPage()
+        {
+            // Pour debug uniquement, afin de vérifier que les instances de
+            // cette classe sont bien détruits à un moment ou à un autre.
+        }
+
         public TriPage(Facts.Page p, Facts.Section s) : base(p)
         {
             articlesGrid = new Grid()

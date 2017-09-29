@@ -38,6 +38,12 @@ namespace GetFacts.Render
         /// </summary>
         private Facts.AbstractInfo info = null;
 
+        ~ArticleDisplay()
+        {
+            // Pour debug uniquement, afin de vérifier que les instances de
+            // cette classe sont bien détruits à un moment ou à un autre.
+        }
+
         public ArticleDisplay(): this(false, 0)
         {
 
@@ -309,6 +315,12 @@ namespace GetFacts.Render
         {
             CleanIconTask();
             CleanMediaTask();
+            imageContainer.MouseLeftButtonUp -= ImageContainer_MouseLeftButtonUp;
+
+            // Arrêter la lecture du média actuellement verrouillé par
+            // MediaDisplay; indispensable pour assurer la libération
+            // des ressources par le GarbageCollector.
+            mediaDisplay.Dispose(); 
         }
 
         private void UserControl_Initialized(object sender, EventArgs e)
@@ -406,10 +418,23 @@ namespace GetFacts.Render
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            bgBorder.Background = normalBrush;
+            Deactivate();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Activate();
+        }
+
+
+        private void Deactivate()
+        {
+            bgBorder.Background = normalBrush;
+            mediaDisplay.SmoothVideo = false;
+
+        }
+
+        private void Activate()
         {
             bgBorder.Background = Brushes.Yellow;
             this.BeginAnimation(FrameworkElement.MarginProperty, null);
@@ -421,6 +446,8 @@ namespace GetFacts.Render
             {
                 this.info.IsNew = false;
             }
+
+            mediaDisplay.SmoothVideo = true;
         }
     }
 

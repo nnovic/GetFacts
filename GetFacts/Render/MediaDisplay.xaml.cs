@@ -30,7 +30,7 @@ namespace GetFacts.Render
 
         public string Caption
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -82,6 +82,7 @@ namespace GetFacts.Render
             downloadProgressContainer.Visibility = Visibility.Hidden;
             mediaProgressContainer.Visibility = Visibility.Hidden;
             dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
+            dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
@@ -96,27 +97,83 @@ namespace GetFacts.Render
 
         #region timer management
 
+        private bool smoothVideo = false;
+
+        /// <summary>
+        /// Définit si la vidéo en cours d'affichage doit être
+        /// jouée de façon "fluide" (lecture normale) ou "hachée"
+        /// (sauts d'image successifs d'1 seconde).
+        /// </summary>
+        public bool SmoothVideo
+        {
+            get
+            {
+                return smoothVideo;
+            }
+            set
+            {
+                smoothVideo = value;
+                if(smoothVideo)
+                {
+                    articleMedia.Play();
+                }
+                else
+                {
+                    articleMedia.Pause();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toutes les secondes, mettre à jour la barre de progression
+        /// de lecture du média en cours. S'il s'agit d'une vidéo et
+        /// que SmoothVideo vaut "false", alors avance la position
+        /// de la vidéo d'1 seconde.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            TimeSpan ts = articleMedia.Position;
-            double secondes = ts.TotalSeconds;
-            mediaProgressValue.Value = secondes;
-            mediaProgressContainer.Visibility = Visibility.Visible;
+            double maxDuration = articleMedia.NaturalDuration.TimeSpan.TotalSeconds;
+            double currentPosition = articleMedia.Position.TotalSeconds;
+
+            if (articleMedia.HasVideo && (SmoothVideo==false) )
+            {
+                currentPosition = Math.Min(currentPosition + 1.0, maxDuration);
+                articleMedia.Position = TimeSpan.FromSeconds(currentPosition);
+            }
+
+            mediaProgressValue.Maximum = maxDuration;
+            mediaProgressValue.Value = currentPosition;
+        }
+
+        /// <summary>
+        /// une fois le contrôle chargé, démarrer la lecture
+        /// du média.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ArticleMedia_Loaded(object sender, RoutedEventArgs e)
+        {
+            articleMedia.Play();
         }
 
         private void ArticleMedia_MediaOpened(object sender, RoutedEventArgs e)
         {
-            Duration d = articleMedia.NaturalDuration;
-            TimeSpan ts = d.TimeSpan;
-            double secondes = ts.TotalSeconds;
-            mediaProgressValue.Maximum = secondes;
+            // Lorsque le fichier média est ouvert,
+            // mettre la lecture en pause immédiatement.
+
+            articleMedia.Pause();
             mediaProgressValue.Value = 0;
+            mediaProgressContainer.Visibility = Visibility.Visible;            
             dispatcherTimer.Start();
         }
 
         private void ArticleMedia_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
             dispatcherTimer.Stop();
+            articleMedia.Stop();
+            mediaProgressContainer.Visibility = Visibility.Hidden;
         }
 
         private void ArticleMedia_MediaEnded(object sender, RoutedEventArgs e)
@@ -124,8 +181,25 @@ namespace GetFacts.Render
             dispatcherTimer.Stop();
             mediaProgressContainer.Visibility = Visibility.Hidden;
         }
+
+
         #endregion
 
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+        }
 
+        /// <summary>
+        /// Permet de libérer les ressources "verrouillées" par
+        /// ce contrôle (image, vidéo, etc...), ce qui permettra 
+        /// ensuite à cet objet d'être détruit par le garbage 
+        /// collector.
+        /// </summary>
+        internal void Dispose()
+        {
+            dispatcherTimer.Stop();
+            articleIcon.Source = null;
+            articleMedia.Source = null;
+        }
     }
 }

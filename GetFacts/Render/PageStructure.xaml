@@ -7,7 +7,7 @@
       xmlns:core="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="500"
-      Title="PagePage">
+      Title="PagePage" Unloaded="Page_Unloaded">
 
     <Page.Resources>
         <core:Double x:Key="PauseOpacity">0.65</core:Double>

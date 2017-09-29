@@ -190,5 +190,13 @@ namespace GetFacts.Render
             Undock(md);
             target.Dock(md);
         }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Frozen = null;
+            Unfrozen = null;
+            pauseSymbol.BeginAnimation(Canvas.OpacityProperty, null);
+            mediaDock.Children.Clear();
+        }
     }
 }
