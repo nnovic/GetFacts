@@ -36,7 +36,6 @@ namespace GetFacts.Download
                 {
                     uniqueInstance = new DownloadManager();
                     uniqueInstance.Initialize();
-                    Console.WriteLine("DownloadManager: instance created");
                 }
                 return uniqueInstance;
             }
@@ -347,7 +346,6 @@ namespace GetFacts.Download
                 }
                 downloads.Add(task);
                 SaveTasksToFile();
-                Console.WriteLine("DownloadManager: task {0} added to list", task.Uri.AbsoluteUri);
             }
 
             WakeUpDownloadQueue();
@@ -367,7 +365,6 @@ namespace GetFacts.Download
             }
             downloads.Remove(task);
             task.StopDownload();
-            Console.WriteLine("DownloadManager: task {0} removed from list", task.Uri.AbsoluteUri);
         }
 
         public DownloadTask Create(Uri uri, string defaultFileExtension)
@@ -417,7 +414,6 @@ namespace GetFacts.Download
             };
             isRunning = true;
             dThread.Start();
-            Console.WriteLine("DownloadManager: thread started");
         }
 
 
@@ -480,8 +476,6 @@ namespace GetFacts.Download
                     }
                 }
             }
-
-            Console.WriteLine("DownloadManager: thread stopped");
         }
 
         #endregion

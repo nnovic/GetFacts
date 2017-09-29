@@ -323,43 +323,17 @@ namespace GetFacts.Facts
                 a3 = More();
             }
 
-
-            StringBuilder sb = new StringBuilder();
-
             if (pageChanged || sectionChanged)
             {
-                sb.AppendLine("===========================================================================");
-                sb.AppendFormat("   Page={0}", p.Title).AppendLine();
-                sb.AppendFormat("   Section={0}", s.Title).AppendLine();
-                sb.AppendLine("===========================================================================").AppendLine();
                 System.Windows.Controls.Page pageIntercalaire = new SpacerPage(p, s);
                 output.Add(pageIntercalaire);
             }
-
-            sb.AppendLine("---------------------------------------------------------------------------");
-            if (a1 != null)
-            {
-                sb.AppendFormat("   Title={0}", a1.Title).AppendLine();
-            }
-            if (a2 != null)
-            {
-                sb.AppendFormat("   Title={0}", a2.Title).AppendLine();
-            }
-            if (a3 != null)
-            {
-                sb.AppendFormat("   Title={0}", a3.Title).AppendLine();
-            }
-            sb.AppendLine("---------------------------------------------------------------------------").AppendLine();
 
             TriPage tp = new TriPage(p, s);
             if (a1 != null) tp.AddArticle(a1);
             if (a2 != null) tp.AddArticle(a2);
             if (a3 != null) tp.AddArticle(a3);
             output.Add(tp);
-
-
-            Console.Write(sb.ToString());
-
 
             return output;
         }

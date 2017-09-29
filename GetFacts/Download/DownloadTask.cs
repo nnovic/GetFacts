@@ -36,7 +36,6 @@ namespace GetFacts.Download
             if (File.Exists(LocalFile))
             {
                 _downloadStatus = DownloadStatus.Completed;
-                Console.WriteLine("DownloadTask: {0} is there", uri.AbsoluteUri);
             }
         }
 
@@ -364,7 +363,6 @@ namespace GetFacts.Download
             writeStream = File.OpenWrite(downloadPath);
             Status = DownloadStatus.Started;
             FireTaskStarted();
-            Console.WriteLine("DownloadTask: start {0}", uri.AbsoluteUri);
         }        
 
         private void DownloadMore()
@@ -412,7 +410,6 @@ namespace GetFacts.Download
             }
             Status = DownloadStatus.Aborted;
             FireTaskFinished();
-            Console.WriteLine("DownloadTask: abort {0}", uri.AbsoluteUri);
         }
 
         private void EndOfDownload()
@@ -430,7 +427,6 @@ namespace GetFacts.Download
             downloadPath = null;
             Status = DownloadStatus.Completed;
             FireTaskFinished();
-            Console.WriteLine("DownloadTask: finished {0}", uri.AbsoluteUri);
         }
 
         #endregion

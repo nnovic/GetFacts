@@ -429,6 +429,7 @@ namespace GetFacts.Render
 
         private void Deactivate()
         {
+            Console.WriteLine("ArticleDisplay.Deactivate");
             bgBorder.Background = normalBrush;
             mediaDisplay.SmoothVideo = false;
 
@@ -436,6 +437,8 @@ namespace GetFacts.Render
 
         private void Activate()
         {
+            Console.WriteLine("ArticleDisplay.Activate");
+
             bgBorder.Background = Brushes.Yellow;
             this.BeginAnimation(FrameworkElement.MarginProperty, null);
 
