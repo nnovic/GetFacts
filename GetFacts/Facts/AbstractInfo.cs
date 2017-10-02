@@ -398,7 +398,7 @@ namespace GetFacts.Facts
             MediaUrl = source.MediaUrl;
             BrowserUrl = source.BrowserUrl;
 
-            if( (IsNew==true) && (IsNewBehavior== IsNewPropertyGets.OldOnRefresh))
+            if (IsNewBehavior == IsNewPropertyGets.OldOnRefresh)
             {
                 IsNew = false;
             }
@@ -417,7 +417,7 @@ namespace GetFacts.Facts
             MediaUrl = template.MediaUrlTemplate.Execute(nav);
             BrowserUrl = template.BrowserUrlTemplate.Execute(nav);
 
-            if ((IsNew == true) && (IsNewBehavior == IsNewPropertyGets.OldOnRefresh))
+            if (IsNewBehavior == IsNewPropertyGets.OldOnRefresh)
             {
                 IsNew = false;
             }
