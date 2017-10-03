@@ -12,20 +12,25 @@
         <local:BackgroundControl/>
         
         <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
-
+        
+        <StackPanel Margin="3" VerticalAlignment="Bottom">
+            <ProgressBar x:Name="timerProgressValue"/>
+        </StackPanel>
+        
         <Grid x:Name="UserInputsGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="6*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="6*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="5*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
             <!-- Bouton pour afficher/masquer le menu. Ce bouton contient des indicateurs pour
                  les notifications et pour le rafraichissement des pages. -->
-            <ToggleButton Padding="10"  x:Name="ToggleMenuButton" Grid.Row="1" Grid.Column="1" Checked="ToggleMenuButton_Checked" Unchecked="ToggleMenuButton_Unchecked" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" BorderBrush="{x:Null}">
+            <ToggleButton Padding="10"  x:Name="ToggleMenuButton" Grid.Row="2" Grid.Column="1" Checked="ToggleMenuButton_Checked" Unchecked="ToggleMenuButton_Unchecked" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" BorderBrush="{x:Null}">
                 <ToggleButton.Background>
                     <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,1">
                         <GradientStop Color="White"/>
@@ -45,13 +50,33 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" x:Name="RefreshIndication" HorizontalAlignment="Center" FontSize="16">[r]</TextBlock>
                     <TextBlock x:Name="NotificationIndication" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="16">[m]</TextBlock>
                     <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" StretchDirection="DownOnly">
-                        <TextBlock HorizontalAlignment="Center" Text="MENU" FontSize="16"/>
+                        <TextBlock HorizontalAlignment="Center" Text="MENU" FontSize="16" Foreground="White">
+                            <TextBlock.Effect>
+                                <DropShadowEffect ShadowDepth="0" />
+                            </TextBlock.Effect>
+                        </TextBlock>
                     </Viewbox>
                 </Grid>
             </ToggleButton>
 
+            <!-- Bouton pour passer à la page suivante. -->
+            <Button Padding="10"  x:Name="SkipButton2" Grid.Row="0" Grid.Column="1"  HorizontalContentAlignment="Right" VerticalContentAlignment="Top" BorderBrush="{x:Null}" Click="SkipButton_Click">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,0">
+                        <GradientStop Color="White"/>
+                        <GradientStop Offset="1"/>
+                        <GradientStop Color="White" Offset="0.3"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+                <TextBlock FontSize="16" Foreground="White">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="0"/>
+                    </TextBlock.Effect>SKIP</TextBlock>
+            </Button>
+
+
             <!-- bandeau vertical pour les boutons -->
-            <Grid x:Name="ButtonsPanel" Background="Black" Grid.Row="0" Grid.Column="1" Visibility="Hidden">
+            <Grid x:Name="ButtonsPanel" Background="Black" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -80,16 +105,12 @@
                 </Button>
             </Grid>
 
-            <local:NotificationsPanel Grid.RowSpan="2" x:Name="NotificationsPanel" Visibility="Hidden" />
+            <local:NotificationsPanel Grid.RowSpan="3" x:Name="NotificationsPanel" Visibility="Hidden" />
 
-            <local:ConfigurationPanel Grid.RowSpan="2" x:Name="ConfigurationPanel" Visibility="Hidden" />
+            <local:ConfigurationPanel Grid.RowSpan="3" x:Name="ConfigurationPanel" Visibility="Hidden" />
 
         </Grid>
 
-        <StackPanel Margin="3" VerticalAlignment="Bottom">
-            <ProgressBar x:Name="timerProgressValue"/>
-        </StackPanel>
-        
     </Grid>
 
 </Window>

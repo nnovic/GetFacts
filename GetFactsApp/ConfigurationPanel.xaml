@@ -14,7 +14,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" x:Name="PanelFordirectories">
+        <StackPanel Grid.Row="0" x:Name="PanelFordirectories" Background="Gray">
+            <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MemorizeLayoutButton" Click="MemorizeLayoutButton_Click">Memorize layout</Button>
+                </StackPanel>
+            </Border>
             <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
             </Border>

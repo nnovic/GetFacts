@@ -324,6 +324,8 @@ namespace GetFacts
         private void Window_Initialized(object sender, EventArgs e)
         {
             NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
+            WindowPosition wp = ConfigFactory.GetInstance().WindowPosition;
+            wp.ApplyTo(this);
         }
 
         /// <summary>
@@ -357,7 +359,7 @@ namespace GetFacts
 
         private void ToggleMenuButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            HideEverythingBut(ToggleMenuButton);
+            HideEverythingBut(ToggleMenuButton, SkipButton2);
         }
 
         private void HideEverythingBut(params UIElement[] doNotHide)
@@ -373,13 +375,13 @@ namespace GetFacts
 
         private void ShowMessagesButton_Click(object sender, RoutedEventArgs e)
         {
-            HideEverythingBut(ToggleMenuButton, ButtonsPanel);
+            HideEverythingBut(ToggleMenuButton, SkipButton2, ButtonsPanel);
             NotificationsPanel.Visibility = Visibility.Visible;
         }
 
         private void ConfigMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            HideEverythingBut(ToggleMenuButton, ButtonsPanel);
+            HideEverythingBut(ToggleMenuButton, SkipButton2, ButtonsPanel);
             ConfigurationPanel.Visibility = Visibility.Visible;
         }
 

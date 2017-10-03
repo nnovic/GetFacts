@@ -262,6 +262,21 @@ namespace GetFacts
 
         #endregion
 
+        public WindowPosition WindowPosition
+        {
+            get
+            {
+                string s = GetStringFromRegistry(null, "WindowPosition");
+                return WindowPosition.CreateFrom(s);
+            }
+            set
+            {
+                string s = value.ToJson();
+                SetStringToRegistry(null, "WindowPosition", s);
+            }
+        }
+        
+
 
         #region registry
 
@@ -302,6 +317,24 @@ namespace GetFacts
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Obtient une string depuis la base de registre
+        /// de l'utilisateur pour cette application.
+        /// </summary>
+        /// <param name="keyPath"></param>
+        /// <param name="valueName"></param>
+        /// <returns></returns>
+        void SetStringToRegistry(string keyPath, string valueName, string value)
+        {            
+            using (RegistryKey key = GetRegistryKey(keyPath, true))
+            {
+                if (key != null)
+                {
+                    key.SetValue(valueName, value);
+                }
+            }           
         }
 
         List<string> GetListOfStringsFromRegistry(string keyPath, string valueName)

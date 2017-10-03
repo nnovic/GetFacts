@@ -82,5 +82,11 @@ namespace GetFacts
                 UserDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().ConfigFile;
             }
         }
+
+        private void MemorizeLayoutButton_Click(object sender, RoutedEventArgs e)
+        {            
+            WindowPosition wp = WindowPosition.CreateFrom(this);
+            ConfigFactory.GetInstance().WindowPosition = wp;
+        }
     }
 }
