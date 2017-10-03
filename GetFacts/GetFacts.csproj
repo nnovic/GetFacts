@@ -83,6 +83,9 @@
     <Compile Include="Ads\JsonNET_Ad.xaml.cs">
       <DependentUpon>JsonNET_Ad.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ads\VisualStudio_Ad.xaml.cs">
+      <DependentUpon>VisualStudio_Ad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ads\WindowsAPICodePack_Ad.xaml.cs">
       <DependentUpon>WindowsAPICodePack_Ad.xaml</DependentUpon>
     </Compile>
@@ -129,12 +132,17 @@
     </Compile>
     <Compile Include="TextBoxWithValidation.cs" />
     <Compile Include="Toolkit.cs" />
+    <Compile Include="WindowPosition.cs" />
     <Compile Include="XPathTextBox.cs" />
     <Page Include="Ads\HtmlAgilityPack_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ads\JsonNET_Ad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ads\VisualStudio_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,6 +227,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ads\Json.NET_Ad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ads\VisualStudio_Ad.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

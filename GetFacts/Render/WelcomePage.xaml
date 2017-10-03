@@ -47,6 +47,11 @@
                     <local1:WindowsAPICodePack_Ad/>
                 </Viewbox>
             </Border>
+            <Border Grid.Column="1" Grid.Row="1" x:Name="vsts_ad" Margin="10" CornerRadius="10" Background="#FF7CC3FF">
+                <Viewbox Margin="10">
+                    <local1:VisualStudio_Ad/>
+                </Viewbox>
+            </Border>
         </Grid>
     </Grid>
 </Page>
