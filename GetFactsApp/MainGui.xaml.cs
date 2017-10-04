@@ -325,7 +325,7 @@ namespace GetFacts
         {
             NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
             WindowPosition wp = ConfigFactory.GetInstance().WindowPosition;
-            wp.ApplyTo(this);
+            wp?.ApplyTo(this);
         }
 
         /// <summary>

@@ -267,6 +267,7 @@ namespace GetFacts
             get
             {
                 string s = GetStringFromRegistry(null, "WindowPosition");
+                if (string.IsNullOrEmpty(s)) return null;
                 return WindowPosition.CreateFrom(s);
             }
             set

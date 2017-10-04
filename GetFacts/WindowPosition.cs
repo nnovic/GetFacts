@@ -70,8 +70,15 @@ namespace GetFacts
 
         public static WindowPosition CreateFrom(string json)
         {
-            WindowPosition wp = JsonConvert.DeserializeObject<WindowPosition>(json);
-            return wp;
+            try
+            {
+                WindowPosition wp = JsonConvert.DeserializeObject<WindowPosition>(json);
+                return wp;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public string ToJson()
