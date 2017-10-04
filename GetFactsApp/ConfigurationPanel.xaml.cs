@@ -105,7 +105,7 @@ namespace GetFacts
         private void OnTopButton_Loaded(object sender, RoutedEventArgs e)
         {
             Window w = Window.GetWindow(this);
-            OnTopButton.IsChecked = w.Topmost;
+            OnTopButton.IsChecked = w?.Topmost;
         }
     }
 }

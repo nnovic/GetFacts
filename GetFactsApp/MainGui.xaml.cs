@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace GetFacts
@@ -216,7 +217,17 @@ namespace GetFacts
                                 freezable.Unfrozen += Freezable_Unfrozen;
                             }
                             navigator.Navigate(nextPage);
-                            navigator.RemoveBackEntry();                            
+                            navigator.RemoveBackEntry();
+
+                            //TrayIcon.Icon = nextPage.HasNewArticles? GetFacts.Properties.Resources.NewFactsIcon:GetFacts.Properties.Resources.GetFactsIcon;
+                            if( nextPage is IHostsInformation hostsNews)
+                            {
+                                TrayIcon.Icon = hostsNews.HasNewInformation ? GetFacts.Properties.Resources.NewFactsIcon : GetFacts.Properties.Resources.GetFactsIcon;
+                            }
+                            else
+                            {
+                                TrayIcon.Icon = GetFacts.Properties.Resources.GetFactsIcon;
+                            }
                         }
 
                         if((nextPage!=null) && (nextPage is ICustomPause))
@@ -316,6 +327,7 @@ namespace GetFacts
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            TrayIcon.Dispose();
             NotificationSystem.GetInstance().Notifications.CollectionChanged -= Notifications_CollectionChanged;
             StopRotationThread();
             DownloadManager.GetInstance().Stop();
@@ -326,6 +338,7 @@ namespace GetFacts
             NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
             WindowPosition wp = ConfigFactory.GetInstance().WindowPosition;
             wp?.ApplyTo(this);
+            TrayIcon.ToolTipText = this.Title;
         }
 
         /// <summary>
@@ -388,6 +401,11 @@ namespace GetFacts
         private void SkipButton_Click(object sender, RoutedEventArgs e)
         {
             Skip();
+        }
+
+        private void TrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            this.Activate();
         }
     }
 }
