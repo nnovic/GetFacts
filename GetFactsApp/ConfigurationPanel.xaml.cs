@@ -83,10 +83,29 @@ namespace GetFacts
             }
         }
 
-        private void MemorizeLayoutButton_Click(object sender, RoutedEventArgs e)
-        {            
+        private void DoMemorizeLayout()
+        {
             WindowPosition wp = WindowPosition.CreateFrom(this);
             ConfigFactory.GetInstance().WindowPosition = wp;
+        }
+
+        private void MemorizeLayoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoMemorizeLayout();
+        }
+
+        private void OnTopButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool alwaysOnTop = OnTopButton.IsChecked.Value;
+            Window w = Window.GetWindow(this);
+            w.Topmost = alwaysOnTop;
+            DoMemorizeLayout();
+        }
+
+        private void OnTopButton_Loaded(object sender, RoutedEventArgs e)
+        {
+            Window w = Window.GetWindow(this);
+            OnTopButton.IsChecked = w.Topmost;
         }
     }
 }

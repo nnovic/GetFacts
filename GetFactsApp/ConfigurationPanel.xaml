@@ -18,6 +18,7 @@
             <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="MemorizeLayoutButton" Click="MemorizeLayoutButton_Click">Memorize layout</Button>
+                    <ToggleButton x:Name="OnTopButton" Click="OnTopButton_Click" Loaded="OnTopButton_Loaded" >Always on top</ToggleButton>
                 </StackPanel>
             </Border>
             <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">

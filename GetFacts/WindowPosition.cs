@@ -45,6 +45,13 @@ namespace GetFacts
             private set;
         }
 
+        [JsonProperty]
+        public bool TopMost
+        {
+            get;
+            private set;
+        }
+
         public static WindowPosition CreateFrom(System.Windows.Controls.Control c)
         {
             WindowPosition wp = new WindowPosition();
@@ -55,7 +62,7 @@ namespace GetFacts
             wp.Left = w.Left;
             wp.Width = w.Width;
             wp.Height = w.Height;
-
+            wp.TopMost = w.Topmost;
             return wp;
         }
 
@@ -93,6 +100,7 @@ namespace GetFacts
             w.Left = Left;
             w.Width = Width;
             w.Height = Height;
+            w.Topmost = TopMost;
             if (IsMaximized)
             {
                 w.WindowState = System.Windows.WindowState.Maximized;
