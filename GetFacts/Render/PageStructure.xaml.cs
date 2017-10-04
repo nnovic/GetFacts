@@ -19,7 +19,7 @@ namespace GetFacts.Render
     /// <summary>
     /// Logique d'interaction pour PagePage.xaml
     /// </summary>
-    public partial class PageStructure : Page, IFreezable, ICanDock
+    public partial class PageStructure : Page, IFreezable, ICanDock, IHostsInformation
     {
         DoubleAnimation pauseAnimation;
         
@@ -44,6 +44,25 @@ namespace GetFacts.Render
         {
             set { factsBorder.Child = value; }
             get { return factsBorder.Child; }
+        }
+
+        /// <summary>
+        /// Si Embedded est un objet qui implémente IHostsInformation,
+        /// retourne la valeur courante de ((IHostsInformation)Embedded).HasNewInformation.
+        /// Sinon, retourne false.
+        /// </summary>
+        /// <see cref="Embedded"/>
+        /// <seealso cref="IHostsInformation"/>
+        public bool HasNewInformation
+        {
+            get
+            {
+                if( factsBorder.Child is IHostsInformation ihn)
+                {
+                    return ihn.HasNewInformation;
+                }
+                return false;
+            }
         }
 
         #region layout

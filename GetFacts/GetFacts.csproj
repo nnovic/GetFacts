@@ -105,10 +105,12 @@
     <Compile Include="Render\ArticleDisplay.xaml.cs">
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Render\ArticlesGrid.cs" />
     <Compile Include="Render\GridLengthAnimation.cs" />
     <Compile Include="Render\ICanDock.cs" />
     <Compile Include="Render\ICustomPause.cs" />
     <Compile Include="Render\IFreezable.cs" />
+    <Compile Include="Render\IHostsInformation.cs" />
     <Compile Include="Render\MediaDisplay.xaml.cs">
       <DependentUpon>MediaDisplay.xaml</DependentUpon>
     </Compile>

@@ -22,7 +22,7 @@ namespace GetFacts.Render
     /// <summary>
     /// Logique d'interaction pour ArticleDisplay.xaml
     /// </summary>
-    public partial class ArticleDisplay : UserControl, ICanDock
+    public partial class ArticleDisplay : UserControl, ICanDock, IHostsInformation
     {
         private readonly bool enableAnimations;
         private readonly int orderOfAppearance;
@@ -94,9 +94,11 @@ namespace GetFacts.Render
                 textContainer.ToolTip = browserUrl;
             }
 
+            this.HasNewInformation = info.IsNew;
+
             if(enableAnimations)
             {
-                if(info.IsNew)
+                if(this.HasNewInformation)
                 {
                     bgBorder.Background = Brushes.Green;
                     ShakeShakeAnimation ssa = new ShakeShakeAnimation(this.Margin)
@@ -106,6 +108,20 @@ namespace GetFacts.Render
                     this.BeginAnimation(FrameworkElement.MarginProperty, ssa);
                 }
             }
+        }
+
+        /// <summary>
+        /// Retourne 'true' si, lors du dernier appel à Update(),
+        /// l'article passé en paramètre avant sa propriété IsNew à true.
+        /// Sinon, retourne 'false'. 
+        /// </summary>
+        /// <remarks>Retournera 'false' systématiquement après un appel à Activate()</remarks>
+        /// <see cref="Update(Facts.AbstractInfo)"/>
+        /// <see cref="Activate"/>
+        public bool HasNewInformation
+        {
+            get;
+            private set;
         }
 
         #region downloads
@@ -441,10 +457,11 @@ namespace GetFacts.Render
 
             bgBorder.Background = Brushes.Yellow;
             this.BeginAnimation(FrameworkElement.MarginProperty, null);
+            this.HasNewInformation = false;
 
             // Lorsque le curseur de la souris survole ce contrôle, alors les données qu'il affiche
             // deviennent "vieille" (si c'est le comportement choisi par l'utilisateur!).
-            if((this.info!=null) 
+            if ((this.info!=null) 
                 && (this.info.IsNewBehavior== Facts.AbstractInfo.IsNewPropertyGets.OldOnMouseHover) )
             {
                 this.info.IsNew = false;

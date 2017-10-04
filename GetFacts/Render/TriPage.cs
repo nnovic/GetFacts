@@ -10,7 +10,7 @@ namespace GetFacts.Render
 {
     public class TriPage:PageStructure,ICustomPause
     {
-        private Grid articlesGrid;
+        private ArticlesGrid articlesGrid;
 
         ~TriPage()
         {
@@ -20,7 +20,7 @@ namespace GetFacts.Render
 
         public TriPage(Facts.Page p, Facts.Section s) : base(p)
         {
-            articlesGrid = new Grid()
+            articlesGrid = new ArticlesGrid()
             {
                 //Margin = new System.Windows.Thickness(5)
             };
