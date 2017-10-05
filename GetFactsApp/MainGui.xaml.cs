@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,11 +35,48 @@ namespace GetFacts
             progressBarTimer.Interval = TimeSpan.FromSeconds(progressBarResolution);
         }
 
+        private bool blinker;
         private void ProgressBarTimer_Tick(object sender, EventArgs e)
         {
+            blinker = !blinker;
             double value = timerProgressValue.Value;
             value = Math.Min(value + progressBarResolution, timerProgressValue.Maximum);
             timerProgressValue.Value = value;
+
+            object o = navigator.Content;
+
+            if( (o is IHostsInformation hostsNews) && blinker)
+            {
+                TrayIcon.Icon = hostsNews.HasNewInformation ? GetFacts.Properties.Resources.NewFactsIcon : GetFacts.Properties.Resources.GetFactsIcon;
+            }
+            else
+            {
+                TrayIcon.Icon = GetFacts.Properties.Resources.GetFactsIcon;
+            }
+        }
+
+        private void UpdateTooltips(object o)
+        {
+            StringBuilder title = new StringBuilder();
+
+            title.Append("GetFacts");
+
+            if (o is IHostsInformation host)
+            {
+                if (string.IsNullOrEmpty(host.InformationHeadline) == false)
+                {
+                    title.Append(" - ");
+                    title.Append(host.InformationHeadline);
+                }
+
+                if (host.HasNewInformation)
+                {
+                    TrayIcon.ShowBalloonTip(host.InformationHeadline, host.InformationSummary, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                }
+            }
+
+            this.Title = title.ToString();
+            TrayIcon.ToolTipText = title.ToString();
         }
 
         #region rotation of pages
@@ -216,18 +254,9 @@ namespace GetFacts
                                 freezable.Frozen += Freezable_Frozen;
                                 freezable.Unfrozen += Freezable_Unfrozen;
                             }
-                            navigator.Navigate(nextPage);
+                            navigator.Navigate(nextPage);                            
                             navigator.RemoveBackEntry();
-
-                            //TrayIcon.Icon = nextPage.HasNewArticles? GetFacts.Properties.Resources.NewFactsIcon:GetFacts.Properties.Resources.GetFactsIcon;
-                            if( nextPage is IHostsInformation hostsNews)
-                            {
-                                TrayIcon.Icon = hostsNews.HasNewInformation ? GetFacts.Properties.Resources.NewFactsIcon : GetFacts.Properties.Resources.GetFactsIcon;
-                            }
-                            else
-                            {
-                                TrayIcon.Icon = GetFacts.Properties.Resources.GetFactsIcon;
-                            }
+                            UpdateTooltips(nextPage);
                         }
 
                         if((nextPage!=null) && (nextPage is ICustomPause))
@@ -338,7 +367,7 @@ namespace GetFacts
             NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
             WindowPosition wp = ConfigFactory.GetInstance().WindowPosition;
             wp?.ApplyTo(this);
-            TrayIcon.ToolTipText = this.Title;
+            UpdateTooltips(null);
         }
 
         /// <summary>
@@ -405,6 +434,12 @@ namespace GetFacts
 
         private void TrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
+            //this.Activate();
+        }
+
+        private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
             this.Activate();
         }
     }

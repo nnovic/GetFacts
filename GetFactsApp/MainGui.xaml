@@ -10,7 +10,7 @@
 
     <Grid>
 
-        <tb:TaskbarIcon x:Name="TrayIcon" IconSource="GetFacts.ico" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick"/>
+        <tb:TaskbarIcon x:Name="TrayIcon" IconSource="GetFacts.ico" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp"/>
 
         <local:BackgroundControl/>
         
