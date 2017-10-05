@@ -22,5 +22,17 @@ namespace GetFacts.Render
         /// différente de celle de AbstractInfo.IsNew
         /// </summary>
         bool HasNewInformation { get; }
+
+        /// <summary>
+        /// Retourne un texte qui résume le contenu de l'information
+        /// hébergée dans l'objet qui implémente cette interface.
+        /// </summary>
+        string InformationHeadline { get; }
+
+        /// <summary>
+        /// Retourne un résumé de l'information
+        /// hébergée dans l'objet qui implémente cette interface.
+        /// </summary>
+        string InformationSummary { get; }
     }
 }

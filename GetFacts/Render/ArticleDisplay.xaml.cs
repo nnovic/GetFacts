@@ -110,6 +110,8 @@ namespace GetFacts.Render
             }
         }
 
+        #region IHostsInformation
+        
         /// <summary>
         /// Retourne 'true' si, lors du dernier appel à Update(),
         /// l'article passé en paramètre avant sa propriété IsNew à true.
@@ -123,6 +125,28 @@ namespace GetFacts.Render
             get;
             private set;
         }
+
+        /// <summary>
+        /// Retourne le titre de l'article en tant que résumé
+        /// de l'information
+        /// hébergée dans l'objet qui implémente cette interface.
+        /// </summary>
+        public string InformationHeadline
+        {
+            get { return articleTitle.Text; }
+        }
+
+        /// <summary>
+        /// Retourne le titre de l'article en tant que résumé
+        /// de l'information
+        /// hébergée dans l'objet qui implémente cette interface.
+        /// </summary>
+        public string InformationSummary
+        {
+            get { return articleTitle.Text; }
+        }
+
+        #endregion
 
         #region downloads
 

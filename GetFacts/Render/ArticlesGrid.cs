@@ -30,5 +30,37 @@ namespace GetFacts.Render
                 return false;
             }
         }
+
+        /// <summary>
+        /// Retourne un texte qui résume le contenu des articles.
+        /// </summary>
+        public string InformationHeadline
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (ArticleDisplay ad in Children)
+                {
+                    sb.AppendLine(ad.InformationHeadline);
+                }
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Retourne un résumé du contenu des articles.
+        /// </summary>
+        public string InformationSummary
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (ArticleDisplay ad in Children)
+                {
+                    sb.AppendLine(ad.InformationSummary);
+                }
+                return sb.ToString();
+            }
+        }
     }
 }

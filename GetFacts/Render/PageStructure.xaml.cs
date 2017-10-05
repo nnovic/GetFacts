@@ -46,6 +46,8 @@ namespace GetFacts.Render
             get { return factsBorder.Child; }
         }
 
+        #region IHostsInformation
+
         /// <summary>
         /// Si Embedded est un objet qui implémente IHostsInformation,
         /// retourne la valeur courante de ((IHostsInformation)Embedded).HasNewInformation.
@@ -64,6 +66,33 @@ namespace GetFacts.Render
                 return false;
             }
         }
+
+        /// <summary>
+        /// Retourne le titre de la page pour résumer les articles
+        /// présentés.
+        /// </summary>
+        public string InformationHeadline
+        {
+            get { return pageDisplay.InformationHeadline; }
+        }
+
+        /// <summary>
+        /// Retourne le résumé des articles
+        /// présentés.
+        /// </summary>
+        public string InformationSummary
+        {
+            get
+            {
+                if (factsBorder.Child is IHostsInformation ihn)
+                {
+                    return ihn.InformationSummary;
+                }
+                return null;
+            }
+        }
+
+        #endregion 
 
         #region layout
 
