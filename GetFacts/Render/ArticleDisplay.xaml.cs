@@ -90,8 +90,8 @@ namespace GetFacts.Render
 
             if( string.IsNullOrEmpty(browserUrl)==false)
             {
-                /*textContainer.*/Cursor = Cursors.Hand;
-                /*textContainer.*/ToolTip = browserUrl;
+                Cursor = Cursors.Hand;
+                ToolTip = "Click to open in browser";
             }
 
             this.HasNewInformation = info.IsNew;
