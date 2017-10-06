@@ -1,0 +1,37 @@
+{
+  "PageName": "RSS",
+  "PageType": "XmlParser",
+  "Reference": "http://feeds.ign.com/ign/games-videos?format=xml",
+  "TitleTemplate": {
+    "XPath": "/rss/channel/title"
+  },
+  "TextTemplate": {
+    "XPath": "/rss/channel/description"
+  },
+  "Sections": [
+    {
+      "SectionName": "Items",
+      "XPathFilter": "/rss/channel",
+      "Articles": [
+        {
+          "XPathFilter": "./item",
+          "TitleTemplate": {
+            "XPath": "./title"
+          },
+          "TextTemplate": {
+            "XPath": "./description"
+          },
+          "IconUrlTemplate": {
+            "XPath": ".//media:thumbnail/@url"
+          },
+          "MediaUrlTemplate": {
+            "XPath": "./enclosure/@url"
+          },
+          "BrowserUrlTemplate": {
+            "XPath": "./link"
+          }
+        }
+      ]
+    }
+  ]
+}
