@@ -5,7 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts.Render"
              mc:Ignorable="d" 
-             d:DesignHeight="171.429" d:DesignWidth="436.607" Unloaded="UserControl_Unloaded" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded">
+             d:DesignHeight="171.429" d:DesignWidth="436.607" 
+             Unloaded="UserControl_Unloaded" 
+             Initialized="UserControl_Initialized" 
+             Loaded="UserControl_Loaded"
+             MouseLeftButtonUp="UserControl_MouseLeftButtonUp" >
     <Grid SizeChanged="Grid_SizeChanged">
         <Border x:Name="bgBorder" CornerRadius="10" BorderBrush="Black" BorderThickness="5" Background="#7FFFFFFF" >
             <Grid x:Name="rotatingGrid" Margin="5">
@@ -20,7 +24,7 @@
                 <Grid x:Name="imageContainer">
                     <local:MediaDisplay x:Name="mediaDisplay"  />
                 </Grid>
-                <Grid x:Name="textContainer" Grid.Column="1" MouseLeftButtonUp="TextContainer_MouseLeftButtonUp">
+                <Grid x:Name="textContainer" Grid.Column="1" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="2*"/>

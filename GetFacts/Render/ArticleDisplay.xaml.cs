@@ -90,8 +90,8 @@ namespace GetFacts.Render
 
             if( string.IsNullOrEmpty(browserUrl)==false)
             {
-                textContainer.Cursor = Cursors.Hand;
-                textContainer.ToolTip = browserUrl;
+                /*textContainer.*/Cursor = Cursors.Hand;
+                /*textContainer.*/ToolTip = browserUrl;
             }
 
             this.HasNewInformation = info.IsNew;
@@ -398,7 +398,7 @@ namespace GetFacts.Render
             }
         }
 
-        private void TextContainer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void UserControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
 
             // Lorsque l'utilisateur clique sur ce contrôle, alors les données qu'il affiche
@@ -451,6 +451,7 @@ namespace GetFacts.Render
                 Undock(mediaDisplay);
                 target.Dock(mediaDisplay);
                 OnMouseLeave(null);
+                e.Handled = true;
             }
         }
 
