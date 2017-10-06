@@ -56,9 +56,18 @@ namespace GetFacts.Parse
             if (string.IsNullOrEmpty(XPath))
                 return string.Empty;
 
-            XPathNavigator node = nav.SelectSingleNode(XPath, (IXmlNamespaceResolver)nav );
-            if (node == null)
+            XPathNavigator node;
+
+            try
+            {
+                node = nav.SelectSingleNode(XPath, (IXmlNamespaceResolver)nav);
+                if (node == null)
+                    return string.Empty;
+            }
+            catch(XPathException e)
+            {
                 return string.Empty;
+            }
 
             string innerText = node.Value.Trim();
             innerText = HtmlEntity.DeEntitize(innerText);
