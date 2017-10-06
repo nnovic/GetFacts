@@ -404,6 +404,17 @@ namespace GetFacts.Facts
             }
         }
 
+        /// <summary>
+        /// Définit une limite du nombre caractères que peut
+        /// avoir une chaine de caractères pour un affichage
+        /// agréable à l'écran (les chaines trop longues donneront
+        /// un affichage très seeré et illisible).
+        /// </summary>
+        private int MaxChars
+        {
+            get { return 280; }
+        }
+
         protected void UpdateInfo(XPathNavigator nav, AbstractTemplate template)
         {
             if (!template.IdentifierTemplate.IsNullOrEmpty)
@@ -411,8 +422,8 @@ namespace GetFacts.Facts
                 Identifier = template.IdentifierTemplate.Execute(nav);
             }
 
-            Title = template.TitleTemplate.Execute(nav);
-            Text = template.TextTemplate.Execute(nav);
+            Title = template.TitleTemplate.Execute(nav, MaxChars);
+            Text = template.TextTemplate.Execute(nav, MaxChars);
             IconUrl = template.IconUrlTemplate.Execute(nav);
             MediaUrl = template.MediaUrlTemplate.Execute(nav);
             BrowserUrl = template.BrowserUrlTemplate.Execute(nav);

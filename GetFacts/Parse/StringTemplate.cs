@@ -51,6 +51,33 @@ namespace GetFacts.Parse
             }
         }
 
+        /// <summary>
+        /// Cette version de Execute fait appel à Execute(XPathNavigator),
+        /// et réalise les opérations suivantes sur le résultat:
+        /// - supprime toutes les balises HTML du texte
+        /// - coupe le texte s'il dépasse maxChars caractères
+        /// </summary>
+        /// <param name="nav"></param>
+        /// <param name="maxChars"></param>
+        /// <returns></returns>
+        public string Execute(XPathNavigator nav, int maxChars)
+        {
+            string output = Execute(nav);
+
+            if (string.IsNullOrEmpty(output))
+                return output;
+
+            HtmlDocument htmldoc = new HtmlDocument();
+            htmldoc.LoadHtml(output);
+            output = htmldoc.DocumentNode.InnerText;
+
+            if (output.Length > maxChars)
+            {
+                output = output.Substring(0, maxChars) + " [...]";
+            }
+            return output;
+        }
+
         public string Execute(XPathNavigator nav)
         {
             if (string.IsNullOrEmpty(XPath))
