@@ -26,12 +26,14 @@ namespace GetFacts.Download
         private readonly Uri uri;
         private readonly Guid id;
         private readonly string defaultFileExtension;
+        private readonly string downloadPath = null;
 
         public DownloadTask(Uri uri, Guid id, string defaultFileExtension)
         {
             this.uri = uri;
             this.id = id;
             this.defaultFileExtension = defaultFileExtension;
+            this.downloadPath = Path.ChangeExtension(LocalFile, TmpFileExtension);
 
             if (File.Exists(LocalFile))
             {
@@ -138,8 +140,7 @@ namespace GetFacts.Download
         private DownloadStatus _downloadStatus = DownloadStatus.ReadyToStart;
         private FileStream writeStream = null;
         private Stream readStream = null;
-        private byte[] downloadBuffer = new byte[1024];
-        private string downloadPath = null;
+        private byte[] downloadBuffer = new byte[1024];        
         private WebClient webClient = null;        
         private long expectedDownloadSize = -1;
         private long achievedDownloadSize = 0;
@@ -358,8 +359,7 @@ namespace GetFacts.Download
                     expectedDownloadSize = -1;
                 }
             }
-
-            downloadPath = Path.ChangeExtension(LocalFile, TmpFileExtension);
+            
             writeStream = File.OpenWrite(downloadPath);
             Status = DownloadStatus.Started;
             FireTaskStarted();
@@ -403,11 +403,6 @@ namespace GetFacts.Download
         private void AbortDownload()
         {
             TerminateStreams();
-            if (downloadPath != null)
-            {
-                try { File.Delete(downloadPath); } catch { }
-                downloadPath = null;
-            }
             Status = DownloadStatus.Aborted;
             FireTaskFinished();
         }
@@ -424,7 +419,6 @@ namespace GetFacts.Download
             {
                 File.Move(downloadPath, LocalFile);
             }
-            downloadPath = null;
             Status = DownloadStatus.Completed;
             FireTaskFinished();
         }
