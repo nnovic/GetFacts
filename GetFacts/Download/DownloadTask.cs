@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GetFacts.Download
@@ -89,8 +90,48 @@ namespace GetFacts.Download
             }
         }
 
+        /// <summary>
+        /// Retourne uri.AbsoluteUri, mais en ayant pris soin
+        /// de supprimer tout ce qui pourrait se trouver après
+        /// le '?' qui délimite les paramètres de requête.
+        /// </summary>
+        private string AbsoluteUri
+        {
+            get
+            {
+                string strippedAbsoluteUri = uri.AbsoluteUri;
+                int markIndex = uri.AbsoluteUri.LastIndexOf('?');
+                if (markIndex != -1)
+                {
+                    strippedAbsoluteUri = uri.AbsoluteUri.Remove(markIndex);
+                }
+                return strippedAbsoluteUri;
+            }
+        }
 
-        
+        /// <summary>
+        /// Retourne true si la reprise de téléchargement
+        /// doit être tentée sur ce fichier.
+        /// </summary>
+        /// <remarks>Actuellement, retourne 'true' pour les fichiers
+        /// de type vidéo et son. Retourne 'false' pour les autres
+        /// types de fichier.</remarks>
+        private bool IsResumingSupported
+        {
+            get
+            {
+                DownloadTypes.Categories cat = DownloadTypes.Guess(AbsoluteUri);
+                switch (cat)
+                {
+                    default:
+                        return false;
+
+                    case DownloadTypes.Categories.Video:
+                    case DownloadTypes.Categories.Sound:
+                        return true;
+                }
+            }
+        }
 
         
 
@@ -101,16 +142,7 @@ namespace GetFacts.Download
         {
             get
             {
-                // remove parameters at the end of the Uri
-                // (anything beyond the '?' mark)
-                string strippedAbsoluteUri = uri.AbsoluteUri;
-                int markIndex = uri.AbsoluteUri.LastIndexOf('?');
-                if (markIndex != -1)
-                {
-                    strippedAbsoluteUri = uri.AbsoluteUri.Remove(markIndex);
-                }
-
-                DownloadTypes.Categories cat = DownloadTypes.Guess(strippedAbsoluteUri);
+                DownloadTypes.Categories cat = DownloadTypes.Guess(AbsoluteUri);
                 switch(cat)
                 {
                     case DownloadTypes.Categories.Text:
@@ -121,6 +153,7 @@ namespace GetFacts.Download
 
                     default:
                     case DownloadTypes.Categories.Video:
+                    case DownloadTypes.Categories.Sound:
                         return 3;
                 }
             }
@@ -245,17 +278,8 @@ namespace GetFacts.Download
                 string dirName = ConfigFactory.GetInstance().CacheDirectory;
                 string fileName = id.ToString();              
                 string path = Path.Combine(dirName, fileName);
+                string extension = Path.GetExtension(AbsoluteUri);
 
-                // remove parameters at the end of the Uri
-                // (anything beyond the '?' mark)
-                string strippedAbsoluteUri = uri.AbsoluteUri;
-                int markIndex = uri.AbsoluteUri.LastIndexOf('?');
-                if (markIndex != -1)
-                {
-                    strippedAbsoluteUri = uri.AbsoluteUri.Remove(markIndex);
-                }
-
-                string extension = Path.GetExtension(strippedAbsoluteUri);
                 if (string.IsNullOrEmpty(extension))
                     extension = DefaultFileExtension;
                 if (string.IsNullOrEmpty(extension) == false)
@@ -287,6 +311,18 @@ namespace GetFacts.Download
                 {
                     pendingAsyncOperation = true;
                     webRequest = WebRequest.CreateHttp(uri);
+
+                    // La reprise de téléchargement n'est supportée
+                    // que pour les fichiers médias, tels que
+                    // les images ou les vidéos.
+
+                    if(File.Exists(downloadPath) && IsResumingSupported)
+                    {
+                        FileInfo info = new FileInfo(downloadPath);
+                        long resumeFrom = info.Length;
+                        webRequest.AddRange(resumeFrom);
+                    }
+
                     Task<WebResponse> task = webRequest.GetResponseAsync();
                     task.ContinueWith(OpenResponseStream);
                     Status = DownloadStatus.Connecting;
@@ -355,14 +391,56 @@ namespace GetFacts.Download
                 AbortDownload();
                 return;
             }
-            
-            achievedDownloadSize = 0;
-            expectedDownloadSize = webResponse.ContentLength;
-            
-            writeStream = File.OpenWrite(downloadPath);
+
+            if ( File.Exists(downloadPath) 
+                && IsResumingSupported 
+                && !string.IsNullOrEmpty(webResponse.Headers[HttpResponseHeader.ContentRange]) )
+            {
+                writeStream = TryResumeDownload();
+            }
+
+            else
+            {
+                achievedDownloadSize = 0;
+                expectedDownloadSize = webResponse.ContentLength;
+                writeStream = File.OpenWrite(downloadPath);
+            }
+
             Status = DownloadStatus.Started;
             FireTaskStarted();
-        }        
+        }  
+        
+        private FileStream TryResumeDownload()
+        {                       
+            try
+            {
+                string contentRange = webResponse.Headers[HttpResponseHeader.ContentRange];
+                Regex contentRangePattern = new Regex(@"bytes ([\d]+)-([\d]+)/([\d]+)");
+                Match match = contentRangePattern.Match(contentRange);
+                expectedDownloadSize = long.Parse(match.Groups[3].Value);
+                achievedDownloadSize = long.Parse(match.Groups[1].Value);
+
+                FileStream stream = new FileStream(downloadPath, FileMode.Append, FileAccess.Write);
+
+                try
+                {
+                    if (stream.Position != achievedDownloadSize)
+                        throw new IOException();
+
+                    return stream;
+                }
+                catch
+                {
+                    stream?.Dispose();
+                    throw;
+                }
+            }
+            catch
+            {
+                File.Delete(downloadPath);
+                throw;
+            }
+        }
 
         private void DownloadMore()
         {

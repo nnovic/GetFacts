@@ -14,7 +14,8 @@ namespace GetFacts.Download
             Undefined,
             Text,
             Image,
-            Video
+            Video,
+            Sound
         }
 
         public static Categories Guess(string url)
@@ -36,6 +37,9 @@ namespace GetFacts.Download
                 case ".avi":
                 case ".mp4":
                     return Categories.Video;
+
+                case ".mp3":
+                    return Categories.Sound;
 
                 default:
                     return Categories.Undefined;
