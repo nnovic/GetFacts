@@ -1,26 +1,22 @@
 [
   {
-    "Name": "sokrostream",
-    "Url": "http://sokrostream.cc/",
-    "Template": "fr\\sokrostream_cc.json",
-    "Refresh": 60
+    "Name": "TechCrunch",
+    "Url": "http://feeds.feedburner.com/TechCrunch/",
+    "Template": "rss.json",
   },
   {
-    "Name": "leboncoin",
-    "Url": "https://www.leboncoin.fr/annonces/offres/rhone_alpes/",
-    "Template": "fr\\www_leboncoin_fr.json",
-    "Refresh": 10
+    "Name": "IGN games videos",
+    "Url": "http://feeds.ign.com/ign/games-videos?format=xml",
+    "Template": "rss.json"
   },
   {
-    "Name": "slate",
-    "Url": "http://www.slate.fr/",
-    "Template": "fr\\www_slate_fr.json",
-    "Refresh": 60
+    "Name": "CinemaBlend Latest Content",
+    "Url": "http://feeds.feedburner.com/cinemablendallthing?format=xml",
+    "Template": "rss.json",
   },
   {
-    "Name": "Mairie SPDC",
-    "Url": "http://mairie-stpierredechandieu.com/index.php/fr/",
-    "Template": "fr\\mairie-stpierredechandieu_com.json",
-    "Refresh": 60
+    "Name": "Music News",
+    "Url": "http://www.music-news.com/rss/UK/news?includeCover=true",
+    "Template": "rss.json",
   }
 ]
