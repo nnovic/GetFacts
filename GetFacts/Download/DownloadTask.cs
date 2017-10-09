@@ -140,8 +140,9 @@ namespace GetFacts.Download
         private DownloadStatus _downloadStatus = DownloadStatus.ReadyToStart;
         private FileStream writeStream = null;
         private Stream readStream = null;
-        private byte[] downloadBuffer = new byte[1024];        
-        private WebClient webClient = null;        
+        private byte[] downloadBuffer = new byte[1024];       
+        private HttpWebRequest webRequest = null;
+        private HttpWebResponse webResponse = null;
         private long expectedDownloadSize = -1;
         private long achievedDownloadSize = 0;
 
@@ -270,8 +271,9 @@ namespace GetFacts.Download
         internal void StopDownload()
         {
             try { readStream?.Dispose(); } catch { }
-            try { webClient?.Dispose(); } catch { }
+            try { webResponse?.Dispose(); } catch { }
             try { writeStream?.Dispose(); } catch { }
+            webRequest = null;
             Status = DownloadStatus.Aborted;
         }
 
@@ -283,10 +285,10 @@ namespace GetFacts.Download
             {
                 try
                 {
-                    webClient = new WebClient();
-                    webClient.OpenReadCompleted += WebClient_OpenReadCompleted;
                     pendingAsyncOperation = true;
-                    webClient.OpenReadAsync(uri);
+                    webRequest = WebRequest.CreateHttp(uri);
+                    Task<WebResponse> task = webRequest.GetResponseAsync();
+                    task.ContinueWith(OpenResponseStream);
                     Status = DownloadStatus.Connecting;
                 }
                 catch
@@ -299,14 +301,13 @@ namespace GetFacts.Download
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="task"></param>
         /// <remarks>Ajoute une notification dans NotificationSystem en cas
         /// d'erreur durant l'obtention du flux d'entrée.</remarks>
         /// <seealso cref="NotificationKeys.CannotOpenConnection"/>
-        private void WebClient_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        private void OpenResponseStream(Task<WebResponse> task)
         {
-            lock(_lock_)
+            lock (_lock_)
             {
                 var notification = new NotificationSystem.Notification(this,
                                 (int)NotificationKeys.CannotOpenConnection)
@@ -315,23 +316,29 @@ namespace GetFacts.Download
                     Description = "Connection cannot be established."
                 };
 
-                try
+
+                switch (task.Status)
                 {
-                    readStream = e.Result;
-                    NotificationSystem.GetInstance().Remove(notification);
-                }
-                catch
-                {
-                    readStream = null;
-                    NotificationSystem.GetInstance().Add(notification);
-                }
-                finally
-                {
-                    pendingAsyncOperation = false;
+                    case TaskStatus.RanToCompletion:
+                        pendingAsyncOperation = false;
+                        webResponse = (HttpWebResponse)task.Result;
+                        readStream = webResponse.GetResponseStream();
+                        break;
+
+                    default:
+                        break;
+
+                    case TaskStatus.Canceled:
+                    case TaskStatus.Faulted:
+                        pendingAsyncOperation = false;
+                        webResponse = null;
+                        readStream = null;
+                        NotificationSystem.GetInstance().Add(notification);
+                        break;
                 }
             }
         }
-
+        
         private void StartDownload()
         {
             if(pendingAsyncOperation==true)
@@ -349,16 +356,8 @@ namespace GetFacts.Download
                 return;
             }
             
-            expectedDownloadSize = -1;
             achievedDownloadSize = 0;
-            string contentLengthAsString = webClient.ResponseHeaders[HttpResponseHeader.ContentLength];
-            if (string.IsNullOrEmpty(contentLengthAsString) == false)
-            {
-                if (long.TryParse(contentLengthAsString, out expectedDownloadSize) == false)
-                {
-                    expectedDownloadSize = -1;
-                }
-            }
+            expectedDownloadSize = webResponse.ContentLength;
             
             writeStream = File.OpenWrite(downloadPath);
             Status = DownloadStatus.Started;
@@ -395,7 +394,8 @@ namespace GetFacts.Download
         {
             try { writeStream?.Dispose(); } catch { } finally { writeStream = null; }
             try { readStream?.Dispose(); } catch { } finally { readStream = null; }
-            try { webClient?.Dispose(); } catch { } finally { webClient = null; }
+            try { webResponse?.Dispose(); } catch { } finally { webResponse = null; }
+            webRequest = null;
             expectedDownloadSize = -1;
             achievedDownloadSize = 0;
         }
