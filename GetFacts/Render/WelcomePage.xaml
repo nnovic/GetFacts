@@ -27,28 +27,34 @@
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Border x:Name="hap_ad" Margin="10" CornerRadius="10" Background="#FFDE7D7D">
-                <Viewbox Margin="10">
+                <Viewbox Margin="5">
                     <local1:HtmlAgilityPack_Ad />
                 </Viewbox>
             </Border>
             <Border Grid.Row="1" x:Name="json_ad" Margin="10" CornerRadius="10" Background="#FF24BB62">
-                <Viewbox Margin="10">
+                <Viewbox Margin="5">
                     <local1:JsonNET />
                 </Viewbox>
             </Border>
             <Border Grid.Column="1" x:Name="winapi_ad" Margin="10" CornerRadius="10" Background="#FFC7A81E">
-                <Viewbox Margin="10">
+                <Viewbox Margin="5">
                     <local1:WindowsAPICodePack_Ad/>
                 </Viewbox>
             </Border>
-            <Border Grid.Column="1" Grid.Row="1" x:Name="vsts_ad" Margin="10" CornerRadius="10" Background="#FF7CC3FF">
-                <Viewbox Margin="10">
+            <Border Grid.Column="1" Grid.Row="1" x:Name="notifyicon_ad" Margin="10" CornerRadius="10" Background="#FFA20000">
+                <Viewbox Margin="5">
+                    <local1:WpfNotifyIcon_Ad/>
+                </Viewbox>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="2" x:Name="vsts_ad" Margin="10" CornerRadius="10" Background="#FF7CC3FF">
+                <Viewbox Margin="5">
                     <local1:VisualStudio_Ad/>
                 </Viewbox>
             </Border>

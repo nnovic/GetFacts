@@ -9,7 +9,7 @@ namespace GetFacts.Ads
     /// </summary>
     public partial class WindowsAPICodePack_Ad : UserControl
     {
-        public static readonly string URL = "http://html-agility-pack.net/";
+        public static readonly string URL = "https://github.com/aybe/Windows-API-Code-Pack-1.1";
 
         public WindowsAPICodePack_Ad()
         {
