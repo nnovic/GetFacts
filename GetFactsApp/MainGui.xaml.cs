@@ -318,6 +318,13 @@ namespace GetFacts
 
         #region removal of unused files
         
+        /// <summary>
+        /// TODO
+        /// Problèmes possibles: 
+        /// - supprime les fichiers
+        /// associés à des pages qui sont désactviées
+        /// dans la configuration utilisateur.
+        /// </summary>
         private void RemoveTrash()
         {
             //remove active urls from downloads and
