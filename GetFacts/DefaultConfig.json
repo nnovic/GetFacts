@@ -2,21 +2,22 @@
   {
     "Name": "TechCrunch",
     "Url": "http://feeds.feedburner.com/TechCrunch/",
-    "Template": "rss.json",
+    "Template": "rss.json"
   },
   {
     "Name": "IGN games videos",
     "Url": "http://feeds.ign.com/ign/games-videos?format=xml",
-    "Template": "rss.json"
+    "Template": "rss.json",
+    "Enabled": false
   },
   {
     "Name": "CinemaBlend Latest Content",
     "Url": "http://feeds.feedburner.com/cinemablendallthing?format=xml",
-    "Template": "rss.json",
+    "Template": "rss.json"
   },
   {
     "Name": "Music News",
     "Url": "http://www.music-news.com/rss/UK/news?includeCover=true",
-    "Template": "rss.json",
+    "Template": "rss.json"
   }
 ]

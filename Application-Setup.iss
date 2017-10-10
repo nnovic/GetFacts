@@ -2,8 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "GetFacts"
+#define MyAppCfgName "Template editor"
 #define MyAppVersion "0.1"
-#define MyAppExeName "MyProg.exe"
+#define MyAppExeName "GetFactsApp.exe"
+#define MyAppCfgExeName "TemplatesApp.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -13,10 +15,10 @@ AppId={{0EBE7ACC-671C-4774-B137-D5A47E7096D4}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={localappdata}\GetFacts\Apps
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-OutputBaseFilename=setup
+OutputBaseFilename={#MyAppName}_{#MyAppVersion}_Install
 Compression=lzma
 SolidCompression=yes
 
@@ -28,16 +30,18 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
+Source: "C:\Users\alexandre\Documents\GetFacts\TemplatesApp\bin\Debug\*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\alexandre\Documents\GetFacts\TemplatesApp\bin\Debug\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\DefaultConfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\GetFacts.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\GetFactsApp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\HtmlAgilityPack.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\alexandre\Documents\GetFacts\GetFactsApp\bin\Debug\Templates\*"; DestDir: "{app}\Templates\"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppCfgName}"; Filename: "{app}\{#MyAppCfgExeName}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
@@ -45,3 +49,5 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+
+#define MyAppExeName "GetFactsApp.exe"
