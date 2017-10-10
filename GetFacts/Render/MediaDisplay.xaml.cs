@@ -134,17 +134,26 @@ namespace GetFacts.Render
         /// <param name="e"></param>
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            double maxDuration = articleMedia.NaturalDuration.TimeSpan.TotalSeconds;
-            double currentPosition = articleMedia.Position.TotalSeconds;
-
-            if (articleMedia.HasVideo && (SmoothVideo==false) )
+            if (articleMedia.NaturalDuration.HasTimeSpan)
             {
-                currentPosition = Math.Min(currentPosition + 1.0, maxDuration);
-                articleMedia.Position = TimeSpan.FromSeconds(currentPosition);
-            }
+                double maxDuration = articleMedia.NaturalDuration.TimeSpan.TotalSeconds;
+                double currentPosition = articleMedia.Position.TotalSeconds;
 
-            mediaProgressValue.Maximum = maxDuration;
-            mediaProgressValue.Value = currentPosition;
+                if (articleMedia.HasVideo && (SmoothVideo == false))
+                {
+                    currentPosition = Math.Min(currentPosition + 1.0, maxDuration);
+                    articleMedia.Position = TimeSpan.FromSeconds(currentPosition);
+                }
+
+                mediaProgressValue.Maximum = maxDuration;
+                mediaProgressValue.Value = currentPosition;
+                mediaProgressContainer.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                mediaProgressValue.Value = 0;
+                mediaProgressContainer.Visibility = Visibility.Hidden;
+            }
         }
 
         /// <summary>
@@ -164,8 +173,8 @@ namespace GetFacts.Render
             // mettre la lecture en pause immédiatement.
 
             articleMedia.Pause();
-            mediaProgressValue.Value = 0;
-            mediaProgressContainer.Visibility = Visibility.Visible;            
+            //mediaProgressValue.Value = 0;
+            //mediaProgressContainer.Visibility = Visibility.Visible;            
             dispatcherTimer.Start();
         }
 
