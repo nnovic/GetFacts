@@ -172,9 +172,7 @@ namespace GetFacts.Render
             // Lorsque le fichier média est ouvert,
             // mettre la lecture en pause immédiatement.
 
-            articleMedia.Pause();
-            //mediaProgressValue.Value = 0;
-            //mediaProgressContainer.Visibility = Visibility.Visible;            
+            articleMedia.Pause();          
             dispatcherTimer.Start();
         }
 
