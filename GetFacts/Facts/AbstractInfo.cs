@@ -155,11 +155,13 @@ namespace GetFacts.Facts
         {
             get
             {
-                if(newContent==true)
+                if (newContent == true)
                 {
-                    switch(IsNewBehavior)
+                    switch (IsNewBehavior)
                     {
                         default:
+                            return true;
+
                         case IsNewPropertyGets.OldImmediately:
                             newContent = false;
                             return true;
@@ -169,7 +171,10 @@ namespace GetFacts.Facts
                             return false;
                     }
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
             set
             {
