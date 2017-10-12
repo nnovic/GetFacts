@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -423,15 +424,35 @@ namespace GetFacts.Render
             imageContainer.MouseLeftButtonUp -= ImageContainer_MouseLeftButtonUp;
             imageContainer.Children.Remove(md);
             md.Tag = this;
-            Console.WriteLine("Media detached from ArticleDisplay");
+            Console.WriteLine("Media detached from ArticleDisplay");            
         }
 
 
         public void Dock(MediaDisplay md)
         {
-            imageContainer.Children.Add(md);
-            imageContainer.MouseLeftButtonUp += ImageContainer_MouseLeftButtonUp;
             Console.WriteLine("Media attached to ArticleDisplay");
+
+            // L'encapsulation qui suit est une astuce
+            // pour permettre au Dispatcher de "voir",
+            // dans certains cas tordus, que le curseur
+            // de la souris n'est plus sur le même contrôle;
+            // ce faisait, il génère les évènement MouseLeave
+            // et MouseEnter appropriés.
+            Task.Run(() =>
+            {
+                Thread.Sleep(20);
+                Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        imageContainer.Children.Add(md);
+                        imageContainer.MouseLeftButtonUp += ImageContainer_MouseLeftButtonUp;
+                    }
+                    catch
+                    {
+                    }
+                });
+            });
         }
 
         private void ImageContainer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -472,8 +493,11 @@ namespace GetFacts.Render
         {
             Console.WriteLine("ArticleDisplay.Deactivate");
             bgBorder.Background = normalBrush;
-            mediaDisplay.SmoothVideo = false;
 
+            if (mediaDisplay.Parent == imageContainer)
+            {
+                mediaDisplay.SmoothVideo = false;
+            }
         }
 
         private void Activate()

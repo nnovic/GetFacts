@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -206,14 +207,13 @@ namespace GetFacts.Render
 
         public void Dock(MediaDisplay md)
         {
-            if( dockedMedia!=null)
+            if (dockedMedia != null)
             {
                 throw new Exception();
             }
 
             OnFrozen(CauseOfFreezing.ZoomOnMedia); // disable stop watch
             dockedMedia = md;
-            mediaDock.Children.Add(md);
 
             if (string.IsNullOrEmpty(md.Caption))
             {
@@ -227,6 +227,28 @@ namespace GetFacts.Render
 
             mediaGrid.Visibility = Visibility.Visible;
             Console.WriteLine("Media attached to Page");
+
+            // L'encapsulation qui suit est une astuce
+            // pour permettre au Dispatcher de "voir",
+            // dans certains cas tordus, que le curseur
+            // de la souris n'est plus sur le même contrôle;
+            // ce faisait, il génère les évènement MouseLeave
+            // et MouseEnter appropriés.
+            Task.Run(() => 
+            {
+                Thread.Sleep(20);
+                Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        mediaDock.Children.Add(md);
+                    }
+                    catch
+                    {
+                    }
+                });
+            });
+            
         }
 
         #endregion
