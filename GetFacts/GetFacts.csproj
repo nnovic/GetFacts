@@ -77,6 +77,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ads\GitHub_Ad.xaml.cs">
+      <DependentUpon>GitHub_Ad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ads\HtmlAgilityPack_Ad.xaml.cs">
       <DependentUpon>HtmlAgilityPack_Ad.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
     <Compile Include="Toolkit.cs" />
     <Compile Include="WindowPosition.cs" />
     <Compile Include="XPathTextBox.cs" />
+    <Page Include="Ads\GitHub_Ad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ads\HtmlAgilityPack_Ad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -245,6 +252,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ads\WpfNotifyIcon_Ad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ads\GitHub_Ad.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
