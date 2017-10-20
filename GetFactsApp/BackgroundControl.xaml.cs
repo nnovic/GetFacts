@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace GetFacts
 {
@@ -22,6 +24,7 @@ namespace GetFacts
     {
         private readonly Random random = new Random();
 
+        private readonly DispatcherTimer timer = new DispatcherTimer();
         private Color bottomBgColor;
         private Color bottomFgColor;
         private Color topBgColor;
@@ -48,38 +51,48 @@ namespace GetFacts
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
+            timer.Tick += new EventHandler(DispatcherTimer_Tick);
+            timer.Interval = TimeSpan.FromSeconds(0.1);
             GenerateShapes();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            AnimationEnabled = true;
         }
 
-        private Point[,] originalMatrix=null;
-        private Point[,] actualMatrix=null;
+        private Point[,] percentageMatrix=null;
+        private Point[,] sizedMatrix=null;
+        private Point[,] animatedMatrix = null;
         private int rowCount = 10;
         private int colCount = 10;
 
         private void GenerateShapes()
         {
             rowCount = 5 + random.Next(15);
-            colCount = 5 + random.Next(15);
+            rowCount = colCount = 5 + random.Next(15);
 
             // génération de la matrice de points,
             // en pourcentage de la taille réelle du control.
-            originalMatrix = GeneratePoints(rowCount, colCount);
-            actualMatrix = GeneratePoints(rowCount, colCount);
-            ShufflePoints(originalMatrix, rowCount, colCount);
+            percentageMatrix = GeneratePoints(rowCount, colCount);
+            sizedMatrix = new Point[rowCount, colCount];
+            animatedMatrix =  new Point[rowCount, colCount]; 
+            ShufflePoints(percentageMatrix, rowCount, colCount);
         }
 
         private void RescaleShapes()
+        {
+            RescalePoints(percentageMatrix, sizedMatrix, rowCount, colCount);
+            RescaleAnimation(sizedMatrix, animatedMatrix, rowCount, colCount);
+        }
+        
+        private void RedrawShapes()
         {
             Canvas.BeginInit();
             try
             {
                 Canvas.Children.Clear();
-                RescalePoints(originalMatrix, actualMatrix, rowCount, colCount);
-                List<Shape> shapes = GeneratePolygons(actualMatrix, rowCount, colCount);
+                List<Shape> shapes = GeneratePolygons(animatedMatrix, rowCount, colCount);
                 shapes.ForEach(s => Canvas.Children.Add(s));
             }
             finally
@@ -126,8 +139,8 @@ namespace GetFacts
 
         private void ShufflePoints(Point[,] points, int rows, int columns)
         {
-            double width = 1.0;// ActualWidth;
-            double height = 1.0; // ActualHeight;
+            double width = 1.0;
+            double height = 1.0;
 
             double hMaxJitter = (width / (columns - 1)) / 4;
             double vMaxJitter = (height / (rows - 1)) / 4;
@@ -217,6 +230,7 @@ namespace GetFacts
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             RescaleShapes();
+            RedrawShapes();
         }
 
         private Color Lighter(Color c)
@@ -235,6 +249,87 @@ namespace GetFacts
             byte g = (byte)Math.Max(0, c.G - decr);
             byte b = (byte)Math.Max(0, c.B - decr);
             return Color.FromRgb(r, g, b);
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+        }
+
+
+        private int animationStep = 0;
+        private int animationCycle = 10;
+        private double[] animationXIncrements;
+        private double[] animationYIncrements;
+
+
+        private void RescaleAnimation(Point[,] inputMatrix, Point[,] outputMatrix, int rows, int columns)
+        {
+            animationXIncrements = new double[2 * animationCycle];
+            animationYIncrements = new double[2 * animationCycle];
+
+            for (int keyframe = 0; keyframe < animationCycle; keyframe++)
+            {
+                animationXIncrements[keyframe] = 3 * Math.Cos(2 * Math.PI * keyframe / animationCycle);
+                animationYIncrements[keyframe] = 3 * Math.Cos(2 * Math.PI * keyframe / animationCycle);
+
+                animationXIncrements[animationCycle + keyframe] = animationXIncrements[keyframe];
+                animationYIncrements[animationCycle + keyframe] = animationYIncrements[keyframe];
+            }
+
+
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < columns; col++)
+                {
+                    outputMatrix[row, col] = new Point(inputMatrix[row, col].X, inputMatrix[row, col].Y);
+                }
+            }
+        }
+
+        private void AnimateShapes(Point[,] inputMatrix, Point[,] outputMatrix, int rows, int columns)
+        {
+            rows--;
+            columns--;
+
+            for (int row = 1; row < rows; row++)
+            {
+                for (int col = 1; col < columns; col++)
+                {                    
+                    outputMatrix[row, col] = inputMatrix[row, col];
+                    int decalage = (row + col) % animationCycle;
+                    outputMatrix[row, col].Offset(animationXIncrements[animationStep+decalage], animationYIncrements[animationStep+decalage]);
+                }
+            }
+        }
+
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            animationStep++;
+            if(animationStep>=animationCycle)
+            {
+                animationStep = 0;
+            }
+            AnimateShapes(sizedMatrix, animatedMatrix, rowCount, colCount);
+            RedrawShapes();
+            InvalidateVisual();
+        }
+
+
+        public bool AnimationEnabled
+        {
+            set
+            {
+                if((value==true) && (DesignerProperties.GetIsInDesignMode(this)==false) )
+                {
+                    timer.Start();
+                }
+                else
+                {
+                    timer.Stop();
+                }
+            }
         }
     }
 }

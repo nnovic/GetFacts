@@ -449,5 +449,17 @@ namespace GetFacts
             WindowState = WindowState.Normal;
             this.Activate();
         }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Background.AnimationEnabled = false;
+            }
+            else
+            {
+                Background.AnimationEnabled = true;
+            }
+        }
     }
 }

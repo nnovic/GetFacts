@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:GetFacts"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing" Initialized="Window_Initialized">
+        Title="MainGui" Loaded="Window_Loaded" Closing="Window_Closing" Initialized="Window_Initialized" StateChanged="Window_StateChanged">
 
     <Grid>
 
         <tb:TaskbarIcon x:Name="TrayIcon" IconSource="GetFacts.ico" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp"/>
 
-        <local:BackgroundControl/>
+        <local:BackgroundControl x:Name="Background"/>
         
         <Frame x:Name="navigator" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden"></Frame>
         
