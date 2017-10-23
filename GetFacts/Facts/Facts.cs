@@ -21,7 +21,7 @@ namespace GetFacts.Facts
             {
                 if (uniqueInstance == null)
                 {
-                    string cfgFile = ConfigFactory.GetInstance().ConfigFile;
+                    string cfgFile = ConfigManager.GetInstance().ConfigFile;
                     uniqueInstance = new Facts(cfgFile);
                 }
                 return uniqueInstance;
@@ -37,7 +37,7 @@ namespace GetFacts.Facts
 
         private void LoadConfiguration(string path)
         {
-            List<PageConfig> listConfigs = ConfigFactory.GetInstance().LoadConfig(path);
+            List<PageConfig> listConfigs = ConfigManager.GetInstance().LoadConfig(path);
             IEnumerable<PageConfig> orderedList = listConfigs;
 
             if(ShufflePages)

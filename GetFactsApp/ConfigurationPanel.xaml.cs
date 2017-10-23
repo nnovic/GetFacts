@@ -40,7 +40,7 @@ namespace GetFacts
             {
                 list.Add(pci.PageConfig);
             }
-            ConfigFactory.Save(list);
+            ConfigManager.Save(list);
         }
 
         private void Restart()
@@ -62,7 +62,7 @@ namespace GetFacts
         {
             if (ListOfConfigItems.Items.Count == 0)
             {
-                List<PageConfig> configuration = ConfigFactory.Load();
+                List<PageConfig> configuration = ConfigManager.Load();
                 foreach (PageConfig config in configuration)
                 {
                     PageConfigItem pci = new PageConfigItem() { PageConfig = config };
@@ -70,23 +70,23 @@ namespace GetFacts
                 }
 
                 CacheDirectoryInput.Caption = "Data cache location:";
-                CacheDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultCacheDirectory;
-                CacheDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().CacheDirectory;
+                CacheDirectoryInput.DefaultDirectory = ConfigManager.GetInstance().DefaultCacheDirectory;
+                CacheDirectoryInput.CurrentDirectory = ConfigManager.GetInstance().CacheDirectory;
 
                 TemplatesDirectoryInput.Caption = "Page templates location:";
-                TemplatesDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultTemplatesDirectory;
-                TemplatesDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().TemplatesDirectory;
+                TemplatesDirectoryInput.DefaultDirectory = ConfigManager.GetInstance().DefaultTemplatesDirectory;
+                TemplatesDirectoryInput.CurrentDirectory = ConfigManager.GetInstance().TemplatesDirectory;
 
                 UserDirectoryInput.Caption = "Personal info location:";
-                UserDirectoryInput.DefaultDirectory = ConfigFactory.GetInstance().DefaultConfigFile;
-                UserDirectoryInput.CurrentDirectory = ConfigFactory.GetInstance().ConfigFile;
+                UserDirectoryInput.DefaultDirectory = ConfigManager.GetInstance().DefaultConfigFile;
+                UserDirectoryInput.CurrentDirectory = ConfigManager.GetInstance().ConfigFile;
             }
         }
 
         private void DoMemorizeLayout()
         {
             WindowPosition wp = WindowPosition.CreateFrom(this);
-            ConfigFactory.GetInstance().WindowPosition = wp;
+            ConfigManager.GetInstance().WindowPosition = wp;
         }
 
         private void MemorizeLayoutButton_Click(object sender, RoutedEventArgs e)

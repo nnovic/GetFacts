@@ -19,7 +19,7 @@ namespace GetFacts
                 {
                     uniqueInstance = new TemplateFactory()
                     {
-                        TemplatesDirectory = ConfigFactory.GetInstance().TemplatesDirectory }
+                        TemplatesDirectory = ConfigManager.GetInstance().TemplatesDirectory }
                     ;
                 }
                 return uniqueInstance;
@@ -141,7 +141,7 @@ namespace GetFacts
         /// Toute modification ultérieure de cette propriété n'est pas répercutée sur le contenu
         /// de ConfigFactory.GetInstance().TemplatesDirectory.
         /// </summary>
-        /// <see cref="ConfigFactory.TemplatesDirectory"/>
+        /// <see cref="ConfigManager.TemplatesDirectory"/>
         public string TemplatesDirectory
         {
             get;set;

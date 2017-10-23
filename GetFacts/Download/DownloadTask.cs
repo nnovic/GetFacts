@@ -275,7 +275,7 @@ namespace GetFacts.Download
         {
             get
             {
-                string dirName = ConfigFactory.GetInstance().CacheDirectory;
+                string dirName = ConfigManager.GetInstance().CacheDirectory;
                 string fileName = id.ToString();              
                 string path = Path.Combine(dirName, fileName);
                 string extension = Path.GetExtension(AbsoluteUri);

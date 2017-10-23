@@ -3,7 +3,7 @@
 
 #define MyAppName "GetFacts"
 #define MyAppCfgName "Template editor"
-#define MyAppVersion "0.1"
+#define MyAppVersion "0.2"
 #define MyAppExeName "GetFactsApp.exe"
 #define MyAppCfgExeName "TemplatesApp.exe"
 

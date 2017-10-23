@@ -336,7 +336,7 @@ namespace GetFacts
 
             // remove active files from content of the download directory
             // to obtain orphaned files, and remove those.
-            string downloadDir = ConfigFactory.GetInstance().CacheDirectory;
+            string downloadDir = ConfigManager.GetInstance().CacheDirectory;
             ISet<string> activeFiles = DownloadManager.GetInstance().GetAllFilesInUse();
             IEnumerable<string> tempFiles = Directory.EnumerateFiles(downloadDir);
             IEnumerable<string> deleteThoseFiles = tempFiles.Except(activeFiles);
@@ -372,7 +372,7 @@ namespace GetFacts
         private void Window_Initialized(object sender, EventArgs e)
         {
             NotificationSystem.GetInstance().Notifications.CollectionChanged += Notifications_CollectionChanged;
-            WindowPosition wp = ConfigFactory.GetInstance().WindowPosition;
+            WindowPosition wp = ConfigManager.GetInstance().WindowPosition;
             wp?.ApplyTo(this);
             UpdateTooltips(null);
         }

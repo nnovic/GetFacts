@@ -186,7 +186,7 @@ namespace TemplatesApp
                     }
                 }
                 MRU.Insert(0, folder);
-                ConfigFactory.GetInstance().SaveMruTemplatesDirectories(MRU);
+                ConfigManager.GetInstance().SaveMruTemplatesDirectories(MRU);
             }
             finally
             {
@@ -223,7 +223,7 @@ namespace TemplatesApp
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             TemplatesDirSelection.ItemsSource = MRU;
-            foreach(string dir in ConfigFactory.GetInstance().GetMruTemplatesDictories())
+            foreach(string dir in ConfigManager.GetInstance().GetMruTemplatesDictories())
             {
                 MRU.Add(dir);
             }

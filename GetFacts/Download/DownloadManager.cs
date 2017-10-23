@@ -100,7 +100,7 @@ namespace GetFacts.Download
             HashSet<string> output = new HashSet<string>();
             lock (_lock_)
             {
-                string listFile = ConfigFactory.GetInstance().DownloadsList;
+                string listFile = ConfigManager.GetInstance().DownloadsList;
                 output.Add(listFile);
                 output.Add(Path.ChangeExtension(listFile, DownloadTask.BackupExtension));
                 output.Add(Path.ChangeExtension(listFile, DownloadTask.TmpFileExtension));
@@ -140,7 +140,7 @@ namespace GetFacts.Download
 
             lock(_lock_)
             {
-                string path = ConfigFactory.GetInstance().DownloadsList;
+                string path = ConfigManager.GetInstance().DownloadsList;
                 string[] entries = File.ReadAllLines(path);
                 List<string> list = new List<string>(entries);
                 foreach(string d in removeList)
@@ -176,7 +176,7 @@ namespace GetFacts.Download
         {
             if (DownloadsFileSupported)
             {
-                string path = ConfigFactory.GetInstance().DownloadsList;
+                string path = ConfigManager.GetInstance().DownloadsList;
                 List<string> entries = new List<string>();
                 foreach (DownloadTask task in downloads)
                 {
@@ -215,7 +215,7 @@ namespace GetFacts.Download
             {
                 if (DownloadsFileSupported)
                 {
-                    string path = ConfigFactory.GetInstance().DownloadsList;
+                    string path = ConfigManager.GetInstance().DownloadsList;
                     string[] entries = File.ReadAllLines(path);
                     foreach (string entry in entries)
                     {

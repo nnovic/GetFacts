@@ -95,7 +95,7 @@
     <Compile Include="Ads\WpfNotifyIcon_Ad.xaml.cs">
       <DependentUpon>WpfNotifyIcon_Ad.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConfigFactory.cs" />
+    <Compile Include="ConfigManager.cs" />
     <Compile Include="DoubleList.cs" />
     <Compile Include="Facts\Article.cs" />
     <Compile Include="Facts\Facts.cs" />
