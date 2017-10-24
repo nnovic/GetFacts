@@ -77,9 +77,10 @@ namespace GetFacts
                 TemplatesDirectoryInput.DefaultDirectory = ConfigManager.GetInstance().DefaultTemplatesDirectory;
                 TemplatesDirectoryInput.CurrentDirectory = ConfigManager.GetInstance().TemplatesDirectory;
 
-                UserDirectoryInput.Caption = "Personal info location:";
-                UserDirectoryInput.DefaultDirectory = ConfigManager.GetInstance().DefaultConfigFile;
-                UserDirectoryInput.CurrentDirectory = ConfigManager.GetInstance().ConfigFile;
+                ConfigFileInput.Caption = "Personal info location:";
+                ConfigFileInput.FileMode = true;
+                ConfigFileInput.DefaultDirectory = ConfigManager.GetInstance().DefaultConfigFile;
+                ConfigFileInput.CurrentDirectory = ConfigManager.GetInstance().ConfigFile;
             }
         }
 

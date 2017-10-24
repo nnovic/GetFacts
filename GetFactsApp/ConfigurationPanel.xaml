@@ -28,7 +28,7 @@
                 <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
             </Border>
             <Border Background="Cyan"  Margin="3" Padding="3" CornerRadius="3">
-                <local:DirectoryInputPanel x:Name="UserDirectoryInput" />
+                <local:DirectoryInputPanel x:Name="ConfigFileInput" />
             </Border>
             <Separator/>
         </StackPanel>

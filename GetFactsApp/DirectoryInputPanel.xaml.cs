@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -21,9 +24,18 @@ namespace GetFacts
     /// </summary>
     public partial class DirectoryInputPanel : UserControl
     {
+        private bool fileMode = false;
+
         public DirectoryInputPanel()
         {
             InitializeComponent();
+        }
+
+        [DefaultValue(false)]
+        public bool FileMode
+        {
+            get { return fileMode; }
+            set { fileMode = value; OpenButton.IsEnabled = !fileMode; }
         }
 
         public string Caption
@@ -47,6 +59,39 @@ namespace GetFacts
         {
             string path = FullPath.Text;
             Process.Start(path);
+        }
+
+        private void Resetbutton_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentDirectory = DefaultDirectory;
+        }
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dlg = new CommonOpenFileDialog())
+            {
+                dlg.Title = Caption;
+                dlg.IsFolderPicker = !FileMode;
+                dlg.InitialDirectory = CurrentDirectory;
+
+                dlg.AddToMostRecentlyUsedList = false;
+                dlg.AllowNonFileSystemItems = false;
+                dlg.DefaultDirectory = DefaultDirectory;
+                dlg.EnsureValidNames = true;
+                dlg.Multiselect = false;
+                dlg.ShowPlacesList = true;
+
+                if (FileMode)
+                {
+                    CommonFileDialogFilter filter = new CommonFileDialogFilter(".json", ".json");
+                    dlg.Filters.Add(filter);
+                }
+
+                if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    CurrentDirectory = dlg.FileName;
+                }
+            }
         }
     }
 }
