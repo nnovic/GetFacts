@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Loaded="Root_Loaded" Background="White">
+             d:DesignHeight="549" d:DesignWidth="300" Loaded="Root_Loaded" Background="White">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -14,32 +14,43 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" x:Name="PanelFordirectories" Background="Gray">
-            <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="MemorizeLayoutButton" Click="MemorizeLayoutButton_Click">Memorize layout</Button>
-                    <ToggleButton x:Name="OnTopButton" Click="OnTopButton_Click" Loaded="OnTopButton_Loaded" >Always on top</ToggleButton>
+        <StackPanel Grid.Row="0" x:Name="PanelFordirectories" Background="DimGray">
+            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,10,10,5" Padding="5"  CornerRadius="3">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="MemorizeLayoutButton" Click="MemorizeLayoutButton_Click" Margin="3" Padding="3" FontSize="16">Memorize layout</Button>
+                    <ToggleButton x:Name="OnTopButton" Click="OnTopButton_Click" Loaded="OnTopButton_Loaded" Margin="0,3,3,3" Padding="3" FontSize="16" >Always on top</ToggleButton>
                 </StackPanel>
             </Border>
-            <Border Background="Cyan" Margin="3" Padding="3"  CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,0,10,5" Padding="5"  CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
             </Border>
-            <Border Background="Cyan"  Margin="3" Padding="3" CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue"  Margin="10,0,10,5" Padding="5" CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
             </Border>
-            <Border Background="Cyan"  Margin="3" Padding="3" CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue"  Margin="10,0,10,10" Padding="5" CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="ConfigFileInput" />
             </Border>
             <Separator/>
         </StackPanel>
 
-        <ListView Grid.Row="1" x:Name="ListOfConfigItems" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"></ListView>
+        <ListView Grid.Row="1" x:Name="ListOfConfigItems" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Cornsilk" Offset="0"/>
+                    <GradientStop Color="Wheat" Offset="1"/>
+                </LinearGradientBrush>
+            </ListView.Background>
+        </ListView>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Button x:Name="SaveAndRestartButton" Click="SaveAndRestartButton_Click">Save and restart</Button>
-            <Button x:Name="AddPageButton" Click="AddPageButton_Click" >Add</Button>
+        <StackPanel Grid.Row="2" Background="DimGray">
+            <Separator/>
+            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,10,10,5" Padding="5"  CornerRadius="3">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="SaveAndRestartButton" Click="SaveAndRestartButton_Click" Margin="3" Padding="3" FontSize="16">Save and restart</Button>
+                    <Button x:Name="AddPageButton" Click="AddPageButton_Click" Margin="0,3,3,3" Padding="3" FontSize="16" >Add</Button>
+                </StackPanel>
+            </Border>
         </StackPanel>
-       
 
     </Grid>
 </UserControl>
