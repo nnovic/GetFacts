@@ -177,7 +177,7 @@ namespace GetFacts
                 else
                 {
                     PageConfig.Enabled = false;
-                    TheBorder.BorderBrush = Brushes.Silver;
+                    TheBorder.BorderBrush = Brushes.LightGray;
                     EnabledCheckBox.FontWeight = FontWeights.Normal;
                 }
             }
