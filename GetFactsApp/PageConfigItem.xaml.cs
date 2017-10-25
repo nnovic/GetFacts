@@ -62,7 +62,14 @@ namespace GetFacts
         {
             get
             {
-                return !string.IsNullOrEmpty(ConfigNameInput.Text);
+                bool isValid= !string.IsNullOrEmpty(ConfigNameInput.Text);
+
+                if (!isValid)
+                {
+                    ConfigNameInput.Focus();
+                    MessageBox.Show("Invalid name");
+                }
+                return isValid;
             }
         }
 
@@ -70,7 +77,14 @@ namespace GetFacts
         {
             get
             {
-                return !string.IsNullOrEmpty(ConfigUrlInput.Text);
+                bool isValid = !string.IsNullOrEmpty(ConfigUrlInput.Text);
+
+                if (!isValid)
+                {
+                    ConfigUrlInput.Focus();
+                    MessageBox.Show("Invalid URL", ConfigNameInput.Text);
+                }
+                return isValid;
             }
         }
 
@@ -79,7 +93,14 @@ namespace GetFacts
             get
             {
                 string sel = ConfigTemplateInput.Text as string;
-                return TemplatesList.Items.Contains(sel);
+                bool isValid = TemplatesList.Items.Contains(sel);
+
+                if( ! isValid )
+                {
+                    ConfigTemplateInput.Focus();                    
+                    MessageBox.Show("Invalid template", ConfigNameInput.Text);
+                }
+                return isValid;
             }
         }
 

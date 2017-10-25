@@ -29,6 +29,14 @@ namespace GetFacts
 
         private void SaveAndRestartButton_Click(object sender, RoutedEventArgs e)
         {
+            foreach (PageConfigItem pci in ListOfConfigItems.Items)
+            {
+                if( pci.IsValid==false )
+                {
+                    return;
+                }
+            }
+
             Save();
             Restart();
         }

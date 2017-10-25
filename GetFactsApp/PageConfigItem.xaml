@@ -12,7 +12,7 @@
         <Popup IsOpen="{Binding ElementName=ConfigTemplateInput, Path=IsKeyboardFocused, Mode=OneWay}" PlacementTarget="{Binding ElementName=ConfigTemplateInput}" Placement="Bottom" Width="{Binding ElementName=ConfigTemplateInput, Path=ActualWidth, Mode=OneWay}">
             <getfacts:TemplatesListBox x:Name="TemplatesList" SelectionChanged="TemplatesList_SelectionChanged"/>
         </Popup>
-        
+
         <Border x:Name="TheBorder" BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="10">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
