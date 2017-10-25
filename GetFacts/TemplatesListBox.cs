@@ -83,10 +83,24 @@ namespace GetFacts
             }
         }
 
+        private bool MatchesSearchPattern(string s)
+        {
+            if (string.IsNullOrEmpty(SearchPattern))
+                return true;
+
+            return s.Contains(SearchPattern);
+        }
+
         private void RefreshItems()
         {
             Items.Clear();
-            Templates.ForEach(t => Items.Add(t));
+            foreach(string t in Templates)
+            {
+                if (MatchesSearchPattern(t))
+                {
+                    Items.Add(t);
+                }
+            }
         }
         
         #endregion

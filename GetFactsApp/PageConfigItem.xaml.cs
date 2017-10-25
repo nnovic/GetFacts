@@ -35,6 +35,7 @@ namespace GetFacts
                 ConfigNameInput.Text = pageConfig.Name;
                 ConfigUrlInput.Text = pageConfig.Url;
                 ConfigTemplateInput.Text = pageConfig.Template;
+                TemplatesList.SearchPattern = null; ;
                 EnabledCheckBox.IsChecked = pageConfig.Enabled;
                 DownloadPeriodInput.Value = pageConfig.Refresh;
                 IsNewBehaviorInput.SelectedValue = pageConfig.IsNewBehavior;
