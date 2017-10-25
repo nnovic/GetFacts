@@ -153,14 +153,26 @@ namespace GetFacts
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        /// <remarks>Si "dir" est null ou vide, retourne une
+        /// liste vide.</remarks>
         public static List<string> CreateTemplatesList(string dir)
         {
             List<string> output = new List<string>();
-            foreach (string path in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+
+            if (!string.IsNullOrEmpty(dir) )
             {
-                string file = Toolkit.GetRelativePath(path, dir);
-                output.Add(file);
+                foreach (string path in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+                {
+                    string file = Toolkit.GetRelativePath(path, dir);
+                    output.Add(file);
+                }
             }
+
             return output;
         }
 

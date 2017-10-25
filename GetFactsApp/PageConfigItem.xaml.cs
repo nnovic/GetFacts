@@ -34,7 +34,7 @@ namespace GetFacts
 
                 ConfigNameInput.Text = pageConfig.Name;
                 ConfigUrlInput.Text = pageConfig.Url;
-                ConfigTemplateInput.SelectedItem = pageConfig.Template;
+                ConfigTemplateInput.Text = pageConfig.Template;
                 EnabledCheckBox.IsChecked = pageConfig.Enabled;
                 DownloadPeriodInput.Value = pageConfig.Refresh;
                 IsNewBehaviorInput.SelectedValue = pageConfig.IsNewBehavior;
@@ -43,10 +43,6 @@ namespace GetFacts
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
-            foreach (string t in Templates)
-            {
-                ConfigTemplateInput.Items.Add(t);
-            }
             IsNewBehaviorInput.ItemsSource = Enum.GetValues(typeof(AbstractInfo.IsNewPropertyGets));
         }
 
@@ -81,8 +77,8 @@ namespace GetFacts
         {
             get
             {
-                string sel = ConfigTemplateInput.SelectedItem as string;
-                return sel != null;
+                string sel = ConfigTemplateInput.Text as string;
+                return TemplatesList.Items.Contains(sel);
             }
         }
 
@@ -136,30 +132,6 @@ namespace GetFacts
             }
         }
 
-
-        /// <summary>
-        /// Sur modif de la sélection dans la combobox
-        /// "ConfigTemplateInput" (et à condition que
-        /// IsTemplateValid retourne true) :
-        /// - mettre à jour le PageConfig sous-jacent
-        /// - mettre à jour l'URL courant avec l'URL de référence du nouveau template (si IsUrlValid retourne false, uniquement).
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ConfigTemplateInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsTemplateValid)
-            {
-                string path = (string)ConfigTemplateInput.SelectedItem;
-                PageConfig.Template = path;
-                PageTemplate pt = TemplateFactory.GetInstance().GetExistingTemplate(path);
-                if(!IsUrlValid)
-                {
-                    ConfigUrlInput.Text = pt.Reference;
-                }
-            }
-        }
-
         private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             IsEnableChecked = true;
@@ -197,6 +169,22 @@ namespace GetFacts
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             IsEnableChecked = (bool)EnabledCheckBox.IsChecked;
+            TemplatesList.TemplatesDirectory = TemplateFactory.GetInstance().TemplatesDirectory;
+        }
+
+        private void TemplatesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                string template = (string)e.AddedItems[0];
+                ConfigTemplateInput.Text = template;
+                TemplatesList.SearchPattern = null;
+            }
+        }
+
+        private void ConfigTemplateInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TemplatesList.SearchPattern = ConfigTemplateInput.Text;
         }
     }
 }

@@ -52,6 +52,46 @@ namespace GetFacts
             //DefaultStyleKeyProperty.OverrideMetadata(typeof(TemplatesListBox), new FrameworkPropertyMetadata(typeof(TemplatesListBox)));
         }
 
+        #region List of templates
+
+        private List<string> _templates = new List<string>();
+        private string _searchPattern = null;
+
+        public List<string> Templates
+        {
+            get
+            {
+                return _templates;
+            }
+            private set
+            {
+                _templates = value;
+                RefreshItems();
+            }
+        }
+
+        public string SearchPattern
+        {
+            get
+            {
+                return _searchPattern;
+            }
+            set
+            {
+                _searchPattern = value;
+                RefreshItems();
+            }
+        }
+
+        private void RefreshItems()
+        {
+            Items.Clear();
+            Templates.ForEach(t => Items.Add(t));
+        }
+        
+        #endregion
+
+
 
         #region TemplatesDirectoryProperty
 
@@ -89,41 +129,13 @@ namespace GetFacts
             TemplatesListBox lbox = (TemplatesListBox)dobj;
             string oldPath = (string)e.OldValue;
             string newPath = (string)e.NewValue;
-
-            lbox.Items.Clear();
-            if (string.IsNullOrEmpty(newPath) == false)
-            {
-                List<string> templates = TemplateFactory.CreateTemplatesList(newPath);
-                templates.ForEach(t => lbox.Items.Add(t));
-            }
-
-            //To be called whenever the DP is changed.
-            //MessageBox.Show(string.Format(
-            //   "Property changed is fired : OldValue {0} NewValue : {1}", e.OldValue, e.NewValue));
-        }
-
-
-        /*private void RefreshFilesList()
-        {            
-            try
-            {
-                FilesList.Items.Clear();
-                string dir = TemplatesDirSelection.SelectedItem as string;
-                List<string> templates = TemplateFactory.CreateTemplatesList(dir);
-                templates.ForEach(t => FilesList.Items.Add(t));
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
-        }*/
+            lbox.Templates = TemplateFactory.CreateTemplatesList(newPath);
+        }       
 
         private static object TemplatesDirectory_CoerceValue(
             DependencyObject dobj, 
             object Value)
         {
-            //called whenever dependency property value is reevaluated. The return value is the
-            //latest value set to the dependency property
-            //MessageBox.Show(string.Format("CoerceValue is fired : Value {0}", Value));
             return Value;
         }
 
@@ -133,12 +145,7 @@ namespace GetFacts
             if (string.IsNullOrEmpty(path))
                 return true;
             return Directory.Exists(path);
-            //Custom validation block which takes in the value of DP
-            //Returns true / false based on success / failure of the validation
-            //MessageBox.Show(string.Format("DataValidation is Fired : Value {0}", Value));
-            //return true;
         }
-
 
         #endregion
 
