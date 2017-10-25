@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="181.801" d:DesignWidth="522.636" Initialized="UserControl_Initialized">
+             d:DesignHeight="181.801" d:DesignWidth="522.636" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded">
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="10">
+        <Border x:Name="TheBorder" BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="10">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -20,9 +20,9 @@
 
                 <CheckBox x:Name="EnabledCheckBox" Content="Enabled" Checked="EnabledCheckBox_Checked" Unchecked="EnabledCheckBox_Unchecked" />
 
-                <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click">X</Button>
+                <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click" Margin="3,0,0,3" Padding="3">X</Button>
 
-                <Grid Grid.Row="1">
+                <Grid x:Name="TheGrid" Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>

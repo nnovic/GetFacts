@@ -14,20 +14,20 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" x:Name="PanelFordirectories" Background="DimGray">
-            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,10,10,5" Padding="5"  CornerRadius="3">
+        <StackPanel Grid.Row="0" x:Name="PanelFordirectories" Background="Cornsilk">
+            <Border BorderBrush="Black" BorderThickness="1" Background="Tan" Margin="10,10,10,5" Padding="5"  CornerRadius="3">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="MemorizeLayoutButton" Click="MemorizeLayoutButton_Click" Margin="3" Padding="3" FontSize="16">Memorize layout</Button>
                     <ToggleButton x:Name="OnTopButton" Click="OnTopButton_Click" Loaded="OnTopButton_Loaded" Margin="0,3,3,3" Padding="3" FontSize="16" >Always on top</ToggleButton>
                 </StackPanel>
             </Border>
-            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,0,10,5" Padding="5"  CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="Tan" Margin="10,0,10,5" Padding="5"  CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="CacheDirectoryInput"/>
             </Border>
-            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue"  Margin="10,0,10,5" Padding="5" CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="Tan"  Margin="10,0,10,5" Padding="5" CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="TemplatesDirectoryInput" />
             </Border>
-            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue"  Margin="10,0,10,10" Padding="5" CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="Tan"  Margin="10,0,10,10" Padding="5" CornerRadius="3">
                 <local:DirectoryInputPanel x:Name="ConfigFileInput" />
             </Border>
             <Separator/>
@@ -42,9 +42,9 @@
             </ListView.Background>
         </ListView>
 
-        <StackPanel Grid.Row="2" Background="DimGray">
+        <StackPanel Grid.Row="2" Background="Wheat">
             <Separator/>
-            <Border BorderBrush="Black" BorderThickness="1" Background="SkyBlue" Margin="10,10,10,10" Padding="5"  CornerRadius="3">
+            <Border BorderBrush="Black" BorderThickness="1" Background="Tan" Margin="10,10,10,10" Padding="5"  CornerRadius="3">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="SaveAndRestartButton" Click="SaveAndRestartButton_Click" Margin="3" Padding="3" FontSize="16">Save and restart</Button>
                     <Button x:Name="AddPageButton" Click="AddPageButton_Click" Margin="0,3,3,3" Padding="3" FontSize="16" >Add</Button>

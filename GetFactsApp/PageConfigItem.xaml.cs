@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GetFacts
 {
@@ -46,7 +47,6 @@ namespace GetFacts
             {
                 ConfigTemplateInput.Items.Add(t);
             }
-
             IsNewBehaviorInput.ItemsSource = Enum.GetValues(typeof(AbstractInfo.IsNewPropertyGets));
         }
 
@@ -162,17 +162,41 @@ namespace GetFacts
 
         private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            PageConfig.Enabled = true;
+            IsEnableChecked = true;
         }
 
         private void EnabledCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            PageConfig.Enabled = false;
+            IsEnableChecked = false;
+        }
+
+        private bool IsEnableChecked
+        {
+            set
+            {
+                if(value)
+                {
+                    PageConfig.Enabled = true;
+                    TheBorder.BorderBrush = Brushes.Black;
+                    EnabledCheckBox.FontWeight = FontWeights.Bold;
+                }
+                else
+                {
+                    PageConfig.Enabled = false;
+                    TheBorder.BorderBrush = Brushes.Silver;
+                    EnabledCheckBox.FontWeight = FontWeights.Normal;
+                }
+            }
         }
 
         private void IsNewBehaviorInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             pageConfig.IsNewBehavior = (AbstractInfo.IsNewPropertyGets)IsNewBehaviorInput.SelectedItem;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            IsEnableChecked = (bool)EnabledCheckBox.IsChecked;
         }
     }
 }
