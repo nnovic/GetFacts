@@ -44,21 +44,20 @@ namespace TemplatesApp
         private void TemplatesDirSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string path = TemplatesDirSelection.SelectedItem as string;
-            TemplateFactory.GetInstance().TemplatesDirectory = path;
-            RefreshFilesList();
+            TemplatesDirSelected(path);
         }
 
-        private void RefreshFilesList()
-        {            
+        private void TemplatesDirSelected(string path)
+        {
             try
             {
-                FilesList.Items.Clear();
-                string dir = TemplatesDirSelection.SelectedItem as string;
-                List<string> templates = TemplateFactory.CreateTemplatesList(dir);
-                templates.ForEach(t => FilesList.Items.Add(t));
+                FilesList.TemplatesDirectory = path;
+                TemplateFactory.GetInstance().TemplatesDirectory = path;
             }
-            catch (DirectoryNotFoundException)
+            catch(ArgumentException)
             {
+                MessageBoxResult res = MessageBox.Show(string.Format("Error while setting directory: \"{0}\". Do you want to remove it from the list ?", path), "Invalid selection", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                FilesList.TemplatesDirectory = null;
             }
         }
 
@@ -213,7 +212,7 @@ namespace TemplatesApp
                 {
                     string path = dlg.FileName;
                     TemplateFactory.GetInstance().CreateNewTemplate(path);
-                    RefreshFilesList();
+                    //TODO: File system watcher instead of: RefreshFilesList();
                     SelectedTemplate = path;
                     FilesList.Focus();
                 }

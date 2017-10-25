@@ -135,6 +135,7 @@
     <Compile Include="Parse\PageTemplate.cs" />
     <Compile Include="Parse\SectionTemplate.cs" />
     <Compile Include="Parse\StringTemplate.cs" />
+    <Compile Include="TemplatesListBox.cs" />
     <Compile Include="TestGui.xaml.cs">
       <DependentUpon>TestGui.xaml</DependentUpon>
     </Compile>
