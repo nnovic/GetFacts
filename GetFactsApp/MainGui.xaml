@@ -50,8 +50,8 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="RefreshIndication" HorizontalAlignment="Center" FontSize="16">[r]</TextBlock>
-                    <TextBlock x:Name="NotificationIndication" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="16">[m]</TextBlock>
+                    <Image Grid.Row="0" Grid.Column="0" x:Name="RefreshIndication" Source="Refresh.png" StretchDirection="DownOnly"/>
+                    <Image x:Name="NotificationIndication" Grid.Row="0" Grid.Column="1" Source="Notification.png" StretchDirection="DownOnly" />
                     <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" StretchDirection="DownOnly">
                         <TextBlock HorizontalAlignment="Center" Text="MENU" FontSize="16" Foreground="White">
                             <TextBlock.Effect>
@@ -95,9 +95,12 @@
 
                 <!-- bouton qui permet d'afficher le panneau des notifications. -->
                 <Button Margin="10" x:Name="ShowMessagesButton" Grid.Row="1" Click="ShowMessagesButton_Click">
-                    <Viewbox>
-                        <Label>Messages</Label>
-                    </Viewbox>
+                    <Grid>
+                        <Image Source="Notification.png" Margin="10" Visibility="{Binding ElementName=NotificationIndication, Path=Visibility}" StretchDirection="DownOnly"/>
+                        <Viewbox>
+                            <Label>Messages</Label>
+                        </Viewbox>
+                    </Grid>
                 </Button>
 
                 <!-- bouton qui permet d'afficher la configuration de l'app -->
