@@ -7,7 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="Root_Loaded" Unloaded="Root_Unloaded" >
+    <UserControl.Resources>
+        <local:HasItemsToVisibility x:Key="BoolToVisConcerter"/>
+    </UserControl.Resources>
     <Grid>
-        <ListView x:Name="ListOfNotifications"></ListView>
+        <ListView x:Name="ListOfNotifications">
+            <ListView.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Cornsilk" Offset="0"/>
+                    <GradientStop Color="Wheat" Offset="1"/>
+                </LinearGradientBrush>
+            </ListView.Background>
+        </ListView>
+        <TextBlock Visibility="{Binding HasItems, ElementName=ListOfNotifications, Converter={StaticResource BoolToVisConcerter}}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontStyle="Italic" >No message.</TextBlock>
     </Grid>
 </UserControl>

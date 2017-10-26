@@ -6,22 +6,24 @@
              xmlns:local="clr-namespace:GetFacts"
              mc:Ignorable="d" 
              d:DesignHeight="160.9" d:DesignWidth="391.349">
-    <Grid Margin="5">
-        <Border Margin="5" CornerRadius="10" Background="Aquamarine">
-            <Grid>
+    <Grid>
+        <Border Background="Tan" BorderBrush="Black" BorderThickness="2" Margin="5" CornerRadius="10" >
+            <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="DateAndTime">(jj/mm/aaaa hh:mm)</TextBlock>
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="Title">(Title)</TextBlock>
-                <TextBlock Grid.Row="2" Grid.ColumnSpan="2" x:Name="Description">(Description)</TextBlock>
+                <TextBlock x:Name="DateAndTime" FontSize="10">(jj/mm/aaaa hh:mm)</TextBlock>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="Title" FontWeight="Bold">(Title)</TextBlock>
+                <Separator Grid.Row="2" Grid.ColumnSpan="2"  />
+                <TextBlock Grid.Row="3" Grid.ColumnSpan="2" x:Name="Description">(Description)</TextBlock>
             </Grid>
         </Border>
     </Grid>

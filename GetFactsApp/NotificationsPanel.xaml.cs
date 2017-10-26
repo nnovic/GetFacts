@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,6 +98,24 @@ namespace GetFacts
             {
                 ListOfNotifications.EndInit();
             }
+        }
+
+        
+    }
+
+    public class HasItemsToVisibility : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool hasItems = (bool)value;
+            if (hasItems) return Visibility.Hidden;
+            else return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //throw new NotImplementedException();
+            return true;
         }
     }
 }
