@@ -100,11 +100,53 @@ namespace GetFacts.Parse
 
         public enum InformationType
         {
-            ValuableClue,       // +++
-            UsefulContent,      // ++
-            MildlyInteresting,  // +
-            NeutralData,        // =             
-            MeaninglessJunk     // -
+            /// <summary>Niveau qui correspond aux noeuds et/ou
+            /// aux attributs qui peuvent être utilisés afin de localiser une
+            /// information de manière fiable dans la structure du document. C'est
+            /// par exemple le cas des attributes "id" et "class" pour le Html.</summary>
+            /// <remarks>
+            /// +++
+            /// </remarks>
+            ValuableClue,
+
+            /// <summary>Niveau qui correspond au contenu qui
+            /// est susceptible d'être affiché par GetFactsApp: contenu
+            /// ou titre d'article, etc. D'une manière générale, c'est le niveau
+            /// pour les noeuds de type Text (càd les feuilles de l'arbre XmlDocument ou
+            /// du HtmlDocument) ou bien les liens vers les images/vidéos accompagnant
+            /// les textes.</summary>
+            /// <remarks>
+            /// ++
+            /// </remarks>
+            UsefulContent,
+
+            /// <summary>Niveau intermédiaire (pour ne pas dire indéterminé!)
+            /// qui correspond à un élément dont on hésite à dire s'il fournit
+            /// des informations intéressantes ou pas. C'est par exemple le niveau
+            /// pour les attributs XML dont la valeur retourne un résultat positif avec
+            /// DownloadTypes.Guess(string)
+            /// positif avec 
+            /// </summary>
+            /// <remarks>
+            /// +
+            /// </remarks>
+            /// <seealso cref="DownloadTypes.Guess()"/>
+            MildlyInteresting,
+
+            /// <summary>Niveau neutre. Attribué par défaut à toute information
+            /// qui ne rentre pas dans les autres catégories.</summary>
+            /// <remarks>
+            /// =
+            /// </remarks>
+            NeutralData,
+
+            /// <summary>Niveau qui correspond à des portions du document
+            /// qui n'ont aucune valeur pour GetFacts. Il s'agira par exemple
+            /// des commentaires XML/HTML, du code Javascript, etc...</summary>
+            /// <remarks>
+            /// -
+            /// </remarks>
+            MeaninglessJunk
         }
 
         /// <summary>

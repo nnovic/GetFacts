@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GetFacts.Download;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -81,15 +82,52 @@ namespace GetFacts.Parse
         /// <see cref="AbstractParser.EvaluateInformationType(object)"/>
         protected override InformationType EvaluateInformationType(object o)
         {
-            /*if (o is XmlElement)
+            if (o is XmlDeclaration)
             {
-                return EvaluateInformationType((XmlElement)o);
+                return InformationType.MeaninglessJunk;
+            }
+            else if (o is XmlProcessingInstruction)
+            {
+                return InformationType.MeaninglessJunk;
+            }
+            else if (o is XmlElement)
+            {
+                return InformationType.NeutralData;
             }
             else if (o is XmlAttribute)
             {
                 return EvaluateInformationType((XmlAttribute)o);
-            }*/
-            return InformationType.NeutralData;
+            }
+            else if (o is XmlCharacterData)
+            {
+                return EvaluateInformationType((XmlCharacterData)o);
+            }
+            else
+            {
+                return InformationType.NeutralData;
+            }
+        }
+
+        /// <summary>
+        /// text --> UsefulContent
+        /// comment --> MeaninglessJunk
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        private InformationType EvaluateInformationType(XmlCharacterData o)
+        {
+            if (o is XmlText)
+            {
+                return InformationType.UsefulContent;
+            }
+            else if (o is XmlComment)
+            {
+                return InformationType.MeaninglessJunk;
+            }
+            else
+            {
+                return InformationType.NeutralData;
+            }
         }
 
         // TODO
@@ -98,11 +136,26 @@ namespace GetFacts.Parse
             return InformationType.NeutralData;
         }*/
 
-        // TODO
-        /*private InformationType EvaluateInformationType(XmlAttribute attr)
+        private InformationType EvaluateInformationType(XmlAttribute o)
         {
+            //XmlNode node = null;
+            //string nodeName = null;
+            string attributeName = null;
+            string attributeValue = null;
+
+            attributeName = o.Name.ToLower().Trim();
+            attributeValue = o.Value.Trim();
+
+            //node = o.ParentNode;
+            //nodeName = node.Name.ToLower().Trim();
+
+            if( DownloadTypes.Guess(attributeValue) != DownloadTypes.Categories.Undefined )
+            {
+                return InformationType.MildlyInteresting;
+            }
+
             return InformationType.NeutralData;
-        }*/
+        }
 
         #endregion
 
