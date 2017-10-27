@@ -227,5 +227,15 @@ namespace TemplatesApp
                 MRU.Add(dir);
             }
         }
+
+        private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilesList.SearchPattern = FilterTextBox.Text;
+        }
+
+        private void ClearFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterTextBox.Text = null;
+        }
     }
 }

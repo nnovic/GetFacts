@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,7 +56,7 @@ namespace GetFacts
         #region List of templates
 
         private List<string> _templates = new List<string>();
-        private string _searchPattern = null;
+        private string _searchPattern = string.Empty;
 
         public List<string> Templates
         {
@@ -78,25 +79,34 @@ namespace GetFacts
             }
             set
             {
-                _searchPattern = value;
+                _searchPattern = ValidateAndExpand(value);
                 RefreshItems();
             }
         }
 
-        private bool MatchesSearchPattern(string s)
+        private string ValidateAndExpand(string pattern)
         {
-            if (string.IsNullOrEmpty(SearchPattern))
-                return true;
+            if ( string.IsNullOrEmpty(pattern) )
+                return string.Empty;
 
-            return s.Contains(SearchPattern);
+            pattern = Regex.Escape(pattern);
+            pattern = pattern.Replace("\\?", ".");
+            pattern = pattern.Replace("\\*", ".*");
+            return pattern;
         }
 
         private void RefreshItems()
         {
             Items.Clear();
+
+
+            Regex pattern = new Regex(SearchPattern);
+
+
+
             foreach(string t in Templates)
             {
-                if (MatchesSearchPattern(t))
+                if (pattern.IsMatch(t) )
                 {
                     Items.Add(t);
                 }
