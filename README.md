@@ -16,3 +16,6 @@ The current development version is provided as portable application.
 
 ## Current development version
 The current development version is [GetFacts_0.2_Portable.zip](docs/GetFacts_0.2_Portable.zip).
+
+# More
+More information is available at [https://github.com/nnovic/GetFacts/wiki]
