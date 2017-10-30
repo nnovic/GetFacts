@@ -38,7 +38,7 @@ namespace GetFacts.Parse
         private void Build(HtmlNode node)
         {
             List<HtmlNode> hierarchy = new List<HtmlNode>(node.AncestorsAndSelf());
-            hierarchy.Reverse();
+            hierarchy.Reverse(); // mettre le haut (la racine) de la hiérarchie en premier
             foreach(HtmlNode o in hierarchy)
             {
                 if (o.NodeType == HtmlNodeType.Document)

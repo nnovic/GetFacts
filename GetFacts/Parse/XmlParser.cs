@@ -398,15 +398,8 @@ namespace GetFacts.Parse
 
                 foreach (XPathNavigator selected in navigators)
                 {
-                    /*if (selected is HtmlNodeNavigator nodeNav)
-                    {
-                        HtmlNode concreteNode = nodeNav.CurrentNode;
-                        output.Add(concreteNode);
-                    }
-                    else
-                    {
-
-                    }*/
+                    XmlNode concreteNode = (XmlNode)selected.UnderlyingObject;
+                    output.Add(concreteNode);
                 }
             }
 

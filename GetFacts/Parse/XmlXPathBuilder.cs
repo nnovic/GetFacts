@@ -33,30 +33,39 @@ namespace GetFacts.Parse
             {
                 throw new ArgumentException();
             }
+            
         }
 
-        // TODO
         private void Build(XmlElement node)
         {
-            /*List<XmlElement> hierarchy = new List<XmlElement>(node.AncestorsAndSelf());
-            hierarchy.Reverse();
-            foreach(HtmlNode o in hierarchy)
+            // construire la hiérarchie de l'objet du bas vers le haut:
+            List<XmlNode> hierarchy = new List<XmlNode>();
+            XmlNode o = node;
+            while( o != null )
             {
-                if (o.NodeType == HtmlNodeType.Document)
+                hierarchy.Add(o);
+                o = o.ParentNode;
+            }
+
+            hierarchy.Reverse(); // mettre le haut (la racine) de la hiérarchie en premier
+
+            foreach (XmlNode o2 in hierarchy)
+            {
+                if (o2.NodeType == XmlNodeType.Document)
                     continue;
 
-                HtmlNodeXPathElement element = new HtmlNodeXPathElement(o);
+                XmlNodeXPathElement element = new XmlNodeXPathElement(o2);
                 Add(element);
-            }*/
+            }
         }
 
-        internal class XmlElementXPathElement:XPathElement
+        internal class XmlNodeXPathElement:XPathElement
         {
-            internal readonly XmlElement XmlElement;
+            internal readonly XmlNode XmlNode;
 
-            internal XmlElementXPathElement(XmlElement node)
+            internal XmlNodeXPathElement(XmlNode node)
             {
-                this.XmlElement = node;
+                this.XmlNode = node;
                 foreach(XmlAttribute attr in node.Attributes)
                 {
                     Attributes.Add(new XPathAttribute(attr.Name, attr.Value));
@@ -90,10 +99,10 @@ namespace GetFacts.Parse
                         case HtmlNodeType.Comment: return "comment()";
                         case HtmlNodeType.Text: return "text()";
                     }*/
-                    return XmlElement.Name;
+                    return XmlNode.Name;
                 }
             }
-
+            
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {
                 switch(attribute.Name)
