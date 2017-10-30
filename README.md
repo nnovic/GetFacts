@@ -1,6 +1,10 @@
 # About
 GetFacts is an Internet news agregator focused on agility and style. 
 
+![Screenshot #1](/docs/screenshot01.jpg)
+![Screenshot #2](/docs/screenshot02.jpg)
+![Screenshot #3](/docs/screenshot03.jpg)
+
 ###### News
 GetFacts is designed to process any XML and HTML documents. The current developments concentrate on handling RSS feeds properly.
 
