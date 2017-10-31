@@ -171,6 +171,9 @@ namespace GetFacts.Parse
             switch (node.NodeType)
             {
                 case HtmlNodeType.Comment:
+                    InsertText(parent, node.InnerText);
+                    return;
+
                 case HtmlNodeType.Text:
                     InsertText(parent, node.InnerText, node);
                     return;
