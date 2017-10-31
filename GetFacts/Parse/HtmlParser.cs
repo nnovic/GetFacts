@@ -10,6 +10,7 @@ using System.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace GetFacts.Parse
 {
@@ -23,22 +24,22 @@ namespace GetFacts.Parse
         }
 
         /// <summary>
-        /// Lit et charge dans un HtmlDocument les données contenues dans le fichier
-        /// HTML spécifié par le paramètre "path".
+        /// Lit et charge dans un HtmlDocument les données contenues dans le stream
+        /// passé en argument.
         /// </summary>
-        /// <param name="path">Le chemin absolu du fichier contenant les données à analyser</param>
+        /// <param name="stream">Flux contenant les données brutes à analyser</param>
         /// <param name="encoding">Si null, l'encoding sera déterminé
         /// automatiquement</param>
-        public override void Load(string path, Encoding encoding)
+        public override void Load(Stream stream, Encoding encoding)
         {
             Clear();
             if (encoding != null)
             {
-                htmlDoc.Load(path, encoding);
+                htmlDoc.Load(stream, encoding);
             }
             else
             {
-                htmlDoc.Load(path, true);
+                htmlDoc.Load(stream, true);
             }
         }
 

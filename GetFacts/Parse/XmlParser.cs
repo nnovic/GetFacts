@@ -22,40 +22,37 @@ namespace GetFacts.Parse
         }
 
         /// <summary>
-        /// Lit et charge dans un HtmlDocument les données contenues dans le fichier
-        /// HTML spécifié par le paramètre "path".
+        /// Lit et charge dans un XmlDocument les données contenues dans le stream
+        /// passé en argument.
         /// </summary>
-        /// <param name="path">Le chemin absolu du fichier contenant les données à analyser</param>
+        /// <param name="stream">Flux brut contenant les données à analyser</param>
         /// <param name="encoding">Si null, l'encoding sera déterminé
         /// automatiquement</param>
-        public override void Load(string path, Encoding encoding)
+        public override void Load(Stream stream, Encoding encoding)
         {
             Clear();
 
-            using (Stream streamReader = new FileStream(path, FileMode.Open, FileAccess.Read))
+            TextReader textReader;
+            if (encoding != null)
+            {              
+                textReader = new StreamReader(stream, encoding);
+            }
+            else
             {
-                TextReader textReader;
-                if (encoding != null)
-                {              
-                    textReader = new StreamReader(streamReader, encoding);
-                }
-                else
-                {
-                    textReader = new StreamReader(streamReader, true);
-                }
+                textReader = new StreamReader(stream, true);
+            }
 
-                try
+            try
+            {
+                XmlReaderSettings readerSettings = new XmlReaderSettings();
+                using (XmlReader reader = XmlReader.Create(textReader, readerSettings))
                 {
-                    XmlReaderSettings readerSettings = new XmlReaderSettings();
-                    using (XmlReader reader = XmlReader.Create(textReader, readerSettings))
-                    {
-                        xmlDoc.Load(reader);
-                    }
+                    xmlDoc.Load(reader);
                 }
-                finally
-                {
-                    textReader.Dispose();
-                }
+            }
+            finally
+            {
+                textReader.Dispose();
             }
         }
 
@@ -185,7 +182,7 @@ namespace GetFacts.Parse
             {
                 case XmlNodeType.ProcessingInstruction:
                 case XmlNodeType.XmlDeclaration:
-                    InsertText(parent, node.OuterXml, node);
+                    InsertText(parent, node.OuterXml);
                     return;
 
                 case XmlNodeType.Text:

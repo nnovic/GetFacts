@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,20 +27,41 @@ namespace GetFacts.Parse
     public abstract class AbstractParser : IXPathNavigable
     {
         /// <summary>
-        /// Lit et charge en mémoire les données contenues dans le fichier spécifié
-        /// par le paramètre "path". Ces données seront stockées dans une structure
-        /// arborescente appropriée, comme par exemple un XmlDocument pour les fichiers
-        /// XML. Cette structure arborescente sera ensuite parcourue à la recherche
-        /// des informations pertinentes pour l'utilisateur.
-        /// Le fichier source sera généralement un fichier texte, donc il faut gérer
-        /// l'Encoding. Par défaut, l'auto-détection de l'encoding sera utilisée, mais
-        /// on doit pouvoir forcer un autre encoding si le résultat de l'auto-détection
-        /// n'est pas satisfaisant.
+        /// Ouvre le fichier 'path' et appelle Load(Stream,Encoding).
         /// </summary>
         /// <param name="path">Le chemin absolu du fichier contenant les données à analyser</param>
         /// <param name="encoding">Si null, l'encoding sera déterminé
         /// automatiquement</param>
-        public abstract void Load(string path, Encoding encoding);
+        /// <see cref="Load(Stream, Encoding)"/>
+        public void Load(string path, Encoding encoding)
+        {
+            using (Stream streamReader = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                Load(streamReader, encoding);
+            }
+        }
+
+        /// <summary>
+        /// Lit et charge en mémoire les données contenues provenant du stream passé
+        /// en paramètre. Ces données seront stockées dans une structure
+        /// arborescente appropriée, comme par exemple un XmlDocument pour les fichiers
+        /// XML. Cette structure arborescente sera ensuite parcourue à la recherche
+        /// des informations pertinentes pour l'utilisateur.
+        /// La source sera généralement un texte, donc il faut gérer
+        /// l'Encoding. Par défaut, l'auto-détection de l'encoding sera utilisée, mais
+        /// on doit pouvoir forcer un autre encoding si le résultat de l'auto-détection
+        /// n'est pas satisfaisant.
+        /// </summary>
+        /// <param name="stream">Source des données à analyser</param>
+        /// <param name="encoding">Si null, l'encoding sera déterminé
+        /// automatiquement</param>
+        /// <remarks>
+        /// La classe qui implémente cette méthode doit veiller à ce qu'elle
+        /// puisse être appelée plusieurs fois avec des contenus différents: il
+        /// faut donc prendre soin d'appeler "Clean()" avant de traiter le contenu
+        /// de "stream".
+        /// </remarks>
+        public abstract void Load(Stream stream, Encoding encoding);        
 
         /// <summary>
         /// Retourne une liste des extensions de fichier
@@ -302,6 +324,40 @@ namespace GetFacts.Parse
         /// <seealso cref="AddTextElement"/>
         protected abstract void FillSourceCode(Span rootSpan);
 
+        /// <summary>
+        /// Ajoute "text" dans le FlowDocument, dans un Run qui sera ajouté
+        /// aux enfants de "parent". Ce texte n'est pas associé à un noeud 
+        /// du document XML ou HTML. Le style par défaut est utilisé pour l'afficher.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="text"></param>
+        /// <see cref="ApplyDefaultStyle(TextElement)"/>
+        /// <remarks>L'utilisation de cette méthode doit rester exceptionnelle. Autant
+        /// que possible, utiliser la variante InsertText(Span,string,object).</remarks>
+        protected void InsertText(Span parent, string text)
+        {
+            text = text.Trim();
+
+            if (string.IsNullOrEmpty(text) == false)
+            {
+                Run r = new Run(text);
+                ApplyDefaultStyle(r);
+                parent.Inlines.Add(r);
+            }
+        }
+
+        /// <summary>
+        /// Ajoute "text" dans le FlowDocument, dans un Hyperlink qui sera ajouté
+        /// aux enfants de "parent". Ce texte est pas associé à un noeud 
+        /// du document XML ou HTML, ce qui permet de le relier à ce même noeud
+        /// dans l'arborescence SourceTree. Voir AddHyperlink(string, object) pour
+        /// plus d'infos.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="text"></param>
+        /// <param name="o"></param>
+        /// <see cref="AddHyperlink(string, object)"/>
+        /// <seealso cref="SourceTree"/>
         protected void InsertText(Span parent, string text, object o)
         {
             text = text.Trim();
@@ -342,17 +398,38 @@ namespace GetFacts.Parse
             te.TextDecorations = TextDecorations.Underline;
         }
 
+        /// <summary>
+        /// Cette méthode se déclenchera en cas de click sur un
+        /// Hyperlink du SourceCode (Flow Document). Son but est
+        /// de rendre actif le noeud équivalent dans SourceTree.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <seealso cref="SourceCode"/>
+        /// <seealso cref="SourceTree"/>
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            Hyperlink hl = (Hyperlink)sender;
-            object node = textElements2concreteObjects.GetObjectOf(hl);
-            TreeViewItem tvi = treeViewItems2concreteObjects.GetTypedElementOf(node);
+            TreeViewItem tvi = HyperlinkToTreeViewItem((Hyperlink)sender);
             tvi.IsSelected = true;
             tvi.BringIntoView();
             tvi.IsExpanded = true;
         }
 
-
+        /// <summary>
+        /// Retourne un TreeViewItem appartenant à SourceTree et qui correspond
+        /// au même noeud du document XML/HTML que l'Hyperlink passé en argument.
+        /// (Hyperlink appartenant à SourceCode).
+        /// </summary>
+        /// <param name="hl"></param>
+        /// <returns></returns>
+        /// <see cref="SourceTree"/>
+        /// <see cref="SourceCode"/>
+        internal TreeViewItem HyperlinkToTreeViewItem(Hyperlink hl)
+        {
+            object node = textElements2concreteObjects.GetObjectOf(hl);
+            TreeViewItem tvi = treeViewItems2concreteObjects.GetTypedElementOf(node);
+            return tvi;
+        }
 
 
         #endregion
