@@ -53,11 +53,22 @@ namespace GetFacts
             //DefaultStyleKeyProperty.OverrideMetadata(typeof(TemplatesListBox), new FrameworkPropertyMetadata(typeof(TemplatesListBox)));
         }
 
+        ~TemplatesListBox()
+        {
+            fileSystemWatcher.Dispose();
+        }
+
+        #region FilesystemWatcher
+
+        private readonly FileSystemWatcher fileSystemWatcher = new FileSystemWatcher();
+
+        #endregion
+
         #region List of templates
 
         private List<string> _templates = new List<string>();
         private string _searchPattern = string.Empty;
-
+        
         public List<string> Templates
         {
             get
@@ -97,19 +108,21 @@ namespace GetFacts
 
         private void RefreshItems()
         {
+            object selected = SelectedItem;
+
             Items.Clear();
-
-
             Regex pattern = new Regex(SearchPattern);
-
-
-
             foreach(string t in Templates)
             {
                 if (pattern.IsMatch(t) )
                 {
                     Items.Add(t);
                 }
+            }
+
+            if( selected!=null )
+            {
+                SelectedItem = selected;
             }
         }
         
@@ -143,6 +156,8 @@ namespace GetFacts
             set
             {
                 this.SetValue(TemplatesDirectoryProperty, value);
+                fileSystemWatcher.Path = value;
+                fileSystemWatcher.EnableRaisingEvents = true;
             }
         }
 
@@ -175,7 +190,26 @@ namespace GetFacts
 
         protected override void OnInitialized(EventArgs e)
         {
+            fileSystemWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
+            fileSystemWatcher.IncludeSubdirectories = true;
+            fileSystemWatcher.Created += FileSystemWatcher_Changed;
+            fileSystemWatcher.Deleted += FileSystemWatcher_Changed;
+            fileSystemWatcher.Renamed += FileSystemWatcher_Changed;
             base.OnInitialized(e);
+        }
+
+        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                try
+                {
+                    Templates = TemplateFactory.CreateTemplatesList(TemplatesDirectory);
+                }
+                catch
+                {
+                }
+            }), null);
         }
     }
 }
