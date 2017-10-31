@@ -1,6 +1,10 @@
 # About
 GetFacts is an Internet news agregator focused on agility and style. 
 
+Displaying news | Zooming on a media | Interlayer page
+----------------|--------------------|------------------
+![Screenshot #1](/docs/screenshot01.jpg) | ![Screenshot #2](/docs/screenshot02.jpg) | ![Screenshot #3](/docs/screenshot03.jpg)
+
 ###### News
 GetFacts is designed to process any XML and HTML documents. The current developments concentrate on handling RSS feeds properly.
 
@@ -14,8 +18,9 @@ GetFacts is meant to be visible at all times for your entertainment. Only a few 
 GetFacts runs on Windows and requires .Net Framework.
 The current development version is provided as portable application.
 
-## Current development version
+### Current development version
 The current development version is [GetFacts_0.2_Portable.zip](docs/GetFacts_0.2_Portable.zip).
+It is (should be ?) fully functional for RSS feeds.
 
 # More
-More information is available at [https://github.com/nnovic/GetFacts/wiki]
+More information is available at https://github.com/nnovic/GetFacts/wiki
