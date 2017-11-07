@@ -197,7 +197,7 @@ namespace TemplatesApp
         {
             using (var dlg = new CommonSaveFileDialog())
             {
-                dlg.Title = "My Title";
+                dlg.Title = "Create new template file";
                 dlg.InitialDirectory = (string)TemplatesDirSelection.SelectedItem;
 
                 dlg.AddToMostRecentlyUsedList = false;

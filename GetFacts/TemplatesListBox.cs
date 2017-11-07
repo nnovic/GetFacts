@@ -64,6 +64,29 @@ namespace GetFacts
 
         #endregion
 
+
+        #region Selected Item
+
+        private object deferredSelectedItem = null;
+
+        public new object SelectedItem
+        {
+            get
+            {
+                return base.SelectedItem;
+            }
+            set
+            {
+                lock (this)
+                {
+                    deferredSelectedItem = value;
+                    base.SelectedItem = value;
+                }
+            }
+        }
+
+        #endregion
+
         #region List of templates
 
         private List<string> _templates = new List<string>();
@@ -90,6 +113,7 @@ namespace GetFacts
             }
             set
             {
+
                 _searchPattern = ValidateAndExpand(value);
                 RefreshItems();
             }
@@ -108,7 +132,7 @@ namespace GetFacts
 
         private void RefreshItems()
         {
-            object selected = SelectedItem;
+            object selected = base.SelectedItem;
 
             Items.Clear();
             Regex pattern = new Regex(SearchPattern);
@@ -120,9 +144,14 @@ namespace GetFacts
                 }
             }
 
-            if( selected!=null )
+            if(deferredSelectedItem!=null)
             {
-                SelectedItem = selected;
+                base.SelectedItem = deferredSelectedItem;
+                deferredSelectedItem = null;
+            }
+            else if( selected!=null )
+            {
+                base.SelectedItem = selected;
             }
         }
         

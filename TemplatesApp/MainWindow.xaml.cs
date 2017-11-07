@@ -27,10 +27,22 @@ namespace TemplatesApp
             TemplateEditor.Workflow = workflow;
             workflow.WorkflowUpdated += Workflow_WorkflowUpdated;
 
+            ExploreTab.IsEnabledChanged += ExploreTab_IsEnabledChanged;
+
             // Force early initialization of the download manager
             DownloadManager.GetInstance();
 
             workflow.OnWorkflowUpdated();
+        }
+
+        private void ExploreTab_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            bool oldValue = (bool)e.OldValue;
+            bool newValue = (bool)e.NewValue;
+            if((oldValue==false) && (newValue==true) )
+            {
+                ExploreTab.IsSelected = true;
+            }
         }
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
