@@ -46,7 +46,10 @@ namespace TemplatesApp
 
         private void ClearTemplate()
         {
-
+            if (PageTemplate != null)
+            {
+                PageTemplate.ReferenceChanged -= PageTemplate_ReferenceChanged;
+            }
         }
 
         private void InitTemplate()
@@ -57,6 +60,8 @@ namespace TemplatesApp
             TextTemplateEditor.StringTemplate = PageTemplate.TextTemplate;
             IconTemplateEditor.StringTemplate = PageTemplate.IconUrlTemplate;
             MediaTemplateEditor.StringTemplate = PageTemplate.MediaUrlTemplate;
+
+            PageTemplate.ReferenceChanged += PageTemplate_ReferenceChanged;
         }
 
         #endregion
@@ -79,5 +84,15 @@ namespace TemplatesApp
         }
 
 
+        private void PageTemplate_ReferenceChanged(object sender, EventArgs e)
+        {
+            if( sender != this )
+            {
+                if (string.IsNullOrEmpty(ReferenceInput.Text))
+                {
+                    ReferenceInput.Text = PageTemplate.Reference;
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -49,12 +50,28 @@ namespace GetFacts.Parse
             get;set;
         }
 
+
+        private string reference = null;
+        public event EventHandler ReferenceChanged;
+
         /// <summary>
         /// Une URL qui est suggérée pour effectuer des tests du template.
-        /// </summary>
+        /// </summary> 
+        [DefaultValue(null)]
         public string Reference
         {
-            get;set;
+            get
+            {
+                return reference;
+            }
+            set
+            {
+                if (string.Compare(reference, value) != 0)
+                {
+                    reference = value;
+                    ReferenceChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         /// <summary>

@@ -6,9 +6,10 @@
              xmlns:local="clr-namespace:TemplatesApp"
              xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             MinWidth="300">
     <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
-        <Grid Margin="5">
+        <Grid Margin="10">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -20,49 +21,53 @@
             </Grid.RowDefinitions>
 
             <Button x:Name="DeleteThisSectionButton" Grid.Column="1" Click="DeleteThisSectionButton_Click">X</Button>
+
+            <StackPanel Grid.Row="1">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="0,0,5,0">SectionName:</TextBlock>
+                    <TextBox Margin="0,0,0,2" x:Name="SectionNameInput" Grid.Column="1" TextChanged="SectionNameInput_TextChanged" ></TextBox>
+                    <TextBlock Grid.Row="1" Margin="0,0,5,0">XPath filter:</TextBlock>
+                    <getfacts:XPathTextBox Margin="0,0,0,2" x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1" TextChanged="XPathFilterInput_TextChanged"></getfacts:XPathTextBox>
+                </Grid>
+
+                <Expander Header="Title template" Margin="0,5,0,0">
+                    <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <local:StringTemplateEditor x:Name="TitleTemplateEditor" ></local:StringTemplateEditor>
+                    </Border>
+                </Expander>
+
+                <Expander Header="Text template" Margin="0,5,0,0">
+                    <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <local:StringTemplateEditor x:Name="TextTemplateEditor"></local:StringTemplateEditor>
+                    </Border>
+                </Expander>
+
+                <Expander Header="Icon URL template" Margin="0,5,0,0">
+                    <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <local:StringTemplateEditor x:Name="IconTemplateEditor"></local:StringTemplateEditor>
+                    </Border>
+                </Expander>
+
+                <Expander Header="Media URL template" Margin="0,5,0,0">
+                    <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <local:StringTemplateEditor x:Name="MediaTemplateEditor" ></local:StringTemplateEditor>
+                    </Border>
+                </Expander>
+
+                <Separator  Margin="0,5,0,5"/>
+                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="AddArticleButton" Click="AddArticleButton_Click" >Add article</Button>
+                </StackPanel>
             
-            <Grid  Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <TextBlock>SectionName:</TextBlock>
-                <TextBox x:Name="SectionNameInput" Grid.Column="1" TextChanged="SectionNameInput_TextChanged" ></TextBox>
-
-                <TextBlock Grid.Row="1">XPath filter:</TextBlock>
-                <getfacts:XPathTextBox x:Name="XPathFilterInput" Grid.Row="1" Grid.Column="1" TextChanged="XPathFilterInput_TextChanged"></getfacts:XPathTextBox>
-
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <ToggleButton>...</ToggleButton>
-                </StackPanel>
-
-                <TextBlock Grid.Row="3">Title template:</TextBlock>
-                <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="3" Grid.Column="1"></local:StringTemplateEditor>
-
-                <TextBlock Grid.Row="4">Text template:</TextBlock>
-                <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
-
-                <TextBlock Grid.Row="5">Icon URL template:</TextBlock>
-                <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
-
-                <TextBlock Grid.Row="6">Media URL template:</TextBlock>
-                <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
-
-                <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="AddArticleButton" Click="AddArticleButton_Click" >add article</Button>
-                </StackPanel>
-            </Grid>
+            </StackPanel>
         </Grid>
         
     </Border>

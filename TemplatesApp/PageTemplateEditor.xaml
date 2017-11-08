@@ -5,50 +5,56 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TemplatesApp"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" >
+             d:DesignHeight="300" d:DesignWidth="300"
+             MinWidth="300">
     <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
-        <Grid Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <StackPanel Margin="10">
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="0,0,5,0">PageName:</TextBlock>
+                <TextBox  Margin="0,0,0,2" x:Name="PageNameInput" Grid.Column="1" TextChanged="PageNameInput_TextChanged" ></TextBox>
+                <TextBlock Grid.Row="1" Margin="0,0,5,0">Reference:</TextBlock>
+                <TextBox Margin="0,0,0,2" x:Name="ReferenceInput" Grid.Row="1" Grid.Column="1" TextChanged="ReferenceInput_TextChanged"></TextBox>
+            </Grid>
 
-            <TextBlock>PageName:</TextBlock>
-            <TextBox x:Name="PageNameInput" Grid.Column="1" TextChanged="PageNameInput_TextChanged" ></TextBox>
+            <Expander Header="Title template" Margin="0,5,0,0">
+                <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                    <local:StringTemplateEditor x:Name="TitleTemplateEditor" ></local:StringTemplateEditor>
+                </Border>
+            </Expander>
 
-            <TextBlock Grid.Row="1">Reference:</TextBlock>
-            <TextBox x:Name="ReferenceInput" Grid.Row="1" Grid.Column="1" TextChanged="ReferenceInput_TextChanged"></TextBox>
+            <Expander Header="Text template" Margin="0,5,0,0">
+                <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                    <local:StringTemplateEditor x:Name="TextTemplateEditor"></local:StringTemplateEditor>
+                </Border>
+            </Expander>
 
+            <Expander Header="Icon URL template" Margin="0,5,0,0">
+                <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                    <local:StringTemplateEditor x:Name="IconTemplateEditor"></local:StringTemplateEditor>
+                </Border>
+            </Expander>
 
-            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <ToggleButton>...</ToggleButton>
+            <Expander Header="Media URL template" Margin="0,5,0,0">
+                <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
+                    <local:StringTemplateEditor x:Name="MediaTemplateEditor"></local:StringTemplateEditor>
+                </Border>
+            </Expander>
+
+            <Separator  Margin="0,5,0,5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="AddSectionButton" Click="AddSectionButton_Click">Add section</Button>
             </StackPanel>
-            
-            <TextBlock Grid.Row="3">Title template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TitleTemplateEditor" Grid.Row="3" Grid.Column="1"></local:StringTemplateEditor>
-
-            <TextBlock Grid.Row="4">Text template:</TextBlock>
-            <local:StringTemplateEditor x:Name="TextTemplateEditor" Grid.Row="4" Grid.Column="1"></local:StringTemplateEditor>
-            
-            <TextBlock Grid.Row="5">Icon URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="IconTemplateEditor" Grid.Row="5" Grid.Column="1"></local:StringTemplateEditor>
-            
-            <TextBlock Grid.Row="6">Media URL template:</TextBlock>
-            <local:StringTemplateEditor x:Name="MediaTemplateEditor" Grid.Row="6" Grid.Column="1"></local:StringTemplateEditor>
-
-            <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="AddSectionButton" Click="AddSectionButton_Click">add section</Button>
-            </StackPanel>
-        </Grid>
+        </StackPanel>
+        
+        
     </Border>
 </UserControl>

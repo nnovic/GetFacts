@@ -179,12 +179,22 @@ namespace GetFacts
         
         public List<string> GetMruTemplatesDictories()
         {
-            return GetListOfStringsFromRegistry("Templates", "MRU");
+            return GetListOfStringsFromRegistry("Templates", "MRU_Locations");
         }
 
         public void SaveMruTemplatesDirectories(ICollection<string> list)
         {
-            SetListOfStringsToRegistry("Templates", "MRU", list);
+            SetListOfStringsToRegistry("Templates", "MRU_Locations", list);
+        }
+
+        public List<string> GetMruTemplatesUrls()
+        {
+            return GetListOfStringsFromRegistry("Templates", "MRU_Urls");
+        }
+
+        public void SaveMruTemplatesUrls(ICollection<string> list)
+        {
+            SetListOfStringsToRegistry("Templates", "MRU_Urls", list);
         }
 
         #endregion

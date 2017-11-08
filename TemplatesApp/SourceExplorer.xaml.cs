@@ -1,7 +1,9 @@
-﻿using GetFacts.Download;
+﻿using GetFacts;
+using GetFacts.Download;
 using GetFacts.Parse;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,7 @@ namespace TemplatesApp
         private Workflow workflow = null;
         private bool isReady = false;
         private AbstractParser parser = null;
+        public readonly ObservableCollection<string> MRU = new ObservableCollection<string>();
 
         public SourceExplorer()
         {
@@ -60,6 +63,19 @@ namespace TemplatesApp
             NextSelection.IsEnabled = false;
             ElementsCount = 0;
             SelectedIndex = -1;
+
+            UrlInput.ItemsSource = MRU;
+            foreach (string dir in ConfigManager.GetInstance().GetMruTemplatesUrls())
+            {
+                MRU.Add(dir);
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            //string path = TemplateFactory.GetInstance().TemplatesDirectory;
+            //UpdateMRU(path);
+            //TemplatesDirSelection.SelectedItem = path;
         }
 
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
@@ -130,22 +146,28 @@ namespace TemplatesApp
 
         private void UrlInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Workflow.PageTemplate.Reference = UrlInput.Text;
-            Workflow.DownloadTask = null;
+            //Workflow.PageTemplate.Reference = UrlInput.Text;
+            DeleteDownloadTask();
             BrowseButton.Content = "Browse";
         }
 
         #endregion
 
 
-        #region loading the html document
-
-        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteDownloadTask()
         {
-            UrlBar.IsEnabled = false;
-            
-            if(Workflow.DownloadTask==null)
+            if (Workflow.DownloadTask != null)
             {
+                Workflow.DownloadTask.TaskFinished -= DownloadTask_TaskFinished;
+                Workflow.DownloadTask = null;
+            }
+        }
+
+        private void CreateDownloadTask()
+        {           
+            if (Workflow.DownloadTask == null)
+            {
+                Workflow.PageTemplate.Reference = UrlInput.Text;
                 Uri uri = new Uri(Workflow.PageTemplate.Reference);
                 Workflow.DownloadTask = DownloadManager.GetInstance().FindOrQueue(uri, Parser.MostProbableFileExtension);
                 Workflow.DownloadTask.TaskFinished += DownloadTask_TaskFinished;
@@ -155,6 +177,17 @@ namespace TemplatesApp
             {
                 Workflow.DownloadTask.Reload();
             }
+        }
+
+        #region loading the html document
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            UrlBar.IsEnabled = false;
+            CreateDownloadTask();
+
+            string url = UrlInput.Text;
+            UpdateMRU(url);
         }
 
         private void DownloadTask_TaskFinished(object sender, EventArgs e)
@@ -336,9 +369,39 @@ namespace TemplatesApp
             Select(--index);
         }
 
+
         #endregion
-        
 
 
+        /// <summary>
+        /// Place l'URL passé en argument en
+        /// tête de la liste des URLs les plus
+        /// utilisées.
+        /// </summary>
+        /// <param name="url"></param>
+        private void UpdateMRU(string url)
+        {
+            UrlInput.BeginInit();
+            try
+            {
+                if (MRU.Contains(url))
+                {
+                    MRU.Remove(url);
+                }
+                else
+                {
+                    while (MRU.Count > 4)
+                    {
+                        MRU.RemoveAt(4);
+                    }
+                }
+                MRU.Insert(0, url);
+                ConfigManager.GetInstance().SaveMruTemplatesUrls(MRU);
+            }
+            finally
+            {
+                UrlInput.EndInit();
+            }
+        }
     }
 }
