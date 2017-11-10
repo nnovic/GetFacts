@@ -155,6 +155,9 @@ namespace TemplatesApp
 
         #region test template
 
+        const double PREVIEW_WIDTH = 300;
+        const double PREVIEW_HEIGHT = 150;
+
         private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ClearPreviewTree();
@@ -170,7 +173,7 @@ namespace TemplatesApp
 
             ArticleDisplay pageDisplay = new ArticleDisplay(false, 0) {
                 DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
-                Width = 500, Height=200
+                Width = PREVIEW_WIDTH, Height= PREVIEW_HEIGHT
             };
             pageDisplay.Update(page);
             TreeViewItem rootItem = new TreeViewItem() { Header = pageDisplay };
@@ -183,11 +186,12 @@ namespace TemplatesApp
                 GetFacts.Facts.Section section = page.GetSection(sectionIndex);
                 ArticleDisplay sectionDisplay = new ArticleDisplay(false, 0) {
                     DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
-                    Width=500, Height=200
+                    Width= PREVIEW_WIDTH, Height= PREVIEW_HEIGHT
                 };
                 sectionDisplay.Update(section);
                 TreeViewItem sectionItem = new TreeViewItem() { Header = sectionDisplay };
                 rootItem.Items.Add(sectionItem);
+                sectionItem.IsExpanded = true;
 
                 // ARTICLES
 
@@ -197,16 +201,22 @@ namespace TemplatesApp
                     GetFacts.Facts.Article article = section.GetArticle(articleIndex);
                     ArticleDisplay articleDisplay = new ArticleDisplay(false, 0) {
                         DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
-                        Width=500, Height=200
+                        Width= PREVIEW_WIDTH, Height= PREVIEW_HEIGHT
                     };
                     articleDisplay.Update(article);
                     TreeViewItem articleItem = new TreeViewItem() { Header =articleDisplay };
                     sectionItem.Items.Add(articleItem);
                 }
+
+
+                if( (articlesCount>0) || (section.HasContent==true))
+                {
+                    rootItem.IsExpanded = true;
+                }
             }
 
             PreviewTree.Items.Add(rootItem);
-            rootItem.ExpandSubtree();
+            //rootItem.ExpandSubtree();
             //page.Parser = Parser;
             //page.Template = PageTemplate;
 
