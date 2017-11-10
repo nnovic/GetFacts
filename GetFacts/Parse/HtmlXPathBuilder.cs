@@ -49,6 +49,29 @@ namespace GetFacts.Parse
             }
         }
 
+        internal override void Optimize()
+        {
+            base.Optimize();
+            HideFinalTextElement();
+        }
+
+
+        /// <summary>
+        /// Si le dernier élément du XPath est un noeud text(),
+        /// on peut le cacher.
+        /// </summary>
+        private void HideFinalTextElement()
+        {
+            if (elements.Count < 1)
+                return;
+
+            HtmlNodeXPathElement last = (HtmlNodeXPathElement)elements.Last();
+            if( last.HtmlNode.NodeType== HtmlNodeType.Text)
+            {
+                last.Visible = false;
+            }
+        }
+
         internal class HtmlNodeXPathElement:XPathElement
         {
             internal readonly HtmlNode HtmlNode;

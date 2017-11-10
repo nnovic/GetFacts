@@ -8,7 +8,7 @@ namespace GetFacts.Parse
 {
     public abstract class AbstractXPathBuilder
     {
-        private readonly List<XPathElement> elements = new List<XPathElement>();
+        protected readonly List<XPathElement> elements = new List<XPathElement>();
 
         public abstract void Build(object o);
 
@@ -56,7 +56,7 @@ namespace GetFacts.Parse
         /// </summary>
         /// <see cref="HideAllElementsBeforeTheSingularAttributeClosestToTheObject"/>
         /// <see cref="ShowAllImportantAttributesForEachElement"/>
-        internal void Optimize()
+        internal virtual void Optimize()
         {
             HideAllElementsBeforeTheSingularAttributeClosestToTheObject();
             ShowAllImportantAttributesForEachElement();
