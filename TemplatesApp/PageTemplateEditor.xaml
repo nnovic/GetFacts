@@ -7,9 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              MinWidth="300">
-    <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
+    <Border Margin="5" CornerRadius="10" Background="#FF85B0B0">
         <StackPanel Margin="10">
-            
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -54,7 +54,7 @@
                 <Button x:Name="AddSectionButton" Click="AddSectionButton_Click">Add section</Button>
             </StackPanel>
         </StackPanel>
-        
-        
+
+
     </Border>
 </UserControl>

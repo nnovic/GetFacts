@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              MinWidth="300">
-    <Border Margin="5" CornerRadius="10" Background="#FFD68D8D">
+    <Border Margin="5" CornerRadius="10" Background="#FFD6B58D">
 
         <Grid Margin="10">
 
