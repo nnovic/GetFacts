@@ -65,10 +65,12 @@ namespace GetFacts.Parse
             if (elements.Count < 1)
                 return;
 
-            HtmlNodeXPathElement last = (HtmlNodeXPathElement)elements.Last();
-            if( last.HtmlNode.NodeType== HtmlNodeType.Text)
+            if (elements.Last() is HtmlNodeXPathElement last)
             {
-                last.Visible = false;
+                if (last.HtmlNode.NodeType == HtmlNodeType.Text)
+                {
+                    last.Visible = false;
+                }
             }
         }
 
@@ -95,6 +97,7 @@ namespace GetFacts.Parse
                 get
                 {
                     List<string> attributes = new List<string>();
+                    attributes.Add("rel");
                     attributes.Add("class");
                     return attributes;
                 }
