@@ -22,7 +22,7 @@
             <TreeView x:Name="ConfigTree" >
             </TreeView>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="SaveButton" Click="SaveButton_Click" >Save</Button>
+                <Button Margin="5,5,5,5" Padding="5,2,5,2" x:Name="SaveButton" Click="SaveButton_Click" >Save template</Button>
             </StackPanel>
         </Grid>
         
