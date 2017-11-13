@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -163,11 +164,11 @@ namespace TemplatesApp
             }
         }
 
-        private void CreateDownloadTask()
-        {           
+        private void CreateDownloadTask(string url)
+        {
             if (Workflow.DownloadTask == null)
             {
-                Workflow.PageTemplate.Reference = UrlInput.Text;
+                Workflow.PageTemplate.Reference = url;
                 Uri uri = new Uri(Workflow.PageTemplate.Reference);
                 Workflow.DownloadTask = DownloadManager.GetInstance().FindOrQueue(uri, Parser.MostProbableFileExtension);
                 Workflow.DownloadTask.TaskFinished += DownloadTask_TaskFinished;
@@ -183,10 +184,10 @@ namespace TemplatesApp
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
+            PleaseWaitPanel.Visibility = Visibility.Visible;
             UrlBar.IsEnabled = false;
-            CreateDownloadTask();
-
             string url = UrlInput.Text;
+            Task.Run(() => { CreateDownloadTask(url); }); // création d'une tâche obligée pour permettre le rafraichissement de l'UI et réllement "voir" le PleaseWaitPanel apparaître.
             UpdateMRU(url);
         }
 
@@ -207,6 +208,7 @@ namespace TemplatesApp
             {
                 UrlBar.IsEnabled = true;
                 BrowseButton.Content = "Reload";
+                PleaseWaitPanel.Visibility = Visibility.Hidden;
             }));
         }
 

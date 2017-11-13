@@ -9,76 +9,82 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded" >
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        
-        <!-- url bar -->
-        <Grid x:Name="UrlBar" Grid.ColumnSpan="2">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
-            <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
-            <ComboBox x:Name="PageTypeSelector" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
-            </ComboBox>
-            <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
-            </ComboBox>
-        </Grid>
         
-        <!-- webbrowser -->
-        <Grid Grid.Row="1">
-            <FlowDocumentReader x:Name="CodeSourceView"/>
-        </Grid>
+            <!-- url bar -->
+            <Grid x:Name="UrlBar" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
+                <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
+                <ComboBox x:Name="PageTypeSelector" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
+                </ComboBox>
+                <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
+                </ComboBox>
+            </Grid>
         
-        <!-- tree -->
-        <Grid Grid.Column="1" Grid.Row="1">
-            <TreeView x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged">
-            </TreeView>
-        </Grid>
+            <!-- webbrowser -->
+            <Grid Grid.Row="1">
+                <FlowDocumentReader x:Name="CodeSourceView"/>
+            </Grid>
         
-        <!-- XPath filtering -->
-        <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+            <!-- tree -->
+            <Grid Grid.Column="1" Grid.Row="1">
+                <TreeView x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged">
+                </TreeView>
+            </Grid>
+        
+            <!-- XPath filtering -->
+            <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-            <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
-            <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
+                <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
+                <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
             
-            <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
-            <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
+                <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
+                <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
 
-            <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">Selected: 1</TextBlock>
-            <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">of 10 elements</TextBlock>
+                <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">Selected: 1</TextBlock>
+                <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">of 10 elements</TextBlock>
             
-            <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="3" Click="PreviousSelection_Click">Prev.</Button>
-            <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="3" Click="NextSelection_Click">Next</Button>
+                <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="3" Click="PreviousSelection_Click">Prev.</Button>
+                <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="3" Click="NextSelection_Click">Next</Button>
             
-            <!--            
-            <TextBlock Grid.Column="1" x:Name="SelectionCount">0 element selected</TextBlock>
+                <!--            
+                <TextBlock Grid.Column="1" x:Name="SelectionCount">0 element selected</TextBlock>
             
-            -->
-        </Grid>
+                -->
+            </Grid>
         
+        </Grid>
+
+        <local:PleaseWait x:Name="PleaseWaitPanel" Visibility="Hidden"/>
+
     </Grid>
 </UserControl>
