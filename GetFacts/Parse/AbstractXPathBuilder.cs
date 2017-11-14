@@ -6,11 +6,65 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Parse
 {
+    /// <summary>
+    /// Cette classe encapsule une liste ordonnée d'objets XPathElement
+    /// (chaque XPathElement représente un morceau de l'expression XPath
+    /// totale représentée par AbstractXPathBuilder).
+    /// L'action se déroule en deux temps:
+    /// 1- On trouve un chemin dans le document analysé qui permettent d'atteindre
+    ///    la cible de l'expression XPath à construire. Un XPathElement est instancié
+    ///    pour chaque "noeud" de ce chemin.
+    /// 2- On essaye de simplifier l'expression résultante en masquant les informations non
+    ///    pertinentes et en affichant les informations vraiment utiles.
+    /// </summary>
+    /// <see cref="Build(object)"/>
+    /// <see cref="Optimize"/>
+    /// <remarks>
+    /// Pour implémenter concrètement cette classe abstraite:
+    /// - Une référence au document servant de base à l'analyse doit être incorporée.
+    ///   Par exemple, le constructeur de XmlXPathBuilder prend un paramètre le XmlElement qui est la racine du document.
+    /// - La fonction Build() doit être implémentée. Durant le Build, on appel Add(XPathElement) pour constuire l'expression XPath représentée par cet objet.
+    /// - La fonction Optimize() peut, si nécessaire, être héritée.
+    /// </remarks>
     public abstract class AbstractXPathBuilder
     {
-        protected readonly List<XPathElement> elements = new List<XPathElement>();
+        private List<XPathElement> elements = null;
+        
+        public bool? IsAbsolute
+        {
+            get;
+            private set;
+        }
 
-        public abstract void Build(object o);
+        protected IReadOnlyList<XPathElement> Elements
+        {
+            get
+            {
+                if (elements == null) return null;
+                return elements.AsReadOnly();
+            }
+        }
+
+        /// <summary>
+        /// Initialise la liste Elements avec des instances 
+        /// d'XPathElement, construisant un chemin partant de la racine
+        /// du document et permettant d'atteindre le noeud correspondant
+        /// à l'objet concret "target".
+        /// </summary>
+        /// <param name="target"></param>
+        /// <example>Pour HtmlXPathBuilder, "target" sera un HtmlNode ou un HtmlAttribute du HtmlDocument étudié.</example>
+        /// <remarks>Cette méthode délègue le travail à la méthode abstraite BuildImpl()</remarks>
+        /// <seealso cref="BuildImpl(object)"/>
+        public void Build(object target)
+        {
+            if (elements != null) throw new Exception();
+
+            elements = new List<XPathElement>();
+            IsAbsolute = true;
+            BuildImpl(target);
+        }
+
+        protected abstract void BuildImpl(object target);
 
         protected void Add(XPathElement element)
         {

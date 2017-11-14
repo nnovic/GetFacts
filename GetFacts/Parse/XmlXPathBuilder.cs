@@ -17,13 +17,19 @@ namespace GetFacts.Parse
             this.documentNode = documentNode;
         }
 
-        public override void Build(object o)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target">Un objet XmlElement ou XmlAttribute, qui se
+        /// trouve quelque part dans l'arboresence de documentNode.</param>
+        /// <seealso cref="documentNode"/>
+        protected override void BuildImpl(object target)
         {
-            if (o is XmlElement node)
+            if (target is XmlElement node)
             {
                 Build(node);
             }
-            else if (o is XmlAttribute attr)
+            else if (target is XmlAttribute attr)
             {
                 XmlElement parent = attr.OwnerElement;
                 Build(parent);

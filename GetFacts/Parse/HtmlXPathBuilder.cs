@@ -17,13 +17,19 @@ namespace GetFacts.Parse
             this.documentNode = documentNode;
         }
 
-        public override void Build(object o)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target">un objet de type HtmlNode ou HtmlAttribute, et qui se trouve
+        /// quelque part dans l'arboresence de documentNode.</param>
+        /// <seealso cref="documentNode"/>
+        protected override void BuildImpl(object target)
         {
-            if (o is HtmlNode node)
+            if (target is HtmlNode node)
             {
                 Build(node);
             }
-            else if (o is HtmlAttribute attr)
+            else if (target is HtmlAttribute attr)
             {
                 HtmlNode parent = attr.OwnerNode;
                 Build(parent);
@@ -62,10 +68,10 @@ namespace GetFacts.Parse
         /// </summary>
         private void HideFinalTextElement()
         {
-            if (elements.Count < 1)
+            if (Elements.Count < 1)
                 return;
 
-            if (elements.Last() is HtmlNodeXPathElement last)
+            if (Elements.Last() is HtmlNodeXPathElement last)
             {
                 if (last.HtmlNode.NodeType == HtmlNodeType.Text)
                 {
