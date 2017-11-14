@@ -409,7 +409,7 @@ namespace GetFacts.Parse
         /// <seealso cref="SourceTree"/>
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            TreeViewItem tvi = HyperlinkToTreeViewItem((Hyperlink)sender);
+            TreeViewItem tvi = TextElementToTreeViewItem((Hyperlink)sender);
             tvi.IsSelected = true;
             tvi.BringIntoView();
             tvi.IsExpanded = true;
@@ -417,21 +417,21 @@ namespace GetFacts.Parse
 
         /// <summary>
         /// Retourne un TreeViewItem appartenant à SourceTree et qui correspond
-        /// au même noeud du document XML/HTML que l'Hyperlink passé en argument.
-        /// (Hyperlink appartenant à SourceCode).
+        /// au même noeud du document XML/HTML que le TextElement passé en argument.
+        /// (Hyperlink appartenant à SourceCode, par exemple).
         /// </summary>
-        /// <param name="hl"></param>
+        /// <param name="te"></param>
         /// <returns></returns>
         /// <see cref="SourceTree"/>
         /// <see cref="SourceCode"/>
-        internal TreeViewItem HyperlinkToTreeViewItem(Hyperlink hl)
+        public TreeViewItem TextElementToTreeViewItem(TextElement te)
         {
-            object node = textElements2concreteObjects.GetObjectOf(hl);
+            object node = textElements2concreteObjects.GetObjectOf(te);
             TreeViewItem tvi = treeViewItems2concreteObjects.GetTypedElementOf(node);
             return tvi;
         }
 
-
+        
         #endregion
 
         #region [optionel] tree view avec le code source de la page

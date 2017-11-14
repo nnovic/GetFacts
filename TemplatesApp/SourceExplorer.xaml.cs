@@ -230,17 +230,19 @@ namespace TemplatesApp
 
         private void XPathInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ClearHighlights();
-
-            // Faire un test sur le xpath #1 uniquement,
-            // juste pour vérifier s'il est co
+            ClearHighlights();            
             try
             {
                 IList<TextElement> selection = Parser?.SelectFromXPath(XPathInput1.Text, XPathInput2.Text);
                 if( (selection != null) && (selection.Count>0) )
                 {
                     Highlights(selection);
+                    ExpandSourceTreeButOnlyFor(selection);
                 }
+                /*else
+                {
+                    ExpandAllTree();
+                }*/
             }
             catch
             {
@@ -248,6 +250,49 @@ namespace TemplatesApp
         }
 
         #endregion
+
+        #region expansion de l'arbre
+
+        private void ExpandSourceTreeButOnlyFor(IList<TextElement> list)
+        {
+            List<TreeViewItem> expandedItems = new List<TreeViewItem>();
+
+            foreach(TextElement te in list)
+            {
+                TreeViewItem tvi = Parser.TextElementToTreeViewItem(te);
+
+                while(tvi!=null)
+                {
+                    expandedItems.Add(tvi);
+                    tvi.IsExpanded = true;
+                    tvi = tvi.Parent as TreeViewItem;
+                }
+            }
+
+            foreach (TreeViewItem tvi in CodeSourceTree.Items)
+            {
+                CollapseAllChildrenExcept(tvi, expandedItems);
+            }
+        }
+        
+        private void CollapseAllChildrenExcept(TreeViewItem item, List<TreeViewItem> expandedItems)
+        {
+            foreach (TreeViewItem child in item.Items)
+            {
+                if (expandedItems.Contains(child))
+                {
+                    child.IsExpanded = true;
+                    CollapseAllChildrenExcept(child, expandedItems);
+                }
+                else
+                {
+                    child.IsExpanded = false;
+                }
+            }
+        }
+
+        #endregion
+
 
         #region mise en surbrillance
 

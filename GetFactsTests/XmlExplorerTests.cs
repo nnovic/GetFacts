@@ -39,7 +39,7 @@ namespace GetFactsTests
                     {
                         if (te is Hyperlink hl)
                         {
-                            TreeViewItem tvi = parser.HyperlinkToTreeViewItem(hl);
+                            TreeViewItem tvi = parser.TextElementToTreeViewItem(hl);
                             Assert.IsNotNull(tvi);
                             return true;
                         }
