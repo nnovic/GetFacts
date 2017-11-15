@@ -299,5 +299,10 @@ namespace GetFacts.Parse
                 return sb.ToString();
             }
         }
+
+        internal void MakeRelative(AbstractXPathBuilder tmpBuilder)
+        {
+            // TODO
+        }
     }
 }
