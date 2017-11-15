@@ -8,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Parse
 {
-    class HtmlXPathBuilder:AbstractXPathBuilder
+    public class HtmlXPathBuilder:AbstractXPathBuilder
     {
-        private readonly HtmlNode documentNode;
+        private static readonly string[] HtmlSingularAttributeNames = new string[] { "id" };
+        
 
-        public HtmlXPathBuilder(HtmlNode documentNode)
+        public HtmlXPathBuilder()
         {
-            this.documentNode = documentNode;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="target">un objet de type HtmlNode ou HtmlAttribute, et qui se trouve
-        /// quelque part dans l'arboresence de documentNode.</param>
-        /// <seealso cref="documentNode"/>
+        /// quelque part dans l'arboresence du document HTMl.</param>
         protected override void BuildImpl(object target)
         {
             if (target is HtmlNode node)
@@ -89,13 +88,8 @@ namespace GetFacts.Parse
                 this.HtmlNode = node;
                 foreach(HtmlAttribute attr in node.Attributes)
                 {
-                    Attributes.Add(new XPathAttribute(attr.Name, attr.Value));
+                    Attributes.Add(new HtmlXPathAttribute(attr.Name, attr.Value));
                 }
-            }
-
-            public override ICollection<string> SingularAttributeNames
-            {
-                get { return new string[] { "id" }.ToList(); }
             }
 
             public override ICollection<string> ImportantAttributeNames
@@ -144,11 +138,6 @@ namespace GetFacts.Parse
                 this.HtmlAttribute = attribute;
             }
 
-            public override ICollection<string> SingularAttributeNames
-            {
-                get { /*return new string[] {}.ToList();*/ throw new NotImplementedException(); }
-            }
-
             public override ICollection<string> ImportantAttributeNames => throw new NotImplementedException();
 
             protected override string ElementName
@@ -162,6 +151,22 @@ namespace GetFacts.Parse
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        internal class HtmlXPathAttribute : XPathAttribute
+        {
+            public HtmlXPathAttribute(string name, string value) 
+                : base(name, value)
+            {
+            }
+
+            public override bool IsSingular
+            {
+                get
+                {
+                    return HtmlSingularAttributeNames.Contains(Name);
+                }
             }
         }
     }

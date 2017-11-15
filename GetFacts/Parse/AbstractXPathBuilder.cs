@@ -36,7 +36,12 @@ namespace GetFacts.Parse
             private set;
         }
 
-        protected IReadOnlyList<XPathElement> Elements
+        /// <summary>
+        /// Retourne, dans une liste non-modifiable, la liste
+        /// des XPathElement qui composent le XPath représenté
+        /// par cet objet.
+        /// </summary>
+        public IReadOnlyList<XPathElement> Elements
         {
             get
             {
@@ -144,7 +149,7 @@ namespace GetFacts.Parse
             while (index >= 0)
             {
                 XPathElement element = elements[index--];
-                var singularAttributes = from attribute in element.Attributes where element.SingularAttributeNames.Contains(attribute.Name) == true select attribute;
+                var singularAttributes = from attribute in element.Attributes where attribute.IsSingular == true select attribute;
                 if( singularAttributes.Count() > 0 )
                 {
                     singularAttributes.ElementAt(0).Visible = true;
@@ -165,7 +170,7 @@ namespace GetFacts.Parse
         {
             foreach(XPathElement element in elements)
             {
-                var singularAttributes = from a in element.Attributes where element.SingularAttributeNames.Contains(a.Name) && a.Visible select a;
+                var singularAttributes = from a in element.Attributes where a.IsSingular && a.Visible select a;
                 if (singularAttributes.Any())
                     continue;
 
@@ -178,127 +183,9 @@ namespace GetFacts.Parse
             }
         }
 
-        public abstract class XPathElement
-        {
-            internal readonly List<XPathAttribute> Attributes = new List<XPathAttribute>();
+        
 
-            /// <summary>
-            /// Noms des attributs qui, pour la technologie considérée (Xml, Html, ...),
-            /// sont des "singularités". C'est-à-dire, des attributs qui permettent d'identifier
-            /// de façon unique un élément dans l'arboresence du document. 
-            /// </summary>
-            /// <example>
-            /// l'attribut "id" pour le HTML.
-            /// </example>
-            public abstract ICollection<string> SingularAttributeNames { get; }
-
-            /// <summary>
-            /// Noms des attributs qui, pour la technologie considérée (Xml, Html, ...),
-            /// sont des facilitateurs pour localiser du contenu dans l'arboresence du document.
-            /// </summary>
-            /// <example>
-            /// l'attribut "class" pour le HTML.
-            /// </example>
-            public abstract ICollection<string> ImportantAttributeNames { get; }
-
-            protected abstract string ElementName { get; }
-
-            public bool HasAnyVisibleAttribute
-            {
-                get
-                {
-                    var visibleAttributes = from a in Attributes where a.Visible == true select a;
-                    return visibleAttributes.Any();
-                }
-            }
-
-            private string VisibleAttributes(string separator)
-            {   
-                var visibleAttributes = from a in Attributes where a.Visible == true select a;
-                StringBuilder sb = new StringBuilder();
-                bool isFirstAttribute = true;
-                foreach (var attribute in visibleAttributes)
-                {
-                    if (isFirstAttribute == true)
-                        isFirstAttribute = false;
-                    else
-                        sb.Append(separator);
-                    sb.Append(attribute.GetString(true));
-                }
-                return sb.ToString();
-            }
-
-            public string GetString()
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(ElementName);
-
-                if (HasAnyVisibleAttribute)
-                {
-                    sb.Append('[');
-                    sb.Append(VisibleAttributes(" and "));
-                    sb.Append(']');
-                }
-
-                return sb.ToString();
-            }
-
-            private bool visible = true;
-            public bool Visible
-            {
-                get { return visible; }
-                internal set { visible = value; }
-            }
-
-            /// <summary>
-            /// Evalue la fiabilité de l'attribut passé en argument pour
-            /// devenir un élément du XPath après optmisation.
-            /// </summary>
-            /// <param name="attribute"></param>
-            /// <returns>Retourne "true" si quelque chose dans le contexte du document ou dans la valeur
-            /// de l'attribut laise penser qu'il sera difficile d'en faire usage pour le XPath
-            /// en cours d'optimisation. Sinon, retourne "false".</returns>
-            /// <example>
-            /// Dans le cas du HTML, un attribut "class" dont la valeur contient plusieurs mots séparés
-            /// par des espaces retournera "true", car non fiable.
-            /// </example>
-            public abstract bool CanBeMisguiding(XPathAttribute attribute);
-        }
-
-        public class XPathAttribute
-        {
-            public XPathAttribute(string name, string value)
-            {
-                Name = name;
-                Value = value;
-            }
-
-            public string Name { get; private set; }
-            public string Value { get; private set; }
-
-            private bool visible = false;
-            public bool Visible
-            {
-                get { return visible; }
-                internal set { visible = value; }
-            }
-
-            public string GetString()
-            {
-                return GetString(false);
-            }
-
-            public string GetString(bool withValue)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("@{0}", Name);
-                if(withValue)
-                {
-                    sb.AppendFormat("=\"{0}\"", Value);
-                }
-                return sb.ToString();
-            }
-        }
+        
 
         internal void MakeRelative(AbstractXPathBuilder tmpBuilder)
         {

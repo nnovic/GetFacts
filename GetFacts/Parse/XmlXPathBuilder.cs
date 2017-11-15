@@ -8,20 +8,17 @@ using System.Xml;
 
 namespace GetFacts.Parse
 {
-    class XmlXPathBuilder:AbstractXPathBuilder
+    public class XmlXPathBuilder:AbstractXPathBuilder
     {
-        private readonly XmlElement documentNode;
-
-        public XmlXPathBuilder(XmlElement documentNode)
+        public XmlXPathBuilder()
         {
-            this.documentNode = documentNode;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="target">Un objet XmlElement ou XmlAttribute, qui se
-        /// trouve quelque part dans l'arboresence de documentNode.</param>
+        /// trouve quelque part dans l'arboresence du document XML.</param>
         /// <seealso cref="documentNode"/>
         protected override void BuildImpl(object target)
         {
@@ -74,14 +71,8 @@ namespace GetFacts.Parse
                 this.XmlNode = node;
                 foreach(XmlAttribute attr in node.Attributes)
                 {
-                    Attributes.Add(new XPathAttribute(attr.Name, attr.Value));
+                    Attributes.Add(new XmlXPathAttribute(attr.Name, attr.Value));
                 }
-            }
-
-            // TODO
-            public override ICollection<string> SingularAttributeNames
-            {
-                get { return new string[] { /*"id"*/ }.ToList(); }
             }
 
             // TODO
@@ -132,11 +123,6 @@ namespace GetFacts.Parse
                 this.XmlAttribute = attribute;
             }
 
-            public override ICollection<string> SingularAttributeNames
-            {
-                get { /*return new string[] {}.ToList();*/ throw new NotImplementedException(); }
-            }
-
             public override ICollection<string> ImportantAttributeNames => throw new NotImplementedException();
 
             protected override string ElementName
@@ -150,6 +136,22 @@ namespace GetFacts.Parse
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        internal class XmlXPathAttribute:XPathAttribute
+        {
+            public XmlXPathAttribute(string name, string value)
+                : base(name, value)
+            {
+            }
+
+            public override bool IsSingular
+            {
+                get
+                {
+                    return false;
+                }
             }
         }
     }

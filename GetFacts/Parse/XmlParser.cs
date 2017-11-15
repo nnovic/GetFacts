@@ -345,7 +345,7 @@ namespace GetFacts.Parse
 
         protected override AbstractXPathBuilder CreateXPathBuilder()
         {
-            return new XmlXPathBuilder(xmlDoc.DocumentElement);
+            return new XmlXPathBuilder();
         }
         
 

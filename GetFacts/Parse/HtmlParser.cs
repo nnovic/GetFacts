@@ -339,7 +339,7 @@ namespace GetFacts.Parse
 
         protected override AbstractXPathBuilder CreateXPathBuilder()
         {
-            return new HtmlXPathBuilder(htmlDoc.DocumentNode);
+            return new HtmlXPathBuilder();
         }
 
               

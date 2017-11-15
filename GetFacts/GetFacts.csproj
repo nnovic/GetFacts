@@ -104,9 +104,12 @@
     <Compile Include="JaroWinkler.cs" />
     <Compile Include="NotificationSystem.cs" />
     <Compile Include="Parse\AbstractXPathBuilder.cs" />
+    <Compile Include="Parse\Extensions.cs" />
     <Compile Include="Parse\XmlXPathBuilder.cs" />
     <Compile Include="Parse\HtmlXPathBuilder.cs" />
     <Compile Include="Parse\XmlParser.cs" />
+    <Compile Include="Parse\XPathAttribute.cs" />
+    <Compile Include="Parse\XPathElement.cs" />
     <Compile Include="RegexTextBox.cs" />
     <Compile Include="Render\ArticleDisplay.xaml.cs">
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
