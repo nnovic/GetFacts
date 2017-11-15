@@ -12,16 +12,6 @@ namespace GetFacts.Parse
     {
         internal readonly List<XPathAttribute> Attributes = new List<XPathAttribute>();
 
-
-        /// <summary>
-        /// Noms des attributs qui, pour la technologie considérée (Xml, Html, ...),
-        /// sont des facilitateurs pour localiser du contenu dans l'arboresence du document.
-        /// </summary>
-        /// <example>
-        /// l'attribut "class" pour le HTML.
-        /// </example>
-        public abstract ICollection<string> ImportantAttributeNames { get; }
-
         protected abstract string ElementName { get; }
 
         public bool HasAnyVisibleAttribute

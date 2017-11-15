@@ -11,7 +11,8 @@ namespace GetFacts.Parse
     public class HtmlXPathBuilder:AbstractXPathBuilder
     {
         private static readonly string[] HtmlSingularAttributeNames = new string[] { "id" };
-        
+        private static readonly string[] HtmlImporantAttributeNames = new string[] { "rel", "class" };
+
 
         public HtmlXPathBuilder()
         {
@@ -92,17 +93,6 @@ namespace GetFacts.Parse
                 }
             }
 
-            public override ICollection<string> ImportantAttributeNames
-            {
-                get
-                {
-                    List<string> attributes = new List<string>();
-                    attributes.Add("rel");
-                    attributes.Add("class");
-                    return attributes;
-                }
-            }
-
             protected override string ElementName
             {
                 get
@@ -138,8 +128,6 @@ namespace GetFacts.Parse
                 this.HtmlAttribute = attribute;
             }
 
-            public override ICollection<string> ImportantAttributeNames => throw new NotImplementedException();
-
             protected override string ElementName
             {
                 get
@@ -166,6 +154,14 @@ namespace GetFacts.Parse
                 get
                 {
                     return HtmlSingularAttributeNames.Contains(Name);
+                }
+            }
+
+            public override bool IsImportant
+            {
+                get
+                {
+                    return HtmlImporantAttributeNames.Contains(Name);
                 }
             }
         }

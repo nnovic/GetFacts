@@ -29,6 +29,14 @@ namespace GetFacts.Parse
         /// </example>
         public abstract bool IsSingular { get; }
 
+        /// <summary>
+        /// Indique si l'élément, pour la technologie considérée (Xml, Html, ...),
+        /// est un facilitateur pour localiser du contenu dans l'arboresence du document.
+        /// </summary>
+        /// <example>
+        /// l'attribut "class" pour le HTML.
+        /// </example>
+        public abstract bool IsImportant { get; }
 
         private bool visible = false;
         public bool Visible

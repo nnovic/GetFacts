@@ -174,7 +174,7 @@ namespace GetFacts.Parse
                 if (singularAttributes.Any())
                     continue;
 
-                var importantAttributes = from a in element.Attributes where element.ImportantAttributeNames.Contains(a.Name) select a;
+                var importantAttributes = from a in element.Attributes where a.IsImportant select a;
                 foreach (var importantAttribute in importantAttributes)
                 {
                     if( element.CanBeMisguiding(importantAttribute)== false )

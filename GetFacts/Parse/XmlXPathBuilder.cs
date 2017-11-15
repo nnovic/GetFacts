@@ -75,17 +75,6 @@ namespace GetFacts.Parse
                 }
             }
 
-            // TODO
-            public override ICollection<string> ImportantAttributeNames
-            {
-                get
-                {
-                    List<string> attributes = new List<string>();
-                    //attributes.Add("class");
-                    return attributes;
-                }
-            }
-
             protected override string ElementName
             {
                 get
@@ -123,8 +112,6 @@ namespace GetFacts.Parse
                 this.XmlAttribute = attribute;
             }
 
-            public override ICollection<string> ImportantAttributeNames => throw new NotImplementedException();
-
             protected override string ElementName
             {
                 get
@@ -147,6 +134,14 @@ namespace GetFacts.Parse
             }
 
             public override bool IsSingular
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override bool IsImportant
             {
                 get
                 {
