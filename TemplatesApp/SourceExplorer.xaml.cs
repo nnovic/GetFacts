@@ -222,10 +222,18 @@ namespace TemplatesApp
             selected.BringIntoView();
             selected.Focus();
 
-            string xpath = Parser.SuggestXPathFor(selected);
-
-            XPathInput2.Text = string.Empty;
-            XPathInput1.Text = xpath;            
+            if (PreFilterLock.IsChecked==false)
+            {
+                string xpath = Parser.SuggestXPathFor(selected, String.Empty);
+                XPathInput2.Text = string.Empty;
+                XPathInput1.Text = xpath;
+            }
+            else
+            {
+                string root = XPathInput1.Text;
+                string xpath = Parser.SuggestXPathFor(selected, root);
+                XPathInput2.Text = xpath;
+            }
         }
 
         private void XPathInput_TextChanged(object sender, TextChangedEventArgs e)
@@ -239,10 +247,6 @@ namespace TemplatesApp
                     Highlights(selection);
                     ExpandSourceTreeButOnlyFor(selection);
                 }
-                /*else
-                {
-                    ExpandAllTree();
-                }*/
             }
             catch
             {

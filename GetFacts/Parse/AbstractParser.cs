@@ -551,16 +551,53 @@ namespace GetFacts.Parse
         /// possible, mais ce n'est pas la priorité.
         /// </summary>
         /// <param name="tvi"></param>
-        public string SuggestXPathFor(TreeViewItem tvi)
+        /// <param name="root">Si non vide, l'expression XPath sera relative par ra</param>
+        public string SuggestXPathFor(TreeViewItem tvi, string root)
         {
             TreeViewItem selected = tvi;
             object concreteObject = treeViewItems2concreteObjects.GetObjectOf(selected);
-            AbstractXPathBuilder builder = XPathFor(concreteObject);
+            AbstractXPathBuilder builder = XPathFor(concreteObject, root);
             return builder.GetString();
         }
 
-        protected abstract AbstractXPathBuilder XPathFor(object o);
+        /// <summary>
+        /// Créé une expression XPath qui est adaptée pour trouver
+        /// l'objet passé en paramètre.
+        /// L'expression retournée est la plus simple possible.
+        /// Cette méthode n'est pas "bijective", c'est-à-dire que
+        /// l'XPath retournée pourra donner plusieurs correpondances,
+        /// dont "o" fera partie.
+        /// </summary>
+        /// <param name="target">objet concret que l'expression XPath devra être capable de trouver.</param>
+        /// <param name="startingPoint"">si renseignée, cette expression XPath devra être le point de départ de la construction de l'expression XPath retournée. Sinon, on part de la racine du document</param>
+        /// <returns>Une instance de AbstractXPathBuilder</returns>
+        private AbstractXPathBuilder XPathFor(object target, string startingPoint)
+        {
+            AbstractXPathBuilder builder = CreateXPathBuilder();
+            builder.Build(target);
 
+            if(string.IsNullOrEmpty(startingPoint)==false)
+            {
+                // obtenir une liste d'objets concrets à partir
+                // de l'expression "startingPoint":
+                IList<object> roots = Select(startingPoint);
+                foreach(object root in roots )
+                {
+                    // construire un AbstractXPathBuilder,
+                    AbstractXPathBuilder tmpBuilder = CreateXPathBuilder();
+
+                    // faire un Build() dessus,
+                    tmpBuilder.Build(root);
+
+                    builder.MakeRelative(tmpBuilder);
+                }
+            }
+
+            builder.Optimize();
+            return builder;
+        }
+
+        protected abstract AbstractXPathBuilder CreateXPathBuilder();
 
         /// <summary>
         /// Retourne tous les objets de type TextElement qui correspondent
@@ -585,7 +622,8 @@ namespace GetFacts.Parse
         }
 
         /// <summary>
-        /// 
+        /// Retourne la liste des objets concrets qui "matchent" avec 
+        /// l'expression XPath passée en paramètre.
         /// </summary>
         /// <param name="xpathElements"></param>
         /// <returns>A non-null IList object. Might be empty, though.</returns>

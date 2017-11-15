@@ -343,14 +343,11 @@ namespace GetFacts.Parse
             return xmlDoc.CreateNavigator();
         }
 
-        protected override AbstractXPathBuilder XPathFor(object o)
+        protected override AbstractXPathBuilder CreateXPathBuilder()
         {
-            XmlXPathBuilder builder = new XmlXPathBuilder(xmlDoc.DocumentElement);
-            builder.Build(o);
-            builder.Optimize();
-            return builder;
+            return new XmlXPathBuilder(xmlDoc.DocumentElement);
         }
-
+        
 
         /// <summary>
         /// 
@@ -380,7 +377,7 @@ namespace GetFacts.Parse
         {
             System.Collections.Generic.List<object> output = new System.Collections.Generic.List<object>();
 
-            if ((xpathElements != null) && (xpathElements.Length > 1))
+            if ((xpathElements != null) && (xpathElements.Length >= 1))
             {
                 IList<XPathNavigator> navigators = new List<XPathNavigator>();
                 navigators.Add(CreateNavigator());

@@ -55,6 +55,7 @@
             <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -65,16 +66,17 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
-                <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
+                <ToggleButton Grid.Row="0" Grid.Column="1" Name="PreFilterLock">X</ToggleButton>
+                <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="2" TextChanged="XPathInput_TextChanged" />
             
                 <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
-                <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="1" TextChanged="XPathInput_TextChanged" />
+                <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="2" TextChanged="XPathInput_TextChanged" />
 
-                <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">Selected: 1</TextBlock>
-                <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">of 10 elements</TextBlock>
+                <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right">Selected: 1</TextBlock>
+                <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right">of 10 elements</TextBlock>
             
-                <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="3" Click="PreviousSelection_Click">Prev.</Button>
-                <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="3" Click="NextSelection_Click">Next</Button>
+                <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="4" Click="PreviousSelection_Click">Prev.</Button>
+                <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="4" Click="NextSelection_Click">Next</Button>
             
                 <!--            
                 <TextBlock Grid.Column="1" x:Name="SelectionCount">0 element selected</TextBlock>
