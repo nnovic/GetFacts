@@ -216,8 +216,15 @@ namespace TemplatesApp
 
         #region navigation dans le code source
 
+        private bool CodeSourceTreeIsCollapsing = false;
+
         private void CodeSourceTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            if(CodeSourceTreeIsCollapsing)
+            {
+                return;
+            }
+
             TreeViewItem selected = (TreeViewItem)e.NewValue;
             selected.BringIntoView();
             selected.Focus();
@@ -259,26 +266,35 @@ namespace TemplatesApp
 
         private void ExpandSourceTreeButOnlyFor(IList<TextElement> list)
         {
-            List<TreeViewItem> expandedItems = new List<TreeViewItem>();
-
-            foreach(TextElement te in list)
+            try
             {
-                TreeViewItem tvi = Parser.TextElementToTreeViewItem(te);
+                CodeSourceTreeIsCollapsing = true;
 
-                while(tvi!=null)
+                List<TreeViewItem> expandedItems = new List<TreeViewItem>();
+
+                foreach (TextElement te in list)
                 {
-                    expandedItems.Add(tvi);
-                    tvi.IsExpanded = true;
-                    tvi = tvi.Parent as TreeViewItem;
+                    TreeViewItem tvi = Parser.TextElementToTreeViewItem(te);
+
+                    while (tvi != null)
+                    {
+                        expandedItems.Add(tvi);
+                        tvi.IsExpanded = true;
+                        tvi = tvi.Parent as TreeViewItem;
+                    }
+                }
+
+                foreach (TreeViewItem tvi in CodeSourceTree.Items)
+                {
+                    CollapseAllChildrenExcept(tvi, expandedItems);
                 }
             }
-
-            foreach (TreeViewItem tvi in CodeSourceTree.Items)
+            finally
             {
-                CollapseAllChildrenExcept(tvi, expandedItems);
+                CodeSourceTreeIsCollapsing = false;
             }
         }
-        
+
         private void CollapseAllChildrenExcept(TreeViewItem item, List<TreeViewItem> expandedItems)
         {
             foreach (TreeViewItem child in item.Items)
