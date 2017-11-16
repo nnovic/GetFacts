@@ -127,12 +127,6 @@ namespace GetFacts.Parse
             }
         }
 
-        // TODO
-        /*private InformationType EvaluateInformationType(XmlElement node)
-        {
-            return InformationType.NeutralData;
-        }*/
-
         private InformationType EvaluateInformationType(XmlAttribute o)
         {
             //XmlNode node = null;

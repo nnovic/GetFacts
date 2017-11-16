@@ -117,17 +117,22 @@ namespace TemplatesApp
             });
         }
 
-        private void FilesList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            //TODO
-        }
-
         private void Workflow_WorkflowUpdated(object sender, EventArgs e)
         {
             // no action required.
         }
 
+        private void FilesList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DoSelectTemplate();
+        }
+
         private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
+        {
+            DoSelectTemplate();
+        }
+
+        private void DoSelectTemplate()
         {
             string template = FilesList.SelectedItem as string;
             workflow.TemplateFile = template;

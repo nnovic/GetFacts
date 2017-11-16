@@ -79,12 +79,6 @@ namespace GetFacts.Parse
             {
                 get
                 {
-                    // TODO
-                    /*switch (XmlElement.NodeType)
-                    {
-                        case HtmlNodeType.Comment: return "comment()";
-                        case HtmlNodeType.Text: return "text()";
-                    }*/
                     return XmlNode.Name;
                 }
             }
@@ -93,10 +87,6 @@ namespace GetFacts.Parse
             {
                 switch(attribute.Name)
                 {
-                    // TODO
-                    //case "class":
-                    //    return Regex.Split(attribute.Value, @"\s").Length > 1;
-
                     default:
                         return false;
                 }
