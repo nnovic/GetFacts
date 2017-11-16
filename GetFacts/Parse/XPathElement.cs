@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GetFacts.Parse
 {
     [DebuggerDisplay("XPathElement = {ElementName}")]
-    public abstract class XPathElement
+    public abstract class XPathElement : IComparable<XPathElement>
     {
         internal readonly List<XPathAttribute> Attributes = new List<XPathAttribute>();
 
@@ -76,5 +76,51 @@ namespace GetFacts.Parse
         public abstract bool CanBeMisguiding(XPathAttribute attribute);
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>
+        /// 0 --> égalité
+        /// -1 --> valeurs différentes pour ElementName
+        /// -2 --> nombre d'attributs différents
+        /// >0 --> valeurs différentes pour l'un des attributs.
+        /// </returns>
+        public int CompareTo(XPathElement e)
+        {
+            // compare les valeurs ElementName
+            if (this.ElementName.CompareTo(e.ElementName) != 0)
+                return -1;
+
+            // compare la quantité d'attributs
+            if (this.Attributes.Count != e.Attributes.Count)
+                return -2;
+
+            for (int index = 0; index < Attributes.Count; index++)
+            {
+                if (Attributes[index].CompareTo(e.Attributes[index]) != 0)
+                    return (index + 1);
+            }
+
+            return 0;
+        }
+
+
+
+        public class GoBackElement : XPathElement
+        {
+            protected override string ElementName
+            {
+                get
+                {
+                    return "..";
+                }
+            }
+
+            public override bool CanBeMisguiding(XPathAttribute attribute)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

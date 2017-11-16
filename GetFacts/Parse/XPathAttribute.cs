@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GetFacts.Parse
 {
     [DebuggerDisplay("XPathAttribute {Name}={Value}")]
-    public abstract class XPathAttribute
+    public abstract class XPathAttribute:IComparable<XPathAttribute>
     {
         public XPathAttribute(string name, string value)
         {
@@ -59,6 +59,24 @@ namespace GetFacts.Parse
                 sb.AppendFormat("=\"{0}\"", Value);
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns>
+        /// 0 --> égalité
+        /// -1 --> différence de valeur pour Name
+        /// 1 --> différence de valeur pour Value
+        /// </returns>
+        public int CompareTo(XPathAttribute a)
+        {
+            if (string.Compare(this.Name, a.Name) != 0)
+                return -1;
+            if (string.Compare(this.Value, a.Value) != 0)
+                return 1;
+            return 0;
         }
     }    
 }
