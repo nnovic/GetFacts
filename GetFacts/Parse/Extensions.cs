@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,5 +31,21 @@ namespace GetFacts.Parse
 
             return null;
         }
+
+
+        /// <summary>
+        /// Retourne le dernier HtmlNode de la collection.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static HtmlNode Last(this HtmlNodeCollection collection)
+        {
+            if( (collection==null) || (collection.Count==0))
+            {
+                return null;
+            }
+            return collection[collection.Count - 1];
+        }
     }
+
 }

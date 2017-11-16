@@ -92,6 +92,7 @@ namespace GetFacts.Parse
             if (this.ElementName.CompareTo(e.ElementName) != 0)
                 return -1;
 
+            /*
             // compare la quantité d'attributs
             if (this.Attributes.Count != e.Attributes.Count)
                 return -2;
@@ -101,7 +102,7 @@ namespace GetFacts.Parse
                 if (Attributes[index].CompareTo(e.Attributes[index]) != 0)
                     return (index + 1);
             }
-
+            */
             return 0;
         }
 

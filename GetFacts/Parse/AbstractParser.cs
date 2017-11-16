@@ -573,28 +573,48 @@ namespace GetFacts.Parse
         /// <returns>Une instance de AbstractXPathBuilder</returns>
         private AbstractXPathBuilder XPathFor(object target, string startingPoint)
         {
-            AbstractXPathBuilder builder = CreateXPathBuilder();
-            builder.Build(target);
+            AbstractXPathBuilder xpathToTarget = CreateXPathBuilder();
+            xpathToTarget.Build(target);
 
+            // Evaluer la possibilité de construire un xpath
+            // relatif à un autre xpath :
             if(string.IsNullOrEmpty(startingPoint)==false)
-            {
+            {               
                 // obtenir une liste d'objets concrets à partir
                 // de l'expression "startingPoint":
                 IList<object> roots = Select(startingPoint);
-                foreach(object root in roots )
-                {
+
+                // pour sauvegarder la meilleure solution:
+                AbstractXPathBuilder bestPath = null;
+                int bestScore = int.MaxValue;
+
+                foreach (object root in roots)
+                {                    
                     // construire un AbstractXPathBuilder,
-                    AbstractXPathBuilder tmpBuilder = CreateXPathBuilder();
+                    AbstractXPathBuilder xpathForRoot = CreateXPathBuilder();
 
                     // faire un Build() dessus,
-                    tmpBuilder.Build(root);
+                    xpathForRoot.Build(root);
 
-                    builder.MakeRelative(tmpBuilder);
+                    // transformer l'objet xpathForRoot
+                    // pour qu'il représente un chemin d'accès
+                    // à "target" relatif à "starting point".
+                    int score = xpathForRoot.Goto(xpathToTarget);
+                    if( score < bestScore )
+                    {
+                        bestScore = score;
+                        bestPath = xpathForRoot;
+                    }
+                }
+
+                if( bestPath!=null )
+                {
+                    xpathToTarget = bestPath;
                 }
             }
 
-            builder.Optimize();
-            return builder;
+            xpathToTarget.Optimize();
+            return xpathToTarget;
         }
 
         protected abstract AbstractXPathBuilder CreateXPathBuilder();

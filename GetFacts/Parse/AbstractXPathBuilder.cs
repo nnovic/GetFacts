@@ -80,6 +80,9 @@ namespace GetFacts.Parse
         {
             StringBuilder result = new StringBuilder();
 
+            if (IsAbsolute == false)
+                result.Append('.');
+
             foreach(XPathElement element in elements)
             {
                 if(element.Visible==false )
@@ -113,12 +116,16 @@ namespace GetFacts.Parse
         /// de façon à former une expression à la fois plus synthétique et plus
         /// inclusive.
         /// </summary>
-        /// <see cref="HideAllElementsBeforeTheSingularAttributeClosestToTheObject"/>
-        /// <see cref="ShowAllImportantAttributesForEachElement"/>
+        /// <see cref="HideAllElementsBeforeTheSingularAttributeClosestToTheTarget"/>
+        /// <see cref="ShowAllImportantAndUnambiguousAttributesForEachElement"/>
+        /// <see cref="ShowImportantButMisguidingAttributeForTheLastElement"/>
         internal virtual void Optimize()
         {
-            HideAllElementsBeforeTheSingularAttributeClosestToTheObject();
-            ShowAllImportantAttributesForEachElement();
+            HideAllElementsBeforeTheSingularAttributeClosestToTheTarget();
+            if (ShowAllImportantAndUnambiguousAttributesForEachElement() == false)
+            {
+                ShowImportantButMisguidingAttributeForTheLastElement();
+            }
         }
 
 
@@ -141,7 +148,7 @@ namespace GetFacts.Parse
         /// </code>
         /// </example>
         /// <see cref="XPathElement.SingularAttributeNames"/>
-        private void HideAllElementsBeforeTheSingularAttributeClosestToTheObject()
+        private void HideAllElementsBeforeTheSingularAttributeClosestToTheTarget()
         {
             int nbOfElements = elements.Count;
             int index = nbOfElements - 1;
@@ -166,8 +173,20 @@ namespace GetFacts.Parse
 
         }
 
-        private void ShowAllImportantAttributesForEachElement()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>'true' --> au moins un argument important non ambigu a été trouvé et rendu visible.
+        /// 'false' --> aucun arugment n'a été trouvé qui soit en même temps 'important' et 'non ambigu'.
+        /// </returns>
+        /// <remarks>
+        /// Attention, un attribut avec IsImportant=true, mais pour lequel CanBeMisguiding vaut true également,
+        /// ne sera pas rendu visible par cette méthode.
+        /// </remarks>
+        private bool ShowAllImportantAndUnambiguousAttributesForEachElement()
         {
+            bool success = false;
+
             foreach(XPathElement element in elements)
             {
                 var singularAttributes = from a in element.Attributes where a.IsSingular && a.Visible select a;
@@ -177,19 +196,94 @@ namespace GetFacts.Parse
                 var importantAttributes = from a in element.Attributes where a.IsImportant select a;
                 foreach (var importantAttribute in importantAttributes)
                 {
-                    if( element.CanBeMisguiding(importantAttribute)== false )
+                    if (element.CanBeMisguiding(importantAttribute) == false)
+                    {
                         importantAttribute.Visible = true;
+                        success = true;
+                    }
                 }
             }
+
+            return success;
         }
 
         
-
-        
-
-        internal void MakeRelative(AbstractXPathBuilder tmpBuilder)
+        private void ShowImportantButMisguidingAttributeForTheLastElement()
         {
-            // TODO
+            for(int index=elements.Count-1; index>=0;index--)
+            {
+                XPathElement currentElement = elements[index];
+                foreach(XPathAttribute a in currentElement.Attributes)
+                {
+                    if (a.IsImportant)
+                    {
+                        if (a.Visible == false)
+                        {
+                            a.Visible = true;
+                            return;
+                        }
+                    }
+                }
+            }            
+        }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xpathToTarget"></param>
+        /// <returns>Retourne un indicateur de performance du résultat</returns>
+        internal int Goto(AbstractXPathBuilder xpathToTarget)
+        {
+            if ((this.IsAbsolute == false) || (xpathToTarget.IsAbsolute == false))
+            {
+                throw new Exception();
+            }
+
+            int score = 0;
+            int index = 0;
+            XPathElement thisElement = null;
+            XPathElement externalElement = null;
+
+            while ((index < elements.Count) && (index < xpathToTarget.elements.Count))
+            {
+                thisElement = elements[index];
+                externalElement = xpathToTarget.elements[index];
+
+                if (thisElement.CompareTo(externalElement) != 0)
+                {
+                    break;
+                }
+
+                index++;
+            }
+
+            int elementsToGetBackFrom = elements.Count - index;
+
+            /*
+            if( index>0 )
+            {
+                elements.RemoveRange(0, index);
+            }*/
+
+            List<XPathElement> result = new List<XPathElement>();
+            for(int i=0;i<elementsToGetBackFrom;i++)
+            {
+                result.Add(new XPathElement.GoBackElement());
+                score++;
+            }
+
+
+            for(int i=index; i<xpathToTarget.elements.Count; i++)
+            {
+                result.Add(xpathToTarget.elements[i]);
+                score++;
+            }
+
+
+            IsAbsolute = false;
+            elements = result;
+            return score;
         }
     }
 }
