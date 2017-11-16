@@ -212,7 +212,6 @@ namespace TemplatesApp
                 {
                     string path = dlg.FileName;
                     TemplateFactory.GetInstance().CreateNewTemplate(path);
-                    //TODO: File system watcher instead of: RefreshFilesList();
                     SelectedTemplate = path;
                     FilesList.Focus();
                 }
