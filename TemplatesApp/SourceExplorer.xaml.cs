@@ -358,13 +358,7 @@ namespace TemplatesApp
         {
             set
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("of ");
-                sb.Append(value);
-                sb.Append(" element");
-                if (value > 1) sb.Append('s');
-                sb.Append('.');
-                SelectionCount.Text = sb.ToString();
+                SelectionCount.Text = value.ToString();
             }
         }
 
@@ -384,7 +378,7 @@ namespace TemplatesApp
                 }
                 else
                 {
-                    sb.AppendFormat("#{0}", value+1);
+                    sb.AppendFormat("{0}/{1}", value+1, HighlightedElements.Count);
                 }
                 SelectionIndex.Text = sb.ToString();
             }
@@ -405,6 +399,7 @@ namespace TemplatesApp
                     SelectedElement.Background = null;
                 }
                 SelectedElement = null;
+                SelectedIndex = -1;
             }
         }
 
@@ -419,8 +414,8 @@ namespace TemplatesApp
                 SelectedElement.BringIntoView();
             }
 
-            NextSelection.IsEnabled = ((index + 1) < HighlightedElements.Count); 
-            PreviousSelection.IsEnabled = (index > 0);
+            NextSelection.IsEnabled = (index>=0) && ((index + 1) < HighlightedElements.Count); 
+            PreviousSelection.IsEnabled = (index > 0) && (index < HighlightedElements.Count);
             SelectedIndex = index;
         }
 

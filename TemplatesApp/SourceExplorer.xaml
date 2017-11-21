@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:TemplatesApp"
              xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded" >
+             d:DesignHeight="300" d:DesignWidth="500" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded" >
     <Grid>
 
         <Grid>
@@ -22,24 +22,27 @@
             </Grid.ColumnDefinitions>
         
             <!-- url bar -->
-            <Grid x:Name="UrlBar" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
-                <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
-                <ComboBox x:Name="PageTypeSelector" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
-                </ComboBox>
-                <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
-                </ComboBox>
-            </Grid>
-        
+            <StackPanel Grid.ColumnSpan="2">
+                <Grid x:Name="UrlBar" Margin="0,5,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
+                    <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
+                    <ComboBox x:Name="PageTypeSelector" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
+                    </ComboBox>
+                    <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
+                    </ComboBox>
+                </Grid>
+                <Separator Margin="0,5,0,5"/>
+            </StackPanel>
+
             <!-- webbrowser -->
             <Grid Grid.Row="1">
                 <FlowDocumentReader x:Name="CodeSourceView"/>
@@ -52,38 +55,89 @@
             </Grid>
         
             <!-- XPath filtering -->
-            <Grid  x:Name="XPathPanel" Grid.Row="2" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+                <Separator Margin="0,5,0,5"/>
 
-                <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"/>
-                <ToggleButton Grid.Row="0" Grid.Column="1" Name="PreFilterLock">X</ToggleButton>
-                <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="2" TextChanged="XPathInput_TextChanged" />
-            
-                <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
-                <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="2" TextChanged="XPathInput_TextChanged" />
+                <Grid  x:Name="XPathPanel" Margin="0,5,0,5">
 
-                <TextBlock x:Name="SelectionIndex" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right">Selected: 1</TextBlock>
-                <TextBlock x:Name="SelectionCount" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right">of 10 elements</TextBlock>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid x:Name="XPathInputs" Grid.Column="0" Margin="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Pre-filter:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Row="0" Grid.Column="1" Name="PreFilterLock" Margin="3,3,3,0" ToolTip="Lock this expression" MinWidth="20">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}">
+                                    <Setter Property="Content" >
+                                        <Setter.Value>
+                                            <Image Source="unlocked.png" Height="14" />
+                                        </Setter.Value>
+                                    </Setter>
+                                            
+                                    <Style.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter Property="Content" >
+                                                <Setter.Value>
+                                                    <Image Source="locked.png" Height="14"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                            
+                            
+                        </ToggleButton>
+                        <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="2" TextChanged="XPathInput_TextChanged" Margin="0,3,0,0"/>
+
+                        <TextBlock Text="2nd filter:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <getfacts:XPathTextBox x:Name="XPathInput2" Grid.Row="1" Grid.Column="2" TextChanged="XPathInput_TextChanged" Margin="0,3,0,0"/>
+
+                    </Grid>
+
+                    <Grid x:Name="XPathResults" Grid.Column="1" Margin="3">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock x:Name="SelectionCount" FontSize="36" VerticalAlignment="Bottom" Margin="3,0,3,0">10</TextBlock>
+                            <StackPanel VerticalAlignment="Bottom">
+                                <TextBlock>element(s)</TextBlock>
+                                <TextBlock>found</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Padding="10,5,10,5" Margin="10,3,3,3">
+                        <Grid x:Name="XPathNavi" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="SelectionIndex" Grid.ColumnSpan="2" >Selected:</TextBlock>
+                            <Button x:Name="PreviousSelection" Grid.Row="1" Grid.Column="0" Click="PreviousSelection_Click">Prev.</Button>
+                            <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="1" Click="NextSelection_Click">Next</Button>
+                        </Grid>
+                    </Border>
+
+
+                </Grid>
+            </StackPanel>
             
-                <Button x:Name="PreviousSelection" Grid.Row="0" Grid.Column="4" Click="PreviousSelection_Click">Prev.</Button>
-                <Button x:Name="NextSelection" Grid.Row="1" Grid.Column="4" Click="NextSelection_Click">Next</Button>
-            
-                <!--            
-                <TextBlock Grid.Column="1" x:Name="SelectionCount">0 element selected</TextBlock>
-            
-                -->
-            </Grid>
-        
         </Grid>
 
         <local:PleaseWait x:Name="PleaseWaitPanel" Visibility="Hidden"/>
