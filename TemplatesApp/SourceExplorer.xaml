@@ -33,9 +33,9 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <ComboBox Grid.ColumnSpan="2"  x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
-                    <Button Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
-                    <ComboBox x:Name="PageTypeSelector" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
+                    <ComboBox Grid.ColumnSpan="2" Margin="0,0,0,3" x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
+                    <Button Margin="5,0,0,0" Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
+                    <ComboBox x:Name="PageTypeSelector" Margin="0,0,5,0" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
                     </ComboBox>
                     <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
                     </ComboBox>
@@ -110,8 +110,8 @@
 
                     <Grid x:Name="XPathResults" Grid.Column="1" Margin="3">
                         <StackPanel Orientation="Horizontal" >
-                            <TextBlock x:Name="SelectionCount" FontSize="36" VerticalAlignment="Bottom" Margin="3,0,3,0">10</TextBlock>
-                            <StackPanel VerticalAlignment="Bottom">
+                            <TextBlock x:Name="SelectionCount" FontSize="36" Margin="3,0,3,0">10</TextBlock>
+                            <StackPanel VerticalAlignment="Center">
                                 <TextBlock>element(s)</TextBlock>
                                 <TextBlock>found</TextBlock>
                             </StackPanel>
