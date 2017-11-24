@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:TemplatesApp"
              xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="500" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded" >
+             d:DesignHeight="300" d:DesignWidth="700" Initialized="UserControl_Initialized" Loaded="UserControl_Loaded" >
     <Grid>
 
         <Grid>
@@ -50,8 +50,15 @@
         
             <!-- tree -->
             <Grid Grid.Column="1" Grid.Row="1">
-                <TreeView x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged">
-                </TreeView>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <TreeView Grid.Row="0" x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged" />
+                    <local:XPathHistory Grid.Row="1" x:Name="ClickHistory"/>
+
+                </Grid>
             </Grid>
         
             <!-- XPath filtering -->

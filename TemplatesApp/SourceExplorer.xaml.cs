@@ -231,15 +231,17 @@ namespace TemplatesApp
 
             if (PreFilterLock.IsChecked==false)
             {
-                string xpath = Parser.SuggestXPathFor(selected, String.Empty);
+                AbstractXPathBuilder xpath = Parser.SuggestXPathFor(selected, String.Empty);
                 XPathInput2.Text = string.Empty;
-                XPathInput1.Text = xpath;
+                XPathInput1.Text = xpath.ToString();
+                ClickHistory.Add(xpath);
             }
             else
             {
                 string root = XPathInput1.Text;
-                string xpath = Parser.SuggestXPathFor(selected, root);
-                XPathInput2.Text = xpath;
+                AbstractXPathBuilder xpath = Parser.SuggestXPathFor(selected, root);
+                XPathInput2.Text = xpath.ToString();
+                ClickHistory.Add(xpath);
             }
         }
 
