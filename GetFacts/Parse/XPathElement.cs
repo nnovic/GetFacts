@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 namespace GetFacts.Parse
 {
     [DebuggerDisplay("XPathElement = {ElementName}")]
-    public abstract class XPathElement : IComparable<XPathElement>
+    public abstract class XPathElement : IEquatable<XPathElement>
     {
         internal readonly List<XPathAttribute> Attributes = new List<XPathAttribute>();
 
         protected abstract string ElementName { get; }
+
+        protected abstract object ConcreteElement { get; }
 
         public bool HasAnyVisibleAttribute
         {
@@ -76,51 +78,27 @@ namespace GetFacts.Parse
         public abstract bool CanBeMisguiding(XPathAttribute attribute);
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns>
-        /// 0 --> égalité
-        /// -1 --> valeurs différentes pour ElementName
-        /// -2 --> nombre d'attributs différents
-        /// >0 --> valeurs différentes pour l'un des attributs.
-        /// </returns>
-        public int CompareTo(XPathElement e)
+
+        public virtual bool Equals(XPathElement other)
         {
-            // compare les valeurs ElementName
-            if (this.ElementName.CompareTo(e.ElementName) != 0)
-                return -1;
-
-            /*
-            // compare la quantité d'attributs
-            if (this.Attributes.Count != e.Attributes.Count)
-                return -2;
-
-            for (int index = 0; index < Attributes.Count; index++)
-            {
-                if (Attributes[index].CompareTo(e.Attributes[index]) != 0)
-                    return (index + 1);
-            }
-            */
-            return 0;
+            return ConcreteElement.Equals(other.ConcreteElement);
         }
-
-
+        
 
         public class GoBackElement : XPathElement
         {
-            protected override string ElementName
-            {
-                get
-                {
-                    return "..";
-                }
-            }
+            protected override string ElementName => "..";
+
+            protected override object ConcreteElement => null;
 
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {
                 throw new NotImplementedException();
+            }
+
+            public override bool Equals(XPathElement other)
+            {
+                return other is GoBackElement;
             }
         }
     }

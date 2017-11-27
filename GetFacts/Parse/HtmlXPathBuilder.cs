@@ -106,6 +106,8 @@ namespace GetFacts.Parse
                 }
             }
 
+            protected override object ConcreteElement => this.HtmlNode;
+
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {
                 switch(attribute.Name)
@@ -128,13 +130,9 @@ namespace GetFacts.Parse
                 this.HtmlAttribute = attribute;
             }
 
-            protected override string ElementName
-            {
-                get
-                {
-                    return "@"+HtmlAttribute.Name;
-                }
-            }
+            protected override string ElementName =>"@"+this.HtmlAttribute.Name;
+
+            protected override object ConcreteElement => this.HtmlAttribute;
 
             public override bool CanBeMisguiding(XPathAttribute attribute)
             {

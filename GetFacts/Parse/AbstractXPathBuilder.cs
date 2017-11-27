@@ -251,7 +251,7 @@ namespace GetFacts.Parse
                 thisElement = elements[index];
                 externalElement = xpathToTarget.elements[index];
 
-                if (thisElement.CompareTo(externalElement) != 0)
+                if( thisElement.Equals(externalElement)==false )
                 {
                     break;
                 }
@@ -260,12 +260,6 @@ namespace GetFacts.Parse
             }
 
             int elementsToGetBackFrom = elements.Count - index;
-
-            /*
-            if( index>0 )
-            {
-                elements.RemoveRange(0, index);
-            }*/
 
             List<XPathElement> result = new List<XPathElement>();
             for(int i=0;i<elementsToGetBackFrom;i++)
