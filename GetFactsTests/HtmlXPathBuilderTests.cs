@@ -94,15 +94,15 @@ namespace GetFactsTests
             HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
             divBuilder.Build(firstDivNode);
-            Assert.AreEqual<string>("/html/body/div", divBuilder.GetString());
+            Assert.AreEqual<string>("/html/body/div", divBuilder.ToString());
 
             HtmlNode firstH1Node = doc.DocumentNode.SelectSingleNode("//h1");
             AbstractXPathBuilder h1Builder = new HtmlXPathBuilder();
             h1Builder.Build(firstH1Node);
-            Assert.AreEqual<string>("/html/body/div/h1", h1Builder.GetString());
+            Assert.AreEqual<string>("/html/body/div/h1", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>("./h1", divBuilder.GetString());
+            Assert.AreEqual<string>("./h1", divBuilder.ToString());
             Assert.AreEqual(1, score);
         }
 
@@ -120,15 +120,15 @@ namespace GetFactsTests
             HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
             divBuilder.Build(firstDivNode);
-            Assert.AreEqual<string>("/html/body/div", divBuilder.GetString());
+            Assert.AreEqual<string>("/html/body/div", divBuilder.ToString());
 
             HtmlNode firstH1Node = doc.DocumentNode.SelectSingleNode("//li");
             AbstractXPathBuilder h1Builder = new HtmlXPathBuilder();
             h1Builder.Build(firstH1Node);
-            Assert.AreEqual<string>("/html/body/div/ul/li", h1Builder.GetString());
+            Assert.AreEqual<string>("/html/body/div/ul/li", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>("./ul/li", divBuilder.GetString());
+            Assert.AreEqual<string>("./ul/li", divBuilder.ToString());
             Assert.AreEqual(2, score);
         }
 
@@ -146,15 +146,15 @@ namespace GetFactsTests
             HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
             divBuilder.Build(firstDivNode);
-            Assert.AreEqual<string>("/html/body/div", divBuilder.GetString());
+            Assert.AreEqual<string>("/html/body/div", divBuilder.ToString());
 
             HtmlNode firstH1Node = doc.DocumentNode.SelectSingleNode("//body");
             AbstractXPathBuilder h1Builder = new HtmlXPathBuilder();
             h1Builder.Build(firstH1Node);
-            Assert.AreEqual<string>("/html/body", h1Builder.GetString());
+            Assert.AreEqual<string>("/html/body", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>("./..", divBuilder.GetString());
+            Assert.AreEqual<string>("./..", divBuilder.ToString());
             Assert.AreEqual(1, score);
         }
 
@@ -172,15 +172,15 @@ namespace GetFactsTests
             HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
             divBuilder.Build(firstDivNode);
-            Assert.AreEqual<string>("/html/body/div", divBuilder.GetString());
+            Assert.AreEqual<string>("/html/body/div", divBuilder.ToString());
 
             HtmlNode firstH1Node = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder h1Builder = new HtmlXPathBuilder();
             h1Builder.Build(firstH1Node);
-            Assert.AreEqual<string>("/html/body/div", h1Builder.GetString());
+            Assert.AreEqual<string>("/html/body/div", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>(".", divBuilder.GetString());
+            Assert.AreEqual<string>(".", divBuilder.ToString());
             Assert.AreEqual(0, score);
         }
 
@@ -198,15 +198,15 @@ namespace GetFactsTests
             HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//div");
             AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
             divBuilder.Build(firstDivNode);
-            Assert.AreEqual<string>("/html/body/div", divBuilder.GetString());
+            Assert.AreEqual<string>("/html/body/div", divBuilder.ToString());
 
             HtmlNode firstH1Node = doc.DocumentNode.SelectNodes("//li").Last();
             AbstractXPathBuilder h1Builder = new HtmlXPathBuilder();
             h1Builder.Build(firstH1Node);
-            Assert.AreEqual<string>("/html/body/div/ul/li", h1Builder.GetString());
+            Assert.AreEqual<string>("/html/body/div/ul/li", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>("./ul/li", divBuilder.GetString());
+            Assert.AreEqual<string>("./ul/li", divBuilder.ToString());
             Assert.AreEqual(2, score);
         }
     }

@@ -541,7 +541,7 @@ namespace GetFacts.Parse
 
 
         /// <summary>
-        /// Suggère une requête XPath qui pourrait convenir pour obtenir 
+        /// Construit une requête XPath qui pourrait convenir pour obtenir 
         /// le noeud passé en paramètre.
         /// Attention: il ne s'agit pas d'obtenir un XPath qui retourne exactement
         /// ce seul noeud, mais bien de proposer une approximation, la plus
@@ -552,12 +552,17 @@ namespace GetFacts.Parse
         /// </summary>
         /// <param name="tvi"></param>
         /// <param name="root">Si non vide, l'expression XPath sera relative par ra</param>
-        public string SuggestXPathFor(TreeViewItem tvi, string root)
+        /// <return>Une instance de AbstractXPathBuilder qui contient la solution proposée. 
+        /// Utiliser la méthode AbstractXPathBuilder.ToString() pour
+        /// obtenir une version "lisible" de cette solution.</return>
+        /// <see cref="AbstractXPathBuilder.ToString()"/>
+        /// <seealso cref="AbstractXPathBuilder"/>
+        public AbstractXPathBuilder SuggestXPathFor(TreeViewItem tvi, string root)
         {
             TreeViewItem selected = tvi;
             object concreteObject = treeViewItems2concreteObjects.GetObjectOf(selected);
             AbstractXPathBuilder builder = XPathFor(concreteObject, root);
-            return builder.GetString();
+            return builder;
         }
 
         /// <summary>

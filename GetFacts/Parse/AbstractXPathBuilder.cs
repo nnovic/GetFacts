@@ -26,7 +26,7 @@ namespace GetFacts.Parse
     /// - La fonction Build() doit être implémentée. Durant le Build, on appel Add(XPathElement) pour constuire l'expression XPath représentée par cet objet.
     /// - La fonction Optimize() peut, si nécessaire, être héritée.
     /// </remarks>
-    public abstract class AbstractXPathBuilder
+    public abstract class AbstractXPathBuilder:IEquatable<AbstractXPathBuilder>
     {
         private List<XPathElement> elements = null;
         
@@ -76,7 +76,8 @@ namespace GetFacts.Parse
             elements.Add(element);
         }
 
-        public string GetString()
+
+        public override string ToString()
         {
             StringBuilder result = new StringBuilder();
 
@@ -284,6 +285,13 @@ namespace GetFacts.Parse
             IsAbsolute = false;
             elements = result;
             return score;
+        }
+
+        public bool Equals(AbstractXPathBuilder other)
+        {
+            string xpath1 = this.ToString();
+            string xpath2 = other.ToString();
+            return xpath1.Equals(xpath2);
         }
     }
 }
