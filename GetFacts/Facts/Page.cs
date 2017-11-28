@@ -54,6 +54,13 @@ namespace GetFacts.Facts
         }
 
         /// <summary>
+        /// Utilisé pour les tests automatiques, permet d'obtenir
+        /// la référence sur l'objet Section qui représente
+        /// la section par défaut de cette Page.
+        /// </summary>
+        internal Section DefaultSection => defaultSection;
+
+        /// <summary>
         /// Retourne l'appellation qui a été
         /// donnée à cette page par l'utilisateur.
         /// </summary>
@@ -182,13 +189,20 @@ namespace GetFacts.Facts
             {
                 try
                 {
-                    XPathNavigator subTree = nav.SelectSingleNode(sectionTemplate.XPathFilter);
-                    string name = sectionTemplate.SectionName;
-                    Section s = GetSection(name);
-
-                    if ((subTree != null) && (s != null))
+                    foreach (XPathNavigator subTree in nav.Select(sectionTemplate.XPathFilter))
                     {
-                        s.Update(subTree, sectionTemplate);
+                        if (subTree == null)
+                            continue;
+
+                        string configName = sectionTemplate.SectionName;
+                        string title = sectionTemplate.TitleTemplate.Execute(subTree);
+                        string text = sectionTemplate.TextTemplate.Execute(subTree);
+                        Section s = FindSection(configName, title, text);
+
+                        if (s != null)
+                        {
+                            s.Update(subTree, sectionTemplate);
+                        }
                     }
                 }
                 catch
@@ -246,6 +260,28 @@ namespace GetFacts.Facts
         }
 
         /// <summary>
+        /// Utilisée uniquement pour faire des tests,
+        /// cette méthode ajoute une nouvelle section à la page.
+        /// Les caractéristiques de cette nouvelle section sont spécifiés
+        /// par les paramètres de la méthode.
+        /// </summary>
+        /// <remarks>
+        /// Utilisée uniquement pour faire des tests,
+        /// aucune vérification sur la validité des paramètres 
+        /// n'est effectuée.
+        /// </remarks>
+        internal Section AddSection(string name, string title, string text)
+        {
+            Section s = new Section(name)
+            {
+                Title=title,
+                Text=text
+            };
+            Children.Add(s);
+            return s;
+        }
+
+        /// <summary>
         /// Retourne l'instance de Section qui est stocké dans la liste
         /// à l'index donné en argument.
         /// </summary>
@@ -276,42 +312,49 @@ namespace GetFacts.Facts
         /// <remarks>Lors de la création implicite d'une nouvelle section portant le nom passé en argument, les
         /// champs BaseUri et IsNewBehavior de la section sont initialisés avec les valeurs des propriétés
         /// homonymes de la Page en cours.</remarks>
-        public Section GetSection(string name)
+        public Section FindSection(string name, string title, string text)
         {
             if( string.IsNullOrEmpty(name) )
             {
-                if(Children.Count==0)
-                {
-                    return defaultSection;
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
+                return defaultSection;
             }
 
-            Section output = null;
 
-            var sections = from child in Children
-                           where child.Identifier == name
+            var strictSelection = from child in Children
+                           where (child.Identifier == name)
+                           && (child.Title == title)
+                                && (child.Text == text)
                            select child;
 
+            var looseSelection = from child in Children
+                           where (child.Identifier == name) 
+                           && ((string.IsNullOrEmpty(title)==false && child.Title == title) 
+                                || (string.IsNullOrEmpty(text)==false && child.Text == text))
+                           select child;
+            
 
-            if (sections.Count() == 0)
+            if(strictSelection.Count()==1)
             {
-                output = new Section(name)
-                {
-                    BaseUri = this.BaseUri,
-                    IsNewBehavior = this.IsNewBehavior
-                };
-                Children.Add(output);
+                return (Section)strictSelection.Single();
             }
+
+            else if (looseSelection.Count() == 1)
+            {
+                return (Section)looseSelection.Single();
+            }
+
             else
             {
-                output = sections.Single() as Section;
+                Section output = new Section(name)
+                {
+                    BaseUri = this.BaseUri,
+                    IsNewBehavior = this.IsNewBehavior,
+                    Title = title,
+                    Text = text
+                };
+                Children.Add(output);
+                return output;
             }
-
-            return output;
         }
 
         #endregion

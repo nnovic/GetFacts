@@ -59,6 +59,7 @@
     <Compile Include="FlowDocumentWalker.cs" />
     <Compile Include="HtmlExplorerTests.cs" />
     <Compile Include="HtmlParserTests.cs" />
+    <Compile Include="PageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samples.Designer.cs">
       <AutoGen>True</AutoGen>

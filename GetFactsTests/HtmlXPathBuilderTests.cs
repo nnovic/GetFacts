@@ -206,8 +206,8 @@ namespace GetFactsTests
             Assert.AreEqual<string>("/html/body/div/ul/li", h1Builder.ToString());
 
             int score = divBuilder.Goto(h1Builder);
-            Assert.AreEqual<string>("./ul/li", divBuilder.ToString());
-            Assert.AreEqual(2, score);
+            Assert.AreEqual<string>("./../div/ul/li", divBuilder.ToString());
+            Assert.AreEqual(4, score);
         }
     }
 }
