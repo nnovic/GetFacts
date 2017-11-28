@@ -12,9 +12,16 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0">
-            <Button Click="Button_Click" >Clear</Button>
+            <Button Click="Button_Click" >Clear history</Button>
         </ToolBar>
-        <ListBox Grid.Row="1" x:Name="HistoryListBox" ItemsSource="{Binding}"  FontFamily="Lucida Console" />
-        
+        <ListBox Grid.Row="1" x:Name="HistoryListBox" ItemsSource="{Binding}"  FontFamily="Lucida Console" >
+            <ListBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFB4B4B4" Offset="1"/>
+                    <GradientStop Color="#FFF0F0F0"/>
+                </LinearGradientBrush>
+            </ListBox.Background>
+        </ListBox>
+
     </Grid>
 </UserControl>

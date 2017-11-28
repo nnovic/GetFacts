@@ -20,7 +20,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-        
+
             <!-- url bar -->
             <StackPanel Grid.ColumnSpan="2">
                 <Grid x:Name="UrlBar" Margin="0,5,0,5">
@@ -40,14 +40,15 @@
                     <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
                     </ComboBox>
                 </Grid>
-                <Separator Margin="0,5,0,5"/>
+                <Separator Margin="0,0,0,20"  />
+
             </StackPanel>
 
             <!-- webbrowser -->
             <Grid Grid.Row="1">
                 <FlowDocumentReader x:Name="CodeSourceView"/>
             </Grid>
-        
+
             <!-- tree -->
             <Grid Grid.Column="1" Grid.Row="1">
                 <Grid>
@@ -60,10 +61,12 @@
 
                 </Grid>
             </Grid>
-        
+
             <!-- XPath filtering -->
             <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
-                <Separator Margin="0,5,0,5"/>
+
+                <Separator Margin="0,20,0,0" />
+
 
                 <Grid  x:Name="XPathPanel" Margin="0,5,0,5">
 
@@ -72,7 +75,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Grid x:Name="XPathInputs" Grid.Column="0" Margin="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -93,7 +96,7 @@
                                             <Image Source="unlocked.png" Height="14" />
                                         </Setter.Value>
                                     </Setter>
-                                            
+
                                     <Style.Triggers>
                                         <Trigger Property="IsChecked" Value="True">
                                             <Setter Property="Content" >
@@ -105,8 +108,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </ToggleButton.Style>
-                            
-                            
+
+
                         </ToggleButton>
                         <getfacts:XPathTextBox x:Name="XPathInput1" Grid.Row="0" Grid.Column="2" TextChanged="XPathInput_TextChanged" Margin="0,3,0,0"/>
 
@@ -144,7 +147,7 @@
 
                 </Grid>
             </StackPanel>
-            
+
         </Grid>
 
         <local:PleaseWait x:Name="PleaseWaitPanel" Visibility="Hidden"/>
