@@ -3,6 +3,7 @@ using GetFacts.Parse;
 using GetFacts.Render;
 using System;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace TemplatesApp
 {
@@ -201,9 +202,11 @@ namespace TemplatesApp
                     GetFacts.Facts.Article article = section.GetArticle(articleIndex);
                     ArticleDisplay articleDisplay = new ArticleDisplay(false, 0) {
                         DesiredOrientation = ArticleDisplay.Orientation.Horizontal,
-                        Width= PREVIEW_WIDTH, Height= PREVIEW_HEIGHT
+                        Width= PREVIEW_WIDTH,
+                        Height = PREVIEW_HEIGHT
                     };
                     articleDisplay.Update(article);
+                    if (article.HasContent == false) articleDisplay.Background = Brushes.Gray;
                     TreeViewItem articleItem = new TreeViewItem() { Header =articleDisplay };
                     sectionItem.Items.Add(articleItem);
                 }
