@@ -4,6 +4,7 @@ using GetFacts.Parse;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -149,7 +150,7 @@ namespace TemplatesApp
         {
             //Workflow.PageTemplate.Reference = UrlInput.Text;
             DeleteDownloadTask();
-            BrowseButton.Content = "Browse";
+            BrowseButton.Content = "Load";
         }
 
         #endregion
@@ -467,5 +468,19 @@ namespace TemplatesApp
                 UrlInput.EndInit();
             }
         }
+
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            string url = UrlInput.Text;
+            Process.Start(url);
+
+        }
+
+        private void ClickHistory_XPathEntryDoubleClick(object sender, AbstractXPathBuilder e)
+        {
+            if ( e!=null)
+                XPathInput1.Text = e.ToString();
+        }
+
     }
 }

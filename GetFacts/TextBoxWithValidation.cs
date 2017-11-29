@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using GetFacts.Parse;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -35,6 +36,43 @@ namespace GetFacts
     /// </summary>
     public abstract class TextBoxWithValidation : TextBox
     {
+        public TextBoxWithValidation()
+        {
+            PreviewDragEnter += TextBoxWithValidation_PreviewDragOver;
+            PreviewDragOver += TextBoxWithValidation_PreviewDragOver;
+            PreviewDrop += TextBoxWithValidation_PreviewDrop;
+            AllowDrop = true;
+        }
+
+
+        private void TextBoxWithValidation_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("AbstractXPathBuilder"))
+            {
+                /*if (sender == e.Source)
+                {
+                    e.Effects = DragDropEffects.None;
+                }
+                else*/
+                {
+                    e.Effects = DragDropEffects.Copy;
+                }
+                e.Handled = true;
+            }
+        }
+
+
+        private void TextBoxWithValidation_PreviewDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("AbstractXPathBuilder"))
+            {
+                AbstractXPathBuilder xp = e.Data.GetData("AbstractXPathBuilder") as AbstractXPathBuilder;
+                this.Text = xp.ToString();
+                e.Handled = true;
+            }
+
+        }
+
         private bool isValid = true;
 
         /// <summary>

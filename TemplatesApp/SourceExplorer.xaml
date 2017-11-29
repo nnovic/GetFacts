@@ -28,13 +28,15 @@
                         <ColumnDefinition />
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <ComboBox Grid.ColumnSpan="2" Margin="0,0,0,3" x:Name="UrlInput" IsEditable="True" Text="https://www.renesas.com/en-eu/about/press-center/news-releases.html" TextBoxBase.TextChanged="UrlInput_TextChanged"></ComboBox>
-                    <Button Margin="5,0,0,0" Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click">Browse...</Button>
+                    <Button Margin="5,0,0,0" Grid.Column="2" Grid.RowSpan="2" x:Name="BrowseButton" Click="BrowseButton_Click" Padding="5,5" FontSize="14">Load</Button>
+                    <Button Margin="5" Grid.Column="3" Grid.RowSpan="2" x:Name="ViewButton" Click="ViewButton_Click"  Padding="5,5" FontSize="10">View</Button>
                     <ComboBox x:Name="PageTypeSelector" Margin="0,0,5,0" Grid.Row="1" SelectionChanged="PageTypeSelector_SelectionChanged"  >
                     </ComboBox>
                     <ComboBox x:Name="CharsetSelector" Grid.Row="1" Grid.Column="1"  SelectedValuePath="WebName" DisplayMemberPath="WebName" SelectionChanged="CharsetSelector_SelectionChanged" >
@@ -57,7 +59,7 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <TreeView Grid.Row="0" x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged" />
-                    <local:XPathHistory Grid.Row="1" x:Name="ClickHistory"/>
+                    <local:XPathHistory Grid.Row="1" x:Name="ClickHistory" XPathEntryDoubleClick="ClickHistory_XPathEntryDoubleClick"/>
 
                 </Grid>
             </Grid>
