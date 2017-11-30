@@ -60,7 +60,7 @@ namespace GetFactsTests
             rawHtml.AppendLine("</head>");
             rawHtml.AppendLine("<body>");
             rawHtml.AppendLine("<div>");
-            rawHtml.AppendLine("<h1>LIST1:</h1>");
+            rawHtml.AppendLine("<h1 id=\"list1\" class=\"list\">LIST1:</h1>");
             rawHtml.AppendLine("<ul>");
             rawHtml.AppendLine("<li>ITEM1</li>");
             rawHtml.AppendLine("<li>ITEM2</li>");
@@ -68,7 +68,7 @@ namespace GetFactsTests
             rawHtml.AppendLine("</ul>");
             rawHtml.AppendLine("</div>");
             rawHtml.AppendLine("<div>");
-            rawHtml.AppendLine("<h1>LIST2:</h1>");
+            rawHtml.AppendLine("<h1 id=\"list2\" class=\"list\">LIST2:</h1>");
             rawHtml.AppendLine("<ul>");
             rawHtml.AppendLine("<li>ITEMA</li>");
             rawHtml.AppendLine("<li>ITEMB</li>");
@@ -79,6 +79,7 @@ namespace GetFactsTests
             rawHtml.AppendLine("</html>");
             return rawHtml.ToString();
         }
+        
 
         /// <summary>
         /// Verifie le fonctionnement de la méthode AbstractXPathBuilder.Goto
@@ -208,6 +209,26 @@ namespace GetFactsTests
             int score = divBuilder.Goto(h1Builder);
             Assert.AreEqual<string>("./../div/ul/li", divBuilder.ToString());
             Assert.AreEqual(4, score);
+        }
+
+
+        /// <summary>
+        /// Vérifie que, pour un noeud où un SingularAttribute est déjà présent,
+        /// l'Xpath optimisé ignore les ImportantAttributes
+        /// </summary>
+        [TestMethod]
+        public void TestSingularAndImportantAttributeOptimization()
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(GenerateHtmlPageForGotoTests());
+
+            HtmlNode firstDivNode = doc.DocumentNode.SelectSingleNode("//h1");
+
+            AbstractXPathBuilder divBuilder = new HtmlXPathBuilder();
+            divBuilder.Build(firstDivNode);
+            divBuilder.Optimize();
+
+            Assert.AreEqual<string>("//h1[@id=\"list1\"]", divBuilder.ToString());
         }
     }
 }

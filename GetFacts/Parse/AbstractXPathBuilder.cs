@@ -214,6 +214,9 @@ namespace GetFacts.Parse
             for(int index=elements.Count-1; index>=0;index--)
             {
                 XPathElement currentElement = elements[index];
+                if (currentElement.HasAnyVisibleAttribute)
+                    return;
+
                 foreach(XPathAttribute a in currentElement.Attributes)
                 {
                     if (a.IsImportant)
