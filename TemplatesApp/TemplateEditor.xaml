@@ -7,38 +7,42 @@
              mc:Ignorable="d" 
              d:DesignHeight="432.692" d:DesignWidth="742.308" Initialized="UserControl_Initialized">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        
-        <!-- template edition -->
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TreeView x:Name="ConfigTree" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!-- template edition -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TreeView x:Name="ConfigTree" >
+                </TreeView>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Margin="5,5,5,5" Padding="5,2,5,2" x:Name="SaveButton" Click="SaveButton_Click" >Save template</Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- separation -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" Margin="5,5,5,5" x:Name="TestTemplateButton" Click="TestTemplateButton_Click">Test!</Button>
+            </Grid>
+
+            <!-- template edition -->
+            <TreeView Grid.Column="2" x:Name="PreviewTree" >
             </TreeView>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="5,5,5,5" Padding="5,2,5,2" x:Name="SaveButton" Click="SaveButton_Click" >Save template</Button>
-            </StackPanel>
         </Grid>
         
-        <!-- separation -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Button Grid.Row="1" Margin="5,5,5,5" x:Name="TestTemplateButton" Click="TestTemplateButton_Click">Test!</Button>
-        </Grid>
-        
-        <!-- template edition -->
-        <TreeView Grid.Column="2" x:Name="PreviewTree" >
-        </TreeView>
+        <local:PleaseWait x:Name="PleaseWaitPanel" Visibility="Hidden"/>
         
     </Grid>
 </UserControl>

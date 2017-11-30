@@ -2,6 +2,8 @@
 using GetFacts.Parse;
 using GetFacts.Render;
 using System;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -161,7 +163,13 @@ namespace TemplatesApp
 
         private void TestTemplateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ClearPreviewTree();
+            PleaseWaitPanel.Visibility = Visibility.Visible;
+            Task.Run(() => { CreateTemplatePreview(); }); // création d'une tâche obligée pour permettre le rafraichissement de l'UI et réllement "voir" le PleaseWaitPanel apparaître.
+        }
+
+        private void CreateTemplatePreview()
+        {            
+            Dispatcher.Invoke(() => { ClearPreviewTree(); });
 
             // ANALYSE
 
@@ -169,7 +177,12 @@ namespace TemplatesApp
             page.Template = Workflow.PageTemplate;
             page.Parser = AbstractParser.NewInstance(Workflow.PageTemplate.PageType);
             page.Update(Workflow.DownloadTask.LocalFile);
+            
+            Dispatcher.Invoke(() => { PopulatePreviewTree(page); });
+        }
 
+        private void PopulatePreviewTree(GetFacts.Facts.Page page)
+        {
             // PAGE
 
             ArticleDisplay pageDisplay = new ArticleDisplay(false, 0) {
@@ -206,11 +219,9 @@ namespace TemplatesApp
                         Height = PREVIEW_HEIGHT
                     };
                     articleDisplay.Update(article);
-                    if (article.HasContent == false) articleDisplay.Background = Brushes.Gray;
                     TreeViewItem articleItem = new TreeViewItem() { Header =articleDisplay };
                     sectionItem.Items.Add(articleItem);
                 }
-
 
                 if( (articlesCount>0) || (section.HasContent==true))
                 {
@@ -224,7 +235,7 @@ namespace TemplatesApp
             //page.Template = PageTemplate;
 
 
-
+            PleaseWaitPanel.Visibility = Visibility.Hidden;
         }
 
 
