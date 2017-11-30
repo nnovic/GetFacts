@@ -40,6 +40,22 @@
                 </Grid>
             </Grid>
         </Border>
-
+        <Border x:Name="fgBorder" Background="#B2FFFFFF" Visibility="Hidden" >
+            <Viewbox>
+                <Label Margin="10" RenderTransformOrigin="0.5,0.5" Background="#FFFFDC00" Foreground="Black">
+                    <Label.Effect>
+                        <DropShadowEffect ShadowDepth="3"/>
+                    </Label.Effect>
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="15"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform> Will not be rendered.
+                </Label>
+            </Viewbox>
+        </Border>
     </Grid>
 </UserControl>

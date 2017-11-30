@@ -73,8 +73,9 @@ namespace GetFacts.Render
             // que pour gérer le changement d'état de AbstractInfo.IsNew
             // en fonction des actions de l'utilisateur.
             this.info = info;
+            fgBorder.Visibility = (info.HasContent) ? Visibility.Hidden : Visibility.Visible;
 
-            if(info.HasContent==false)
+            if (info.HasContent==false)
             {
                 articleTitle.Text = "(no content to display)";
                 articleText.Text = "O_o";
