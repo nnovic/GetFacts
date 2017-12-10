@@ -33,7 +33,7 @@
 
             <!-- Bouton pour afficher/masquer le menu. Ce bouton contient des indicateurs pour
                  les notifications et pour le rafraichissement des pages. -->
-            <ToggleButton Padding="10"  x:Name="ToggleMenuButton" Grid.Row="2" Grid.Column="1" Checked="ToggleMenuButton_Checked" Unchecked="ToggleMenuButton_Unchecked" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" BorderBrush="{x:Null}">
+            <ToggleButton Padding="10"  x:Name="ToggleMenuButton" Grid.Row="2" Grid.Column="1" Checked="ToggleMenuButton_Checked" Unchecked="ToggleMenuButton_Unchecked" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" BorderBrush="{x:Null}" Focusable="False" >
                 <ToggleButton.Background>
                     <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,1">
                         <GradientStop Color="White"/>
@@ -63,7 +63,7 @@
             </ToggleButton>
 
             <!-- Bouton pour passer à la page suivante. -->
-            <Button Padding="10"  x:Name="SkipButton2" Grid.Row="0" Grid.Column="1"  HorizontalContentAlignment="Right" VerticalContentAlignment="Top" BorderBrush="{x:Null}" Click="SkipButton_Click">
+            <Button Padding="10"  x:Name="SkipButton2" Grid.Row="0" Grid.Column="1"  HorizontalContentAlignment="Right" VerticalContentAlignment="Top" BorderBrush="{x:Null}" Click="SkipButton_Click" Focusable="False">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,0">
                         <GradientStop Color="White"/>
