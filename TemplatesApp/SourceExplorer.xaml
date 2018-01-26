@@ -59,7 +59,7 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <TreeView Grid.Row="0" x:Name="CodeSourceTree" SelectedItemChanged="CodeSourceTree_SelectedItemChanged" />
-                    <local:XPathHistory Grid.Row="1" x:Name="ClickHistory" XPathEntryDoubleClick="ClickHistory_XPathEntryDoubleClick"/>
+                    <local:XPathHistory Grid.Row="1" x:Name="ClickHistory" XPathEntryDoubleClick="ClickHistory_XPathEntryDoubleClick" XPathSolutionClick="ClickHistory_XPathSolutionClick"/>
 
                 </Grid>
             </Grid>

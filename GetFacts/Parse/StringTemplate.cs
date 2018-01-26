@@ -91,7 +91,7 @@ namespace GetFacts.Parse
                 if (node == null)
                     return string.Empty;
             }
-            catch(XPathException e)
+            catch(XPathException)
             {
                 return string.Empty;
             }

@@ -24,7 +24,18 @@ namespace TemplatesApp
     {
         private readonly ObservableCollection<AbstractXPathBuilder> History = new ObservableCollection<AbstractXPathBuilder>();
 
+        /// <summary>
+        /// Evènement qui est généré lorsqu'on double cliquer sur l'un
+        /// des éléments de la liste.
+        /// </summary>
         public event EventHandler<AbstractXPathBuilder> XPathEntryDoubleClick;
+
+        /// <summary>
+        /// Evènement qui est déclenché quand un expression a été
+        /// synthétisée à partir de toutes les expressions présentes
+        /// dans la liste
+        /// </summary>
+        public event EventHandler<AbstractXPathBuilder> XPathSolutionClick;
 
         public XPathHistory()
         {
@@ -40,7 +51,7 @@ namespace TemplatesApp
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
         {
             History.Clear();
         }
@@ -109,6 +120,7 @@ namespace TemplatesApp
             
         }
 
+
         // Helper to search up the VisualTree
         /*private static T FindAnchestor<T>(DependencyObject current)
             where T : DependencyObject
@@ -128,6 +140,18 @@ namespace TemplatesApp
 
         #endregion
 
+        private void RemoveEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            AbstractXPathBuilder xp = HistoryListBox.SelectedItem as AbstractXPathBuilder;
+            if (xp != null)
+                History.Remove(xp);
+        }
 
+        private void TrySumUp_Click(object sender, RoutedEventArgs e)
+        {
+            AbstractXPathBuilder xp = AbstractXPathBuilder.SynthetizeAndOptimize(History);
+            if (xp != null)
+                XPathSolutionClick?.Invoke(this, xp);
+        }
     }
 }

@@ -4,6 +4,7 @@ using GetFacts.Parse;
 using System.IO;
 using HtmlAgilityPack;
 using System.Text;
+using System.Collections.Generic;
 
 namespace GetFactsTests
 {
@@ -50,6 +51,7 @@ namespace GetFactsTests
             Assert.IsTrue(idAttribute.IsSingular);
         }
 
+        #region tests de la méthode Goto
 
         private string GenerateHtmlPageForGotoTests()
         {
@@ -211,6 +213,7 @@ namespace GetFactsTests
             Assert.AreEqual(4, score);
         }
 
+        #endregion
 
         /// <summary>
         /// Vérifie que, pour un noeud où un SingularAttribute est déjà présent,
@@ -230,5 +233,6 @@ namespace GetFactsTests
 
             Assert.AreEqual<string>("//h1[@id=\"list1\"]", divBuilder.ToString());
         }
+
     }
 }

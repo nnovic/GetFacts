@@ -75,18 +75,9 @@ namespace GetFacts.Parse
                 }
             }
 
-            protected override string ElementName => this.XmlNode.Name;
+            public override string ElementName => this.XmlNode.Name;
 
             protected override object ConcreteElement => this.XmlNode;
-
-            public override bool CanBeMisguiding(XPathAttribute attribute)
-            {
-                switch(attribute.Name)
-                {
-                    default:
-                        return false;
-                }
-            }
         }
 
         internal class XmlAttributeXPathElement:XPathElement
@@ -98,17 +89,12 @@ namespace GetFacts.Parse
                 this.XmlAttribute = attribute;
             }
 
-            protected override string ElementName => "@"+this.XmlAttribute.Name;
+            public override string ElementName => "@"+this.XmlAttribute.Name;
 
             protected override object ConcreteElement => this.XmlAttribute;
-
-            public override bool CanBeMisguiding(XPathAttribute attribute)
-            {
-                throw new NotImplementedException();
-            }
         }
 
-        internal class XmlXPathAttribute:XPathAttribute
+        internal class XmlXPathAttribute : XPathAttribute
         {
             public XmlXPathAttribute(string name, string value)
                 : base(name, value)
@@ -124,6 +110,14 @@ namespace GetFacts.Parse
             }
 
             public override bool IsImportant
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
+            public override bool CanBeMisguiding
             {
                 get
                 {

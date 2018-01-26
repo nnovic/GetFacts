@@ -482,5 +482,10 @@ namespace TemplatesApp
                 XPathInput1.Text = e.ToString();
         }
 
+        private void ClickHistory_XPathSolutionClick(object sender, AbstractXPathBuilder e)
+        {
+            if (e != null)
+                XPathInput1.Text = e.ToString();
+        }
     }
 }

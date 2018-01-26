@@ -93,7 +93,7 @@ namespace GetFacts.Parse
                 }
             }
 
-            protected override string ElementName
+            public override string ElementName
             {
                 get
                 {
@@ -107,18 +107,6 @@ namespace GetFacts.Parse
             }
 
             protected override object ConcreteElement => this.HtmlNode;
-
-            public override bool CanBeMisguiding(XPathAttribute attribute)
-            {
-                switch(attribute.Name)
-                {
-                    case "class":
-                        return Regex.Split(attribute.Value, @"\s").Length > 1;
-
-                    default:
-                        return false;
-                }
-            }
         }
 
         internal class HtmlAttributeXPathElement:XPathElement
@@ -130,14 +118,9 @@ namespace GetFacts.Parse
                 this.HtmlAttribute = attribute;
             }
 
-            protected override string ElementName =>"@"+this.HtmlAttribute.Name;
+            public override string ElementName =>"@"+this.HtmlAttribute.Name;
 
             protected override object ConcreteElement => this.HtmlAttribute;
-
-            public override bool CanBeMisguiding(XPathAttribute attribute)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         internal class HtmlXPathAttribute : XPathAttribute
@@ -160,6 +143,21 @@ namespace GetFacts.Parse
                 get
                 {
                     return HtmlImporantAttributeNames.Contains(Name);
+                }
+            }
+
+            public override bool CanBeMisguiding
+            {
+                get
+                {
+                    switch (Name)
+                    {
+                        case "class":
+                            return Regex.Split(Value, @"\s").Length > 1;
+
+                        default:
+                            return false;
+                    }
                 }
             }
         }

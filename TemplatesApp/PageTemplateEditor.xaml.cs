@@ -88,10 +88,11 @@ namespace TemplatesApp
         {
             if( sender != this )
             {
-                if (string.IsNullOrEmpty(ReferenceInput.Text))
+                Dispatcher.Invoke( ()=> 
                 {
-                    ReferenceInput.Text = PageTemplate.Reference;
-                }
+                    if (string.IsNullOrEmpty(ReferenceInput.Text))
+                        ReferenceInput.Text = PageTemplate.Reference;
+                });
             }
         }
     }

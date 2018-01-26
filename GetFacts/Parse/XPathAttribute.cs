@@ -17,7 +17,7 @@ namespace GetFacts.Parse
         }
 
         public string Name { get; private set; }
-        public string Value { get; private set; }
+        public string Value { get; internal set; }
 
         /// <summary>
         /// Indique si l'élément, pour la technologie considérée (Xml, Html, ...),
@@ -38,6 +38,22 @@ namespace GetFacts.Parse
         /// </example>
         public abstract bool IsImportant { get; }
 
+        /// <summary>
+        /// Appréciation de la fiabilité de l'attribut, pour savoir
+        /// s'il derait être utilisé ou pas pour l'optimisation
+        /// d'un expression.
+        /// </summary>
+        /// <remarks>Retourne "true" si quelque chose dans le contexte du document ou dans la valeur
+        /// de l'attribut laise penser qu'il sera difficile d'en faire usage pour le XPath
+        /// en cours d'optimisation. Sinon, retourne "false".</returns>
+        /// </remarks>
+        /// Dans le cas du HTML, un attribut "class" dont la valeur contient plusieurs mots séparés
+        /// par des espaces retournera "true", car non fiable.
+        /// </example>
+        public abstract bool CanBeMisguiding { get; }
+
+
+
         private bool visible = false;
         public bool Visible
         {
@@ -56,7 +72,10 @@ namespace GetFacts.Parse
             sb.AppendFormat("@{0}", Name);
             if (withValue)
             {
-                sb.AppendFormat("=\"{0}\"", Value);
+                if (!string.IsNullOrEmpty(Value))
+                {
+                    sb.AppendFormat("=\"{0}\"", Value);
+                }
             }
             return sb.ToString();
         }

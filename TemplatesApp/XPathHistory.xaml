@@ -12,7 +12,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0">
-            <Button Click="Button_Click" >Clear history</Button>
+            <Button x:Name="ClearHistoryButton" Click="ClearHistoryButton_Click" >Clear history</Button>
+            <Button x:Name="RemoveEntryButton" Click="RemoveEntryButton_Click">Remove entry</Button>
+            <Button x:Name="TrySumUp" Click="TrySumUp_Click">Try sum up</Button>
         </ToolBar>
         <ListBox Grid.Row="1" x:Name="HistoryListBox" ItemsSource="{Binding}"  FontFamily="Lucida Console" MouseDoubleClick="HistoryListBox_MouseDoubleClick" PreviewMouseLeftButtonDown="HistoryListBox_PreviewMouseLeftButtonDown" PreviewMouseMove="HistoryListBox_PreviewMouseMove" >
             <ListBox.Background>

@@ -7,12 +7,19 @@ using System.Threading.Tasks;
 
 namespace GetFacts.Parse
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>Cette classe implémente IEquatable, ce qui signifie
+    /// qu'on peut utiliser la méthode .Equals() pour vérifier 
+    /// l'égalité de deux XPathElement.</remarks>
     [DebuggerDisplay("XPathElement = {ElementName}")]
     public abstract class XPathElement : IEquatable<XPathElement>
     {
         internal readonly List<XPathAttribute> Attributes = new List<XPathAttribute>();
 
-        protected abstract string ElementName { get; }
+        public abstract string ElementName { get; }
 
         protected abstract object ConcreteElement { get; }
 
@@ -63,21 +70,6 @@ namespace GetFacts.Parse
             internal set { visible = value; }
         }
 
-        /// <summary>
-        /// Evalue la fiabilité de l'attribut passé en argument pour
-        /// devenir un élément du XPath après optmisation.
-        /// </summary>
-        /// <param name="attribute"></param>
-        /// <returns>Retourne "true" si quelque chose dans le contexte du document ou dans la valeur
-        /// de l'attribut laise penser qu'il sera difficile d'en faire usage pour le XPath
-        /// en cours d'optimisation. Sinon, retourne "false".</returns>
-        /// <example>
-        /// Dans le cas du HTML, un attribut "class" dont la valeur contient plusieurs mots séparés
-        /// par des espaces retournera "true", car non fiable.
-        /// </example>
-        public abstract bool CanBeMisguiding(XPathAttribute attribute);
-
-
 
         public virtual bool Equals(XPathElement other)
         {
@@ -87,14 +79,9 @@ namespace GetFacts.Parse
 
         public class GoBackElement : XPathElement
         {
-            protected override string ElementName => "..";
+            public override string ElementName => "..";
 
             protected override object ConcreteElement => null;
-
-            public override bool CanBeMisguiding(XPathAttribute attribute)
-            {
-                throw new NotImplementedException();
-            }
 
             public override bool Equals(XPathElement other)
             {
