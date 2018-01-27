@@ -64,10 +64,31 @@ namespace GetFacts.Parse
         }
 
         private bool visible = true;
+
+        /// <summary>
+        /// Cette propriété permet de masquer ou
+        /// montrer cet élément au sein de l'expression XPath;
+        /// C'est la fonction d'optimisation qui fera ce choix.
+        /// </summary>
+        /// <see cref="AbstractXPathBuilder.Optimize"/>
         public bool Visible
         {
-            get { return visible; }
+            get { return visible && (!Dumped); }
             internal set { visible = value; }
+        }
+
+        private bool dumped = false;
+
+        /// <summary>
+        /// La fonction de synthèse peut décider que
+        /// cet élément doit être éliminé de l'expression
+        /// XPath
+        /// </summary>
+        /// <see cref="AbstractXPathBuilder.Synthetize(ICollection{AbstractXPathBuilder})"/>
+        public bool Dumped
+        {
+            get { return dumped; }
+            internal set { dumped = value; }
         }
 
 

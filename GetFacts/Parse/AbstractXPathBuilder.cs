@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,10 @@ namespace GetFacts.Parse
             elements.Add(element);
         }
 
+        protected virtual void Insert(XPathElement element)
+        {
+            elements.Insert(0, element);
+        }
 
         public override string ToString()
         {
@@ -127,6 +132,138 @@ namespace GetFacts.Parse
             {
                 ShowImportantButMisguidingAttributeForTheLastElement();
             }
+        }
+
+
+        public static AbstractXPathBuilder SynthetizeAndOptimize(ICollection<AbstractXPathBuilder> expressions)
+        {
+            AbstractXPathBuilder result = Synthetize(expressions);
+            result.Optimize();
+            return result;
+        }
+
+        /// <summary>
+        /// Cette méthode analyse les XPath passés en paramètre et tente de
+        /// les synthétiser en une seule expression XPath englobante.
+        /// </summary>
+        /// <param name="expressions">Ensemble des expressions XPath qu'il faut essayer de synthetiser.
+        /// La collection doit contenir au moins deux éléments.</param>
+        /// <returns>null si aucune synthèse n'a pu être établie, ou si la collection passée en paramètre contient moins de deux éléments.</returns>
+        /// <exception cref="ArgumentNullException">"expressions" ne peut pas être null</exception>
+        /// <remarks>
+        /// Les expressions en argument devraient de préférence être optimisées.
+        /// L'expression resultante n'est pas optimisee.
+        /// </remarks>
+        public static AbstractXPathBuilder Synthetize(ICollection<AbstractXPathBuilder> expressions)
+        {
+            if (expressions == null)
+                throw new ArgumentNullException("expressions");
+
+            if (expressions.Count <= 1)
+                return null;
+
+            // trier par ordre décroissant de la taille
+            // des expressions XPath :
+            IEnumerable <AbstractXPathBuilder> orderedList = expressions.OrderByDescending( xpath => xpath.Elements.Count );
+            int expressionsCount = orderedList.Count();
+            AbstractXPathBuilder referenceXPathBuilder = orderedList.ElementAt(0);
+
+            // créer un tableau pour stocker
+            // les index de recherche de chaque
+            // expression XPath:
+            int[] indexes = new int[expressionsCount];
+            for(int i=0; i< expressionsCount; i++)
+            {
+                indexes[i] = orderedList.ElementAt(i).Elements.Count-1;
+                if( indexes[i]<0 )
+                {
+                    throw new ArgumentException();
+                }
+            }
+
+            // initialisation de l'expression synthétique
+            AbstractXPathBuilder synthetesis = new NaiveXPathBuilder();
+            bool stopSynthetesis = false;
+            bool allDone;
+
+            // Boucle perettant de faire varier
+            // les index (index qui pointent sur
+            // les éléments en cours d'évaluation
+            // au sein de chaque expression):
+            do
+            {
+                // Pour chaque expression, comparer entre eux les XPathElements
+                // dont les indes sont spécifiés dans "indexes".
+                // (le premier AbstractXPathBuilder de "orderedList" sert de référence pour
+                // effectuer la comparaison).
+                NaiveXPathBuilder.NaiveXPathElement referenceElement = new NaiveXPathBuilder.NaiveXPathElement(referenceXPathBuilder.Elements[indexes[0]]);
+                for (int xpIndex = 1; xpIndex < expressionsCount; xpIndex++)
+                {
+                    AbstractXPathBuilder comparedXPathBuilder = orderedList.ElementAt(xpIndex);
+                    XPathElement comparedElement = comparedXPathBuilder.Elements[indexes[xpIndex]];
+
+                    // Faire une simple recherche sur le nom de l'élément:
+                    // si les éléments comparés n'ont pas le même nom,
+                    // on va vérifier si on peut trouver une correspondance
+                    // en avançant un peu dans les index.
+                    if (string.Equals(comparedElement.ElementName, referenceElement.ElementName) == false)
+                    {
+                        int lookupStartIndex = indexes[0] - 1;
+                        int lookupMinIndex = indexes[xpIndex];
+                        int possibleMatchAt = -1;
+
+                        while( lookupStartIndex>=lookupMinIndex )
+                        {
+                            XPathElement lookupElement = referenceXPathBuilder.Elements[lookupStartIndex];
+                            if (string.Equals(comparedElement.ElementName, lookupElement.ElementName) )
+                            {
+                                possibleMatchAt = lookupStartIndex;
+                                break;
+                            }
+                            lookupStartIndex--;
+                        }
+
+                        if( possibleMatchAt!=-1 )
+                        {
+                            indexes[xpIndex]++;
+                            referenceElement.Dumped = true;
+                            continue;
+                        }
+                    }
+
+
+                    // comparer l'élement sélectionné avec l'élément par référence.
+                    NaiveXPathBuilder.NaiveXPathElement intersection = NaiveXPathBuilder.NaiveXPathElement.Intersection(referenceElement,comparedElement);
+                    referenceElement = intersection;
+                }
+
+
+                synthetesis.Insert(referenceElement);
+
+                // Faire régresser les index dans le tableau
+                allDone = true;
+                for(int xpIndex=0; xpIndex<expressionsCount; xpIndex++)
+                {
+                    indexes[xpIndex]--;
+                    if( indexes[xpIndex]< 0 )
+                    {
+                        stopSynthetesis = true;
+                    }
+                    else
+                    {
+                        allDone = false;
+                    }
+                }
+
+            }while (!stopSynthetesis) ;
+
+            if(allDone==false)
+            {
+                throw new Exception("should never happen");
+            }
+
+
+            return synthetesis;
         }
 
 
@@ -197,7 +334,7 @@ namespace GetFacts.Parse
                 var importantAttributes = from a in element.Attributes where a.IsImportant select a;
                 foreach (var importantAttribute in importantAttributes)
                 {
-                    if (element.CanBeMisguiding(importantAttribute) == false)
+                    if (importantAttribute.CanBeMisguiding == false)
                     {
                         importantAttribute.Visible = true;
                         success = true;

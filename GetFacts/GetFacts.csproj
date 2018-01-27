@@ -105,6 +105,7 @@
     <Compile Include="NotificationSystem.cs" />
     <Compile Include="Parse\AbstractXPathBuilder.cs" />
     <Compile Include="Parse\Extensions.cs" />
+    <Compile Include="Parse\NaiveXPathBuilder.cs" />
     <Compile Include="Parse\XmlXPathBuilder.cs" />
     <Compile Include="Parse\HtmlXPathBuilder.cs" />
     <Compile Include="Parse\XmlParser.cs" />

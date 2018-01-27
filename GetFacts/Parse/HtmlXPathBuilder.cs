@@ -58,15 +58,15 @@ namespace GetFacts.Parse
         internal override void Optimize()
         {
             base.Optimize();
-            HideFinalTextElement();
+            DumpFinalTextElement();
         }
 
 
         /// <summary>
         /// Si le dernier élément du XPath est un noeud text(),
-        /// on peut le cacher.
+        /// on peut l'ignorer complètement.
         /// </summary>
-        private void HideFinalTextElement()
+        private void DumpFinalTextElement()
         {
             if (Elements.Count < 1)
                 return;
@@ -75,7 +75,7 @@ namespace GetFacts.Parse
             {
                 if (last.HtmlNode.NodeType == HtmlNodeType.Text)
                 {
-                    last.Visible = false;
+                    last.Dumped = true;
                 }
             }
         }
