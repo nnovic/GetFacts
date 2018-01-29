@@ -27,7 +27,7 @@
 
             <Expander Header="Title template" Margin="0,5,0,0">
                 <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
-                    <local:StringTemplateEditor x:Name="TitleTemplateEditor" ></local:StringTemplateEditor>
+                    <local:StringTemplateEditor x:Name="TitleTemplateEditor" SuggestionsKey="PageTitleSuggestions" ></local:StringTemplateEditor>
                 </Border>
             </Expander>
 

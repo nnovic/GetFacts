@@ -183,6 +183,19 @@ namespace GetFacts
             }
         }
 
+        /// <summary>
+        /// Charge le fichier "template" afin de pré-remplir
+        /// les champs "Name" et "Url" avec les valeurs
+        /// suggérées dans le template.
+        /// </summary>
+        /// <param name="template"></param>
+        private void LoadSettingsFrom(string template)
+        {
+            PageTemplate pt = TemplateFactory.GetInstance().GetExistingTemplate(template);
+            ConfigNameInput.Text = pt.PageName;
+            ConfigUrlInput.Text = pt.Reference;
+        }
+
         private void IsNewBehaviorInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             pageConfig.IsNewBehavior = (AbstractInfo.IsNewPropertyGets)IsNewBehaviorInput.SelectedItem;
@@ -200,13 +213,15 @@ namespace GetFacts
             {
                 string template = (string)e.AddedItems[0];
                 ConfigTemplateInput.Text = template;
-                TemplatesList.SearchPattern = null;
+                LoadSettingsFrom(template);
             }
         }
 
         private void ConfigTemplateInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            TemplatesList.SearchPattern = ConfigTemplateInput.Text;
+            string template = ConfigTemplateInput.Text;
+            TemplatesList.SearchPattern = template;
+            PageConfig.Template = template;
         }
     }
 }

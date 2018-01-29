@@ -22,7 +22,10 @@ namespace GetFacts.Parse
             Charset = UTF8Encoding.UTF8.WebName;
         }
 
-
+        /// <summary>
+        /// Un nom qui est suggéré pour décrire le template.
+        /// </summary> 
+        [DefaultValue(null)]
         public string PageName
         {
             get;set;

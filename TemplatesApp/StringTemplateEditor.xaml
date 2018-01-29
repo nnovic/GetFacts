@@ -7,6 +7,10 @@
              xmlns:getfacts="clr-namespace:GetFacts;assembly=GetFacts"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ContextMenu x:Key="suggestionsMenu">
+        </ContextMenu>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,13 +19,20 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Margin="0,0,5,0">XPath:</TextBlock>
         <getfacts:XPathTextBox Margin="0,0,0,2" Grid.Column="1" x:Name="XPathInput" TextChanged="XPathInput_TextChanged" />
 
         <TextBlock Margin="0,0,5,0" Grid.Row="1">Regex:</TextBlock>
-        <getfacts:RegexTextBox Grid.Row="1" Grid.Column="1" x:Name="RegexInput" TextChanged="RegexInput_TextChanged" />
+        <getfacts:RegexTextBox Grid.Row="1" Grid.Column="1" x:Name="RegexInput" TextChanged="RegexInput_TextChanged" Visibility="{Binding local:}"/>
+
+        <Label Name="SuggestionsButton" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Visibility="Collapsed">
+            <Hyperlink  Click="Suggestions_Click">
+                ?
+            </Hyperlink>
+        </Label>
 
     </Grid>
 </UserControl>
