@@ -86,15 +86,28 @@ namespace GetFacts.Render
             articleText.Text = info.Text;
             mediaDisplay.Caption = info.Title;
 
-            browserUrl = info.BrowserUri?.AbsoluteUri;
+            if (info.BrowserUri != null)
+            {
+                browserUrl = info.BrowserUri?.AbsoluteUri;
+                Cursor = Cursors.Hand;
+                ToolTip = "Click to read in web browser.";
+            }
+            else
+            {
+                browserUrl = info.BaseUri?.AbsoluteUri;
+                Cursor = Cursors.ScrollN;
+                ToolTip = "Click to open originating page.";
+            }
+
+            if(  string.IsNullOrEmpty(browserUrl))
+            {
+                Cursor = Cursors.Arrow;
+                ToolTip = null;
+            }
 
             StartIconTask();
 
-            if( string.IsNullOrEmpty(browserUrl)==false)
-            {
-                Cursor = Cursors.Hand;
-                ToolTip = "Click to open in browser";
-            }
+            
 
             this.HasNewInformation = info.IsNew;
 

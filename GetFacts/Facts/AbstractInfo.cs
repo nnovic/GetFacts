@@ -282,6 +282,10 @@ namespace GetFacts.Facts
 
         #region BaseUri
 
+        /// <summary>
+        /// Retourne l'Uri de la page d'où proviennent
+        /// les informations contenues dans cet objet.
+        /// </summary>
         internal Uri BaseUri
         {
             get; set;

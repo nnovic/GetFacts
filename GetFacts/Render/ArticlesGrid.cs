@@ -57,7 +57,7 @@ namespace GetFacts.Render
                 StringBuilder sb = new StringBuilder();
                 foreach (ArticleDisplay ad in Children)
                 {
-                    sb.AppendLine(ad.InformationSummary);
+                    sb.Append("• ").AppendLine(ad.InformationSummary);
                 }
                 return sb.ToString();
             }
