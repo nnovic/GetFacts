@@ -62,6 +62,28 @@ namespace TemplatesApp.Properties {
         
         /// <summary>
         ///   Recherche une chaîne localisée semblable à [
+        ///&quot;/html/head/link[@rel=\&quot;shortcut icon\&quot; or @rel=\&quot;icon\&quot;]/@href&quot;
+        ///].
+        /// </summary>
+        internal static string PageIconSuggestions {
+            get {
+                return ResourceManager.GetString("PageIconSuggestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à [
+        ///&quot;/html/head/meta[@name=\&quot;description\&quot;]/@content&quot;
+        ///].
+        /// </summary>
+        internal static string PageTextSuggestions {
+            get {
+                return ResourceManager.GetString("PageTextSuggestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à [
         ///&quot;/html/head/title&quot;
         ///].
         /// </summary>

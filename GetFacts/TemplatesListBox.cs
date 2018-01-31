@@ -132,7 +132,7 @@ namespace GetFacts
 
         private void RefreshItems()
         {
-            object selected = base.SelectedItem;
+            //object selected = base.SelectedItem;
 
             Items.Clear();
             Regex pattern = new Regex(SearchPattern);
@@ -149,10 +149,10 @@ namespace GetFacts
                 base.SelectedItem = deferredSelectedItem;
                 deferredSelectedItem = null;
             }
-            else if( selected!=null )
+            /*else if( selected!=null )
             {
                 base.SelectedItem = selected;
-            }
+            }*/
         }
         
         #endregion

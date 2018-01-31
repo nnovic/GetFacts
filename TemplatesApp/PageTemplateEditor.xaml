@@ -33,13 +33,13 @@
 
             <Expander Header="Text template" Margin="0,5,0,0">
                 <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
-                    <local:StringTemplateEditor x:Name="TextTemplateEditor"></local:StringTemplateEditor>
+                    <local:StringTemplateEditor x:Name="TextTemplateEditor" SuggestionsKey="PageTextSuggestions"></local:StringTemplateEditor>
                 </Border>
             </Expander>
 
             <Expander Header="Icon URL template" Margin="0,5,0,0">
                 <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Padding="5">
-                    <local:StringTemplateEditor x:Name="IconTemplateEditor"></local:StringTemplateEditor>
+                    <local:StringTemplateEditor x:Name="IconTemplateEditor" SuggestionsKey="PageIconSuggestions"></local:StringTemplateEditor>
                 </Border>
             </Expander>
 
