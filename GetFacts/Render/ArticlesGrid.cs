@@ -62,5 +62,14 @@ namespace GetFacts.Render
                 return sb.ToString();
             }
         }
+
+        internal void CreateRow()
+        {
+            RowDefinition def = new RowDefinition()
+            {
+                Height = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star)
+            };
+            RowDefinitions.Add(def);
+        }
     }
 }

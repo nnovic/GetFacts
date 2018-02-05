@@ -11,6 +11,7 @@ namespace GetFacts.Render
     public class TriPage:PageStructure,ICustomPause
     {
         private ArticlesGrid articlesGrid;
+        private int articlesCount;
 
         ~TriPage()
         {
@@ -24,8 +25,14 @@ namespace GetFacts.Render
             {
                 //Margin = new System.Windows.Thickness(5)
             };
+            articlesGrid.CreateRow();
+            articlesGrid.CreateRow();
+            articlesGrid.CreateRow();
+            articlesCount = 0;
+
             base.Embedded = articlesGrid;
 
+            
             // Note: the follwing is for debugging purpose only,
             // as no content from a disabled page should
             // ever be displayed !
@@ -51,20 +58,17 @@ namespace GetFacts.Render
 
         public void AddArticle(Facts.AbstractInfo ai)
         {
-            int rowCount = articlesGrid.RowDefinitions.Count;
+            if(articlesCount>=3)
+            {
+                throw new Exception();
+            }
 
-            ArticleDisplay ad = new ArticleDisplay(true, rowCount);
+            ArticleDisplay ad = new ArticleDisplay(true, articlesCount);
             ad.Update(ai);
             articlesGrid.Children.Add(ad);
-            int rowNum = articlesGrid.RowDefinitions.Count;
-            Grid.SetRow(ad, rowNum);
-
-            RowDefinition def = new RowDefinition()
-            {
-                Height = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star)
-            };
-
-            articlesGrid.RowDefinitions.Add(def);
+            //int rowNum = articlesGrid.RowDefinitions.Count;
+            Grid.SetRow(ad, articlesCount);
+            articlesCount++;
         }
 
     }
