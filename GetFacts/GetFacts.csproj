@@ -116,6 +116,9 @@
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Render\ArticlesGrid.cs" />
+    <Compile Include="Render\GfClock.xaml.cs">
+      <DependentUpon>GfClock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Render\GfProgressBar.xaml.cs">
       <DependentUpon>GfProgressBar.xaml</DependentUpon>
     </Compile>
@@ -175,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Render\ArticleDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Render\GfClock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

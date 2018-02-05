@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Initialized="UserControl_Initialized" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" Unloaded="UserControl_Unloaded" >
     <Grid>
+        <local:GfClock Margin="5" x:Name="articleClock" />
         <Image Margin="5" x:Name="articleIcon" Source="GF_logo.png" />
         <Image Margin="5" x:Name="mediaKO" Source="GF_ko.png" Visibility="Hidden"/>
         <MediaElement Margin="5" x:Name="articleMedia" Visibility="Hidden" IsMuted="True" MediaOpened="ArticleMedia_MediaOpened" MediaFailed="ArticleMedia_MediaFailed" MediaEnded="ArticleMedia_MediaEnded" LoadedBehavior="Manual" Loaded="ArticleMedia_Loaded" ScrubbingEnabled="True" UnloadedBehavior="Manual" />

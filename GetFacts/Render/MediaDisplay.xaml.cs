@@ -24,9 +24,11 @@ namespace GetFacts.Render
         private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private NotificationSystem.Notification mediaNotification;
 
+
         public MediaDisplay()
         {
             InitializeComponent();
+            BackgroundMode = BackgroundModes.Smiley;
         }
 
         public string Caption
@@ -78,6 +80,7 @@ namespace GetFacts.Render
                 bmpI.EndInit();
                 articleIcon.Source = bmpI;
                 downloadProgressContainer.Visibility = Visibility.Hidden;
+                BackgroundMode = BackgroundModes.Smiley;
             }
             // Since the action is executed asynchronously, the Dispatcher
             // might execute the above code at a time when iconTask has
@@ -91,6 +94,7 @@ namespace GetFacts.Render
             mediaProgressContainer.Visibility = Visibility.Hidden;
             dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
             dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+            UpdateBackgroundDisplay();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
@@ -210,6 +214,8 @@ namespace GetFacts.Render
         {
         }
 
+
+
         /// <summary>
         /// Permet de libérer les ressources "verrouillées" par
         /// ce contrôle (image, vidéo, etc...), ce qui permettra 
@@ -218,7 +224,8 @@ namespace GetFacts.Render
         /// </summary>
         internal void Dispose()
         {
-            dispatcherTimer.Stop();
+            articleClock.Dispose();
+            dispatcherTimer.Stop(); 
             articleIcon.Source = null;
             articleMedia.Source = null;
         }
@@ -235,5 +242,48 @@ namespace GetFacts.Render
             /// </summary>
             MediaError
         }
+
+        #region background mode
+
+        public static readonly DependencyProperty BackgroundModeProperty = DependencyProperty.Register("BackgroundMode", typeof(BackgroundModes), typeof(MediaDisplay));
+
+        public enum BackgroundModes
+        {
+            Smiley,
+            Clock
+        }
+
+        public BackgroundModes BackgroundMode
+        {
+            get
+            {
+                return (BackgroundModes)GetValue(BackgroundModeProperty);
+            }
+            set
+            {
+                SetValue(BackgroundModeProperty, (BackgroundModes)value);
+                UpdateBackgroundDisplay();
+            }
+        }
+
+        private void UpdateBackgroundDisplay()
+        {
+            switch (BackgroundMode)
+            {
+                case BackgroundModes.Clock:
+                    articleClock.Visibility = Visibility.Visible;
+                    articleIcon.Visibility = Visibility.Hidden;
+                    break;
+
+                default:
+                case BackgroundModes.Smiley:
+                    articleClock.Visibility = Visibility.Hidden;
+                    articleIcon.Visibility = Visibility.Visible;
+                    break;
+            }
+        }
+
+
+        #endregion
     }
 }

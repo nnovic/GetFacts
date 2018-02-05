@@ -36,6 +36,7 @@ namespace GetFacts.Render
                 AutoReverse=true
             };
             pageDisplay.Update(info);
+            pageDisplay.mediaDisplay.BackgroundMode = MediaDisplay.BackgroundModes.Clock;
             DoLayout(new Size(ActualWidth,ActualHeight));
         }
         
