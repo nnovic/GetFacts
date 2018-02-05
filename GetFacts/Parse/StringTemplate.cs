@@ -83,12 +83,14 @@ namespace GetFacts.Parse
             if (string.IsNullOrEmpty(XPath))
                 return string.Empty;
 
-            XPathNavigator node;
+            XPathNodeIterator nodes;
+            //XPathNavigator node;
 
             try
             {
-                node = nav.SelectSingleNode(XPath, (IXmlNamespaceResolver)nav);
-                if (node == null)
+                //node = nav.SelectSingleNode(XPath, (IXmlNamespaceResolver)nav);
+                nodes = nav.Select(XPath, (IXmlNamespaceResolver)nav);
+                if (nodes == null)
                     return string.Empty;
             }
             catch(XPathException)
@@ -96,7 +98,14 @@ namespace GetFacts.Parse
                 return string.Empty;
             }
 
-            string innerText = node.Value.Trim();
+            StringBuilder concat = new StringBuilder();
+            foreach(XPathNavigator node in nodes)
+            {
+                concat.Append(node.Value.Trim());
+                concat.Append(' ');
+            }
+
+            string innerText = concat.ToString().TrimEnd();
             innerText = HtmlEntity.DeEntitize(innerText);
 
             if( string.IsNullOrEmpty(Regex) )

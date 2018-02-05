@@ -22,6 +22,7 @@ namespace GetFacts.Render
     public partial class MediaDisplay : UserControl
     {
         private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        private NotificationSystem.Notification mediaNotification;
 
         public MediaDisplay()
         {
@@ -50,6 +51,13 @@ namespace GetFacts.Render
         {
             try
             {
+                mediaNotification = new NotificationSystem.Notification(this,
+                (int)NotificationKeys.MediaError)
+                {
+                    Title = file,
+                    Description = "Media playback error."
+                };
+
                 articleMedia.Visibility = Visibility.Visible;
                 articleMedia.Source = new Uri(file, UriKind.Absolute);
                 downloadProgressContainer.Visibility = Visibility.Hidden;
@@ -164,6 +172,7 @@ namespace GetFacts.Render
         /// <param name="e"></param>
         private void ArticleMedia_Loaded(object sender, RoutedEventArgs e)
         {
+            NotificationSystem.GetInstance().Remove(mediaNotification);
             articleMedia.Play();
         }
 
@@ -171,16 +180,21 @@ namespace GetFacts.Render
         {
             // Lorsque le fichier média est ouvert,
             // mettre la lecture en pause immédiatement.
-
+            mediaKO.Visibility = Visibility.Hidden;
+            articleIcon.Visibility = Visibility.Hidden;
             articleMedia.Pause();          
             dispatcherTimer.Start();
         }
 
         private void ArticleMedia_MediaFailed(object sender, ExceptionRoutedEventArgs e)
         {
+            mediaNotification.Description = e.ErrorException.Message;
+            NotificationSystem.GetInstance().Add(mediaNotification);
             dispatcherTimer.Stop();
             articleMedia.Stop();
             mediaProgressContainer.Visibility = Visibility.Hidden;
+            mediaKO.Visibility = Visibility.Visible;
+            articleIcon.Visibility = Visibility.Hidden;
         }
 
         private void ArticleMedia_MediaEnded(object sender, RoutedEventArgs e)
@@ -207,6 +221,19 @@ namespace GetFacts.Render
             dispatcherTimer.Stop();
             articleIcon.Source = null;
             articleMedia.Source = null;
+        }
+
+        /// <summary>
+        /// Enumération des clés que cette classe utilise
+        /// pour insérer/supprimer des notifications dans
+        /// NotificationSystem.
+        /// </summary>
+        enum NotificationKeys
+        {
+            /// <summary>
+            /// Erreur durant l'ouverture du média.
+            /// </summary>
+            MediaError
         }
     }
 }

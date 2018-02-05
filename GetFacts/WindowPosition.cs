@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json;
 
 namespace GetFacts
@@ -96,10 +97,20 @@ namespace GetFacts
 
         public void ApplyTo(System.Windows.Window w)
         {
-            w.Top = Top;
-            w.Left = Left;
-            w.Width = Width;
-            w.Height = Height;
+            if ( (w.Top>=SystemParameters.VirtualScreenTop) 
+                && (w.Top+w.Height<=SystemParameters.VirtualScreenTop+SystemParameters.VirtualScreenHeight) )
+            {
+                w.Top = Top;
+                w.Height = Height;
+            }
+
+            if ((w.Left >= SystemParameters.VirtualScreenLeft)
+                && (w.Left + w.Width <= SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth))
+            {
+                w.Left = Left;
+                w.Width = Width;
+            }
+
             w.Topmost = TopMost;
             if (IsMaximized)
             {

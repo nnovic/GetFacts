@@ -15,43 +15,49 @@
 
         <Border x:Name="TheBorder" BorderBrush="Black" BorderThickness="3" Margin="5" CornerRadius="10">
             <Grid Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                
+                <Expander x:Name="ConfigExpander">
+                    <Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox x:Name="EnabledCheckBox" Content="Enabled" Checked="EnabledCheckBox_Checked" Unchecked="EnabledCheckBox_Unchecked" Margin="10,0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label Content="{Binding ElementName=ConfigNameInput, Path=Text}" Margin="10,0" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <Expander.Content>
+                        <Grid x:Name="TheGrid" Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Name:</TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Url:</TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Template:</TextBlock>
+                            <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Download period:</TextBlock>
+                            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Articles are new until:</TextBlock>
+                            <TextBox x:Name="ConfigNameInput" Grid.Row="0" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigNameInput_TextChanged"/>
+                            <TextBox x:Name="ConfigUrlInput" Grid.Row="1" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigUrlInput_TextChanged"></TextBox>
+                            <TextBox x:Name="ConfigTemplateInput" Grid.Row="2" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigTemplateInput_TextChanged" />
+                            <Slider x:Name="DownloadPeriodInput" Grid.Row="3" Grid.Column="1" Margin="5,3,5,3" ></Slider>
+                            <ComboBox x:Name="IsNewBehaviorInput" Grid.Row="4" Grid.Column="1" Margin="5,3,5,3" SelectionChanged="IsNewBehaviorInput_SelectionChanged"></ComboBox>
+                        </Grid>
+                    </Expander.Content>
+                </Expander>
+                
+                <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click" Margin="3,0,0,3" Padding="3" VerticalAlignment="Top">X</Button>
 
-                <CheckBox x:Name="EnabledCheckBox" Content="Enabled" Checked="EnabledCheckBox_Checked" Unchecked="EnabledCheckBox_Unchecked" />
-
-                <Button x:Name="DeleteThisItemButton" Grid.Column="1" Click="DeleteThisItemButton_Click" Margin="3,0,0,3" Padding="3">X</Button>
-
-                <Grid x:Name="TheGrid" Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Name:</TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Url:</TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Template:</TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Download period:</TextBlock>
-                    <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">Articles are new until:</TextBlock>
-                    <TextBox x:Name="ConfigNameInput" Grid.Row="0" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigNameInput_TextChanged"/>
-                    <TextBox x:Name="ConfigUrlInput" Grid.Row="1" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigUrlInput_TextChanged"></TextBox>
-                    <TextBox x:Name="ConfigTemplateInput" Grid.Row="2" Grid.Column="1" Margin="5,3,5,3" TextChanged="ConfigTemplateInput_TextChanged" />
-                    <Slider x:Name="DownloadPeriodInput" Grid.Row="3" Grid.Column="1" Margin="5,3,5,3" ></Slider>
-                    <ComboBox x:Name="IsNewBehaviorInput" Grid.Row="4" Grid.Column="1" Margin="5,3,5,3" SelectionChanged="IsNewBehaviorInput_SelectionChanged"></ComboBox>
-                </Grid>
             </Grid>
         </Border>
     </Grid>

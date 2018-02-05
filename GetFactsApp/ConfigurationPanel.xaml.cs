@@ -60,7 +60,7 @@ namespace GetFacts
         private void AddPageButton_Click(object sender, RoutedEventArgs e)
         {
             PageConfig pc = new PageConfig();
-            PageConfigItem pci = new PageConfigItem() { PageConfig=pc };
+            PageConfigItem pci = new PageConfigItem() { PageConfig = pc, IsExpanded = true };
             ListOfConfigItems.Items.Add(pci);
             pci.BringIntoView();
             pci.Focus();

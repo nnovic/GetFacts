@@ -42,6 +42,12 @@ namespace GetFacts
             }
         }
 
+        public bool IsExpanded
+        {
+            get { return ConfigExpander.IsExpanded; }
+            set { ConfigExpander.IsExpanded = value; }
+        }
+
         private void UserControl_Initialized(object sender, EventArgs e)
         {
             IsNewBehaviorInput.ItemsSource = Enum.GetValues(typeof(AbstractInfo.IsNewPropertyGets));

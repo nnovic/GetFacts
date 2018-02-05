@@ -261,5 +261,8 @@
   <ItemGroup>
     <Resource Include="Ads\GitHub_Ad.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Render\GF_ko.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -48,7 +48,7 @@ namespace TemplatesApp
 
         #region SuggestionsKey
 
-        private string _suggestionsKey = null;
+        //private string _suggestionsKey = null;
         private ContextMenu suggestionsMenu = null;
 
         public string SuggestionsKey
