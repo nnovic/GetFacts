@@ -19,7 +19,7 @@
             </Border>
         </StackPanel>
         <StackPanel x:Name="mediaProgressContainer" Margin="5,2,5,2" VerticalAlignment="Bottom">
-            <ProgressBar x:Name="mediaProgressValue"/>
+            <local:GfProgressBar x:Name="mediaProgressValue"  Height="3"/>
         </StackPanel>
     </Grid>
 </UserControl>

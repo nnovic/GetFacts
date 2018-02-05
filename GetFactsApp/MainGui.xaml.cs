@@ -254,6 +254,10 @@ namespace GetFacts
                                 freezable.Frozen += Freezable_Frozen;
                                 freezable.Unfrozen += Freezable_Unfrozen;
                             }
+                            if( nextPage is SpacerPage )
+                            {
+                                Background.RandomizeColors();
+                            }
                             navigator.Navigate(nextPage);                            
                             navigator.RemoveBackEntry();
                             UpdateTooltips(nextPage);

@@ -116,6 +116,9 @@
       <DependentUpon>ArticleDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Render\ArticlesGrid.cs" />
+    <Compile Include="Render\GfProgressBar.xaml.cs">
+      <DependentUpon>GfProgressBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Render\GridLengthAnimation.cs" />
     <Compile Include="Render\ICanDock.cs" />
     <Compile Include="Render\ICustomPause.cs" />
@@ -172,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Render\ArticleDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Render\GfProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

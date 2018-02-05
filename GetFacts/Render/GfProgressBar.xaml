@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="GetFacts.Render.GfProgressBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GetFacts.Render"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Rectangle x:Name="BackgroundRectangle" Fill="Black"></Rectangle>
+        <Rectangle x:Name="ProgressRectangle" Margin="0" Width="100" HorizontalAlignment="Left">
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,0.5" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" SpreadMethod="Reflect">
+                    <GradientStop Color="#FF236323" Offset="0"/>
+                    <GradientStop Color="Lime" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Grid>
+</UserControl>

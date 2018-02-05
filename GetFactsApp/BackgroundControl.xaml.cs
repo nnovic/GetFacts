@@ -32,12 +32,7 @@ namespace GetFacts
 
         public BackgroundControl()
         {
-            bottomBgColor = RandomColor(); 
-            bottomFgColor = Lighter(bottomBgColor);
-
-            topBgColor = RandomColor(); 
-            topFgColor = Darker(topBgColor);
-
+            RandomizeColors();
             InitializeComponent();
         }
 
@@ -47,6 +42,15 @@ namespace GetFacts
             double g = random.NextDouble() * 200.0 + 55.0;
             double b = random.NextDouble() * 200.0 + 55.0;
             return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public void RandomizeColors()
+        {
+            bottomBgColor = RandomColor();
+            bottomFgColor = Lighter(bottomBgColor);
+
+            topBgColor = RandomColor();
+            topFgColor = Darker(topBgColor);
         }
 
         private void UserControl_Initialized(object sender, EventArgs e)
