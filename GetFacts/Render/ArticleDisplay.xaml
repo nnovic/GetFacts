@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GetFacts.Render"
+             xmlns:properties="clr-namespace:GetFacts"
              mc:Ignorable="d" 
              d:DesignHeight="171.429" d:DesignWidth="436.607" 
              Unloaded="UserControl_Unloaded" 
@@ -11,7 +12,10 @@
              Loaded="UserControl_Loaded"
              MouseLeftButtonUp="UserControl_MouseLeftButtonUp" >
     <Grid SizeChanged="Grid_SizeChanged">
-        <Border x:Name="bgBorder" CornerRadius="10" BorderBrush="Black" BorderThickness="5" Background="#7FFFFFFF" >
+        <Border x:Name="bgBorder" CornerRadius="10" BorderThickness="5" Background="#7FFFFFFF" >
+            <Border.BorderBrush>
+                <SolidColorBrush Color="{Binding Source={x:Static properties:Rendering.Default},Path=ArticleBorderColor}"/>
+            </Border.BorderBrush>
             <Grid x:Name="rotatingGrid" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

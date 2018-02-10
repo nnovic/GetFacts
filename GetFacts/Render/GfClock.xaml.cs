@@ -40,7 +40,7 @@ namespace GetFacts.Render
         private void UpdateClock()
         {
             const double Thickness = 2.0;
-            Brush GrayBrush = new SolidColorBrush(Colors.LightSlateGray);
+            Brush GrayBrush = new SolidColorBrush(Rendering.Default.ClockFrameColor);
             DateTime current = DateTime.Now;
             TimeOfDay.Content = current.ToShortTimeString();
 
@@ -83,8 +83,6 @@ namespace GetFacts.Render
                 Canvas.Children.Add(e2);
                 Canvas.SetLeft(e2, (circleCenterX- dotRadius) + dotX);
                 Canvas.SetTop(e2, (circleCenterY- dotRadius )+ dotY);
-                //List<Shape> shapes = GeneratePolygons(animatedMatrix, rowCount, colCount);
-                //shapes.ForEach(s => Canvas.Children.Add(s));
             }
             finally
             {

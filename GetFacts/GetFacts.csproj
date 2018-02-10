@@ -139,6 +139,11 @@
     <Compile Include="Render\WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Rendering.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Rendering.settings</DependentUpon>
+    </Compile>
     <Compile Include="TemplateFactory.cs" />
     <Compile Include="Parse\AbstractTemplate.cs" />
     <Compile Include="Parse\ArticleTemplate.cs" />
@@ -238,6 +243,10 @@
     </None>
     <None Include="packages.config" />
     <None Include="Resources\README.md" />
+    <None Include="Rendering.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Rendering.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
