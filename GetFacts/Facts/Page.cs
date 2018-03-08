@@ -22,6 +22,7 @@ namespace GetFacts.Facts
             pageUrl = url;
             BaseUri = new Uri(url, UriKind.Absolute);
             defaultSection = new Section(String.Empty);
+            defaultSection.BaseUri = this.BaseUri;
             RefreshDelay = 10;
         }
 
