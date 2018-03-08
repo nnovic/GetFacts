@@ -51,6 +51,18 @@ namespace GetFacts.Parse
             }
         }
 
+        protected virtual string NodesToString(XPathNodeIterator nodes)
+        {
+            StringBuilder concat = new StringBuilder();
+            foreach (XPathNavigator node in nodes)
+            {
+                concat.Append(node.Value.Trim());
+                concat.Append(' ');
+            }
+
+            return concat.ToString().TrimEnd();
+        }
+
         /// <summary>
         /// Cette version de Execute fait appel à Execute(XPathNavigator),
         /// et réalise les opérations suivantes sur le résultat:
@@ -98,14 +110,7 @@ namespace GetFacts.Parse
                 return string.Empty;
             }
 
-            StringBuilder concat = new StringBuilder();
-            foreach(XPathNavigator node in nodes)
-            {
-                concat.Append(node.Value.Trim());
-                concat.Append(' ');
-            }
-
-            string innerText = concat.ToString().TrimEnd();
+            string innerText = NodesToString(nodes);
             innerText = HtmlEntity.DeEntitize(innerText);
 
             if( string.IsNullOrEmpty(Regex) )

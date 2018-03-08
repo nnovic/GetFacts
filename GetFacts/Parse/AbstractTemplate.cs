@@ -54,7 +54,7 @@ namespace GetFacts.Parse
         /// </summary>
         /// <seealso cref="ShouldSerializeIconUrlTemplate"/>
         [JsonProperty(Order = 500)]
-        public readonly StringTemplate IconUrlTemplate = new StringTemplate();
+        public readonly StringTemplate IconUrlTemplate = new UrlTemplate();
 
         /// <summary>
         /// Template pour obtenir l'URL d'un média (vidéo ou musique) qui sera joué
@@ -63,7 +63,7 @@ namespace GetFacts.Parse
         /// </summary>
         /// <seealso cref="ShouldSerializeMediaUrlTemplate"/>
         [JsonProperty(Order = 500)]
-        public readonly StringTemplate MediaUrlTemplate = new StringTemplate();
+        public readonly StringTemplate MediaUrlTemplate = new UrlTemplate();
 
         /// <summary>
         /// Template pour obtenir l'URL qui s'ouvrira dans le web browser
@@ -71,7 +71,7 @@ namespace GetFacts.Parse
         /// </summary>
         /// <seealso cref="ShouldSerializeBrowserUrlTemplate"/>
         [JsonProperty(Order = 500)]
-        public readonly StringTemplate BrowserUrlTemplate = new StringTemplate();
+        public readonly StringTemplate BrowserUrlTemplate = new UrlTemplate();
 
 
         #region json conditional serialization
